@@ -143,12 +143,11 @@ function SMS_send($trans_id, $message, $recipient, $from){
 	$message = stripslashes(str_replace(array('<br>','<br />'),"\r\n", $message));
 	$sms = new SMS('wordpress', get_current_user_id(), get_option('pl_id'));
 	$sms->text($message)->to($recipient)->from($from)->ok();
-	var_dump($sms->report());
-/*
-	if($res['error']) {
+	$report = $sms->report();
+
+	if(!is_numeric($report)) {
 		SMS_refund($trans_id, $recipient, $message, $res['message']);
 	}
-*/
 	return $res;
 }
 
