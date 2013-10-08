@@ -147,9 +147,9 @@ function SMS_send($trans_id, $message, $recipient, $from){
 
 	if(!is_numeric($report)) {
 		SMS_refund($trans_id, $recipient, $message, $res['message']);
-		return false;
+		return array('status' =>false, 'message' => $report);
 	}
-	return true;
+	return array('status' =>true, 'message' => 'Sendt!');
 }
 
 function SMS_refund($trans_id, $recipient, $message, $error){

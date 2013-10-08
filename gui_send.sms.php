@@ -33,9 +33,8 @@ $avsender = $_POST['sender'];
 		$i++;
 		$mottaker = str_replace(' ','',$mottaker);
 		$status = SMS_send($transaction, $beskjed, $mottaker, $avsender);
-		var_dump($status);
 		?>
-		<li class="error_<?= $status ? 'true' : 'false' ?>">
+		<li class="error_<?= $status['error'] ? 'true' : 'false' ?>">
 			<div class="number"><?= $i ?> av <?= sizeof($mottakere)?></div>
 			<div class="mottaker"><?= substr($mottaker,0,3).' '.substr($mottaker, 3,2).' '.substr($mottaker,5) ?></div>
 			<div class="status"><?= empty($status['message']) ? 'Sendt!' : $status['message'] ?></div>
