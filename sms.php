@@ -17,7 +17,7 @@ if(is_admin()){
 ## ADMIN MENU
 function UKMSMS_menu() {
 	global $menu, $blog_id;
-	$page = add_menu_page(__('SMS'), __('SMS'), 'editor', 'UKMSMS_gui', 'UKMSMS_gui', plugin_dir_url( __FILE__ ) . 'mobile-menu.png',315);
+	$page = add_menu_page(__('SMS'), __('SMS'), 'editor', 'UKMSMS_gui', 'UKMSMS_gui', 'http://ico.ukm.no/mobile-menu.png',315);
 	add_action( 'admin_print_styles-' . $page, 'UKMSMS_sns' );
 } 
 
