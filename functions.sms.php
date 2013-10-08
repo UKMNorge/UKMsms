@@ -141,7 +141,7 @@ function SMS_send($trans_id, $message, $recipient, $from){
 	$upd->add('tr_status', 'sent');
 	$upd->run();
 	$message = stripslashes(str_replace(array('<br>','<br />'),"\r\n", $message));
-	$sms = new SMS('wordpress', get_current_user_id());
+	$sms = new SMS('wordpress', get_current_user_id(), get_option('pl_id'));
 	$sms->text($message)->to($recipient)->from($from)->ok();
 	var_dump($sms->report());
 /*
