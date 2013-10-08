@@ -12,6 +12,7 @@ if(is_admin()){
 	require_once('functions.sms.php');
 	require_once('hooks.sms.php');
 	require_once('ajax.sms.php');
+	require_once('UKM/sms.class.php');
 }
 ## ADMIN MENU
 function UKMSMS_menu() {
