@@ -2,8 +2,8 @@
 $credits = SMS_credits();
 $returnLink = SMS_returnLink();
 
-if(isset($_GET['UKMSMS_recipients'])){
-	$recipients = explode(',',$_GET['UKMSMS_recipients']);
+if(isset($_POST['UKMSMS_recipients'])){
+	$recipients = explode(',',$_POST['UKMSMS_recipients']);
 	array_unique($recipients);
 }
 ?>
@@ -48,7 +48,7 @@ if(isset($_GET['UKMSMS_recipients'])){
 		<div id="obs"></div>
 	</div>
 	
-	<?php if(isset($_GET['UKMSMS_recipients'])&&is_array($recipients)){?>
+	<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)){?>
 	<div id="extra_recipients">
 		<div class="title">Forhåndsvalgte mottakere</div>
 		<div id="the_extra_recipients"><p>Rapporten du kommer fra har lagt til <?= sizeof($recipients)?> mottaker(e).<br />
