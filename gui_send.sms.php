@@ -24,7 +24,7 @@ UKM_loader('api/sveve/send.php');
 	<div id="icon-edit-pages">
 		<img src="<?= UKMN_ico('mobile', 32,false)?>" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" />
 	</div>
-	<h2>Sender SMS </h2>
+	<h2>Sender SMS..</h2>
 	<div class="updated" style="width: 420px; font-weight: bold;">IKKE NAVIGER BORT FRA DENNE SIDEN FØR ALLE SMS ER SENDT!</div>
 	
 	<ul class="sendSMS">
@@ -35,7 +35,7 @@ UKM_loader('api/sveve/send.php');
 		$mottaker = str_replace(' ','',$mottaker);
 		$status = SMS_send($transaction, $beskjed, $mottaker, $avsender);
 		?>
-		<li class="error_<?= $status['error'] ? 'true' : 'false' ?>">
+		<li class="error_<?= $status ? 'true' : 'false' ?>">
 			<div class="number"><?= $i ?> av <?= sizeof($mottakere)?></div>
 			<div class="mottaker"><?= substr($mottaker,0,3).' '.substr($mottaker, 3,2).' '.substr($mottaker,5) ?></div>
 			<div class="status"><?= empty($status['message']) ? 'Sendt!' : $status['message'] ?></div>
