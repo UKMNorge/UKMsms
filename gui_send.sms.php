@@ -17,7 +17,6 @@ $beskjed = strip_tags($_POST['message']."\r\n".$_POST['message_from'], '<br>');
 $transaction = SMS_send_init($mottakere, $beskjed);
 
 $avsender = $_POST['sender'];
-UKM_loader('api/sveve/send.php');
 ?>
 
 <div class="wrap">
@@ -34,6 +33,7 @@ UKM_loader('api/sveve/send.php');
 		$i++;
 		$mottaker = str_replace(' ','',$mottaker);
 		$status = SMS_send($transaction, $beskjed, $mottaker, $avsender);
+		var_dump($status);
 		?>
 		<li class="error_<?= $status ? 'true' : 'false' ?>">
 			<div class="number"><?= $i ?> av <?= sizeof($mottakere)?></div>
