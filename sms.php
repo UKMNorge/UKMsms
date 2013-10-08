@@ -22,9 +22,9 @@ function UKMSMS_menu() {
 } 
 
 function UKMSMS_sns(){
-	wp_enqueue_style( 'UKMSMS_style', WP_PLUGIN_URL .'/SMS/style.sms.css');
-	wp_enqueue_script( 'UKMSMS_script', WP_PLUGIN_URL .'/SMS/script.sms.js');
-	wp_enqueue_script( 'UKMSMS_textareacounter', WP_PLUGIN_URL .'/SMS/textareacounter.sms.js');
+	wp_enqueue_style( 'UKMSMS_style', plugin_dir_url( __FILE__ ) .'style.sms.css');
+	wp_enqueue_script( 'UKMSMS_script', plugin_dir_url( __FILE__ ) .'script.sms.js');
+	wp_enqueue_script( 'UKMSMS_textareacounter', plugin_dir_url( __FILE__ ) .'textareacounter.sms.js');
 
 	
 }
