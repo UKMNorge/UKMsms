@@ -10,9 +10,18 @@ if(isset($_POST['UKMSMS_recipients'])){
 <div class="wrap"><div id="icon-edit-pages"><img src="<?= UKMN_ico('mobile', 32,false)?>" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" /></div>
 <h2>Send SMS <?= $returnLink ?></h2>
 
-<?php if(empty($returnLink)) { ?>
-	<div class="updated" id="sendtilflere">Skal du sende SMS til flere av dine deltakere anbefaler vi at du går via rapporter.<br />
-	 Rapporten &quot;<a href="admin.php?page=UKMrapport_admin&rapport=kontaktlister&kat=personer">kontaktlister</a>&quot; er spesielt tilpasset dette formålet.</div>
+<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)) { ?>
+	<div class="updated" id="sendtilflere">
+		Hvis du skal sende SMS til flere mottakere, 
+		anbefaler vi at du går via rapporter 
+		for å sende til dine deltakere 
+		(rapporten &quot;<a href="admin.php?page=UKMrapport_admin&rapport=kontaktlister&kat=personer">kontaktlister</a>&quot;
+		 er spesielt tilpasset dette)
+		<?php
+		if(get_option('site_type') == 'pl_fylke') { ?>
+		, eller via "mine lokalmønstringer" hvis du skal sende til dine lokalkontakter
+		<?php } ?>
+	</div>
 <?php } ?>
 
 <form action="?<?=$_SERVER['QUERY_STRING']?>" method="post" id="SMSform">
@@ -50,7 +59,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 	
 	<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)){?>
 	<div id="extra_recipients">
-		<div class="title">Forhåndsvalgte mottakere</div>
+		<div class="title" style="background: #2f7ddc;">Forhåndsvalgte mottakere</div>
 		<div id="the_extra_recipients"><p>Rapporten du kommer fra har lagt til <?= sizeof($recipients)?> mottaker(e).<br />
 								Ønsker du at flere skal motta meldingen, skriver du inn disse i feltet &quot;mottakere&quot;</p></div>
 		<input type="hidden" name="ekstra_mottakere" id="ekstra_mottakere" value="<?= implode(',',$recipients)?>" />
@@ -60,7 +69,13 @@ if(isset($_POST['UKMSMS_recipients'])){
 	<?php } ?>
 
 	<div id="recipients">
-		<div class="title">Mottakere</div>
+		<div class="title">
+			<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)) { ?>
+			Flere mottakere
+			<?php } else { ?>
+			Mottakere
+			<?php } ?>
+		</div>
 		<div id="the_recipients"><input type="text" name="mottakere" id="mottakere" /></div>
 		<div class="description">Kommaseparert liste over mottakere</div>
 		<div id="obs"></div>
