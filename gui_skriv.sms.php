@@ -59,7 +59,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 	
 	<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)){?>
 	<div id="extra_recipients">
-		<div class="title" style="background: #2f7ddc;">Forhåndsvalgte mottakere</div>
+		<div class="title" style="background: #4f94e8;">Forhåndsvalgte mottakere</div>
 		<div id="the_extra_recipients"><p>Rapporten du kommer fra har lagt til <?= sizeof($recipients)?> mottaker(e).<br />
 								Ønsker du at flere skal motta meldingen, skriver du inn disse i feltet &quot;mottakere&quot;</p></div>
 		<input type="hidden" name="ekstra_mottakere" id="ekstra_mottakere" value="<?= implode(',',$recipients)?>" />
