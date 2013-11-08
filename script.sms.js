@@ -63,7 +63,7 @@ function preview_message(){
 		noreply = '<br>(denne SMS kan ikke besvares)';
 		if(svar.attr('data-svar')=='false') {
 			jQuery('#sender > #obs').html('<strong>MERK:</strong> Mottakeren kan ikke svare hvis du bruker denne avsenderen');
-			jQuery('#iphone_preview > #reply').html('Svar ikke mulig');
+			jQuery('#iphone_preview > #reply').html('');//'Svar ikke mulig');
 			jQuery('#message_from_value').val(jQuery('#message_really_from').val() + noreply);
 		} else {
 			jQuery('#sender > #obs').html('<strong>MERK:</strong> Eventuelle svar vil bli sendt til '+svar.attr('data-name')+'s mobiltelefon');
