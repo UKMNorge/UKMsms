@@ -10,7 +10,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 <div class="wrap"><div id="icon-edit-pages"><img src="<?= UKMN_ico('mobile', 32,false)?>" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" /></div>
 <h2>Send SMS <?= $returnLink ?></h2>
 
-<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)) { ?>
+<?php if(!isset($_POST['UKMSMS_recipients'])||!is_array($recipients)) { ?>
 	<div class="updated" id="sendtilflere">
 		Hvis du skal sende SMS til flere mottakere, 
 		anbefaler vi at du går via rapporter 
