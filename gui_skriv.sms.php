@@ -50,7 +50,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 
 	<div id="message">
 		<div class="title">Melding</div>
-		<textarea name="message" id="the_message"></textarea>
+		<textarea name="message" id="the_message"><?php isset($_POST['UKMSMS_message']) ? $_POST['UKMSMS_message'] : '' ?></textarea>
 		<input type="hidden" id="message_from_value" name="message_from" value="<?= SMS_from()?>" />
 		<input type="hidden" id="message_really_from" name="trahs" value="<?= SMS_from()?>" />
 		<div id="message_from"><?= SMS_from()?></div>
