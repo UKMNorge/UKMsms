@@ -7,7 +7,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 	array_unique($recipients);
 }
 ?>
-<div class="wrap"><div id="icon-edit-pages"><img src="<?= UKMN_ico('mobile', 32,false)?>" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" /></div>
+<div class="wrap"><div id="icon-edit-pages"><img src="http://ico.ukm.no/mobile-32.png" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" /></div>
 <h2>Send SMS <?= $returnLink ?></h2>
 
 <?php if(!isset($_POST['UKMSMS_recipients'])||!is_array($recipients)) { ?>

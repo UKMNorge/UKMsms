@@ -25,14 +25,13 @@ function UKMSMS_sns(){
 	wp_enqueue_style( 'UKMSMS_style', plugin_dir_url( __FILE__ ) .'style.sms.css');
 	wp_enqueue_script( 'UKMSMS_script', plugin_dir_url( __FILE__ ) .'script.sms.js');
 	wp_enqueue_script( 'UKMSMS_textareacounter', plugin_dir_url( __FILE__ ) .'textareacounter.sms.js');
-
-	
 }
 
 function UKMSMS_gui(){
+	require_once('UKM/sql.class.php');
 	if(isset($_POST['SMS_send']))
 		require_once('gui_send.sms.php');
-	else
+	else 
 		require_once('gui_skriv.sms.php');	
 }
 ?>
