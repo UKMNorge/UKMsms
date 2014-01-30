@@ -104,6 +104,7 @@ function SMS_returnLink($text=false){
 	return '';
 }
 
+/*
 function SMS_credit_calc($message){
 	$credits = strlen($message);
 	if($credits <= 160)
@@ -144,6 +145,7 @@ function SMS_send($trans_id, $message, $recipient, $from){
 	$sms = new SMS('wordpress', get_current_user_id(), get_option('pl_id'));
 	$sms->text($message)->to($recipient)->from($from)->ok();
 	$report = $sms->report();
+	var_dump($report);
 
 	if(!is_numeric($report)) {
 		SMS_refund($trans_id, $recipient, $message, $res['message']);
@@ -161,5 +163,4 @@ function SMS_refund($trans_id, $recipient, $message, $error){
 	$ref->add('t_comment', 'Mottaker '.$recipient.' ga feilmelding i transaksjon '.$trans_id.': '.$error);
 	$ref->run();
 }
-
-?>
+*/

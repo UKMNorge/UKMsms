@@ -14,7 +14,7 @@ $mottakere = array_unique($mottakere);
 
 $beskjed = strip_tags($_POST['message']."\r\n".$_POST['message_from'], '<br>');
 // INITIER SENDING 
-$transaction = SMS_send_init($mottakere, $beskjed);
+#$transaction = SMS_send_init($mottakere, $beskjed);
 
 $avsender = $_POST['sender'];
 ?>
@@ -26,19 +26,21 @@ $avsender = $_POST['sender'];
 	<h2>Sender SMS..</h2>
 	<div class="updated" style="width: 420px; font-weight: bold;">IKKE NAVIGER BORT FRA DENNE SIDEN FØR ALLE SMS ER SENDT!</div>
 	
-	<ul class="sendSMS">
+	<ul class="col-xs-12 col-sm-8">
 <?php
 	$i = 0;
 	foreach($mottakere as $mottaker) {
 		$i++;
 		$mottaker = str_replace(' ','',$mottaker);
-		$status = SMS_send($transaction, $beskjed, $mottaker, $avsender);
+		$message = stripslashes(str_replace(array('<br>','<br />'),"\r\n", $beskjed));
+
+		$sms = new SMS('wordpress', get_current_user_id(), get_option('pl_id'));
+		$sms->text($message)->to($mottaker)->from($avsender)->ok();
+		$report = $sms->report();
+
 		?>
-		<li class="error_<?= $status['error'] ? 'true' : 'false' ?>">
-			<div class="number"><?= $i ?> av <?= sizeof($mottakere)?></div>
-			<div class="mottaker"><?= substr($mottaker,0,3).' '.substr($mottaker, 3,2).' '.substr($mottaker,5) ?></div>
-			<div class="status"><?= empty($status['message']) ? 'Sendt!' : $status['message'] ?></div>
-			<div class="clear"></div>
+		<li class="alert alert-<?= is_numeric($report) ? 'success' : 'danger' ?>">
+			<p><strong><?= $mottaker ?>: </strong><?= is_numeric( $report ) ? 'Sendt!' : $report ?></p>	
 		</li>
 		<?php
 	}
