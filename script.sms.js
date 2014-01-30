@@ -1,3 +1,4 @@
+jQuery(document).on('click', '#SMS_send', function(e) { validateLength(e) });
 jQuery(document).ready(function(){
 	// ÅPNE CREDITS-LOGG
 	jQuery('#credits_log').click(function(){
@@ -72,8 +73,13 @@ function preview_message(){
 		}
 
 		jQuery('#message_from').html(jQuery('#message_from_value').val());
-
-	jQuery('#iphone_preview > #message').html(nl2br(jQuery('#the_message').val() + '<br />'+jQuery('#message_from').html()));
+		
+		length = jQuery('#the_message').val().length + jQuery('#message_from').html().length ;
+		if( length > 612 ) {
+			jQuery('#iphone_preview > #message').html('<h3>!! ERROR !!</h3>SMS kan maks være 612 tegn lang, altså 4 SMS');	
+		} else {
+			jQuery('#iphone_preview > #message').html(nl2br(jQuery('#the_message').val() + '<br />'+jQuery('#message_from').html()));	
+		}
 }
 
 function loaded(id, response){
@@ -85,4 +91,12 @@ function loading(id, loading) {
 					+  '<img src="/UKM/ico/loading.gif" width="32" />'
 					+  '<div>Vennligst vent, laster inn '+loading+'...</div>'
 					+  '</span>');	
+}
+function validateLength(e) {
+	length = jQuery('#the_message').val().length + jQuery('#message_from').html().length ;
+	if( length > 612 ) {
+		alert('SMS kan maks være 612 tegn lang, altså 4 SMS');
+		e.preventDefault();
+		return false;
+	}
 }
