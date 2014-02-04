@@ -2,13 +2,14 @@
 /// BEREGN MOTTAKERE
 // Vanlige mottakere
 $mottakere = explode(',', $_POST['mottakere']);
-// Det finnes kun rapport-mottakere
-if(isset($_POST['ekstra_mottakere'])&&!empty($_POST['ekstra_mottakere'])&&!empty($_POST['mottakere']))
-	$mottakere = array_merge($mottakere, explode(',', $_POST['ekstra_mottakere']));
 // Det finnes en blanding av rapport- og vanlige mottakere
-elseif(isset($_POST['ekstra_mottakere'])&&!empty($_POST['ekstra_mottakere']))
+if(isset($_POST['ekstra_mottakere'])&&!empty($_POST['ekstra_mottakere'])&&!empty($_POST['mottakere'])) {
+	$_POST['ekstra_mottakere'] = str_replace(array(' ', ' '),'', $_POST['ekstra_mottakere']);
+	$mottakere = array_merge($mottakere, explode(',', $_POST['ekstra_mottakere']));
+// Det finnes kun rapport-mottakere
+} elseif(isset($_POST['ekstra_mottakere'])&&!empty($_POST['ekstra_mottakere'])) {
 	$mottakere = explode(',', $_POST['ekstra_mottakere']);
-
+}
 // Sikre at det kun finnes unike mottakere (dumt å spamme sveve)
 $mottakere = array_unique($mottakere);
 
