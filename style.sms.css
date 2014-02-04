@@ -51,6 +51,7 @@ ul.log li div.description{
  float: none;
   clear:both;
   padding-left: 130px;
+ font-size: 11px;
 }
 
 /* *** *** *** *** *** *** *** *** *** *** */
@@ -78,6 +79,7 @@ ul.log li div.description{
 div#message > .charleft {
 	float: right;
   margin-right: 15px;
+  font-size: 12px;
 }
 div#extra_recipients > .title,
 div#message > .title,
@@ -94,6 +96,8 @@ div#sender > .title {
   -moz-border-radius: 10px 0px 0px 10px;
   border-radius: 10px 0px 0px 10px;
   width: 115px;
+  height: 100%;
+
 }
 .wrap > form > div#sender {
 	height: 81px;
