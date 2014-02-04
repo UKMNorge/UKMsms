@@ -77,8 +77,8 @@ if(isset($_POST['UKMSMS_recipients'])){
 			<?php } ?>
 		</div>
 		<div id="the_recipients"><input type="text" name="mottakere" id="mottakere" /></div>
+		<div class="recipients" id="obs"></div>
 		<div class="description">Kommaseparert liste over mottakere</div>
-		<div id="obs"></div>
 	</div>
 	
 	<div id="logwarning">

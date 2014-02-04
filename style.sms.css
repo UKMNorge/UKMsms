@@ -51,7 +51,6 @@ ul.log li div.description{
  float: none;
   clear:both;
   padding-left: 130px;
- font-size: 11px !important;
 }
 
 /* *** *** *** *** *** *** *** *** *** *** */
@@ -74,6 +73,7 @@ ul.log li div.description{
   	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
     border-radius: 10px;
+    font-size: 14px;
 }
 
 div#message > .charleft {
@@ -117,17 +117,23 @@ div#recipients input{
  	width: 480px; 
 }
 
-div#sender div#obs {
+div.recipients#obs {
+float: right;
+}
+
+div#sender div.obs {
   margin: 0px;
   font-size: 11px;
   line-height: 12px;
   width: 390px;
+  float: right;
 }
 
 div#sender > .description {
  float: right;
   width: 200px;
   padding: 5px;
+  font-size: 11px !important;
 }
 .wrap > form > div#message{
 	height: 218px;
