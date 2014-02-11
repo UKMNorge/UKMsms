@@ -27,7 +27,7 @@ $avsender = $_POST['sender'];
 		<img src="<?= UKMN_ico('mobile', 32,false)?>" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" />
 	</div>
 	<h2>Sender SMS..</h2>
-	<div class="updated" style="width: 420px; font-weight: bold;">IKKE NAVIGER BORT FRA DENNE SIDEN FØR ALLE SMS ER SENDT!</div>
+	<div class="updated" style="width: 420px; font-weight: bold;">IKKE NAVIGER BORT FRA DENNE SIDEN FØR ALLE SMS ER FORSØKT SENDT!</div>
 	
 	<ul class="col-xs-12 col-sm-8">
 <?php
@@ -52,7 +52,7 @@ $avsender = $_POST['sender'];
 	<div class="clear"></div>
 	<div class="clear"></div>
 	
-	<div class="updated" style="width: 420px; font-weight: bold;">Alle SMS er nå sendt</div>
+	<div class="updated" style="width: 420px; font-weight: bold;">Alle SMS er nå forsøkt sendt. OBS: Om du har error-meldinger i listen ovenfor må du følge opp disse.</div>
 	<h3>Neste stopp:</h3>
 	<a href="?page=<?= $_GET['page'] ?>" class="add-new-h2">Skriv ny SMS</a>
 	<br /><br />
