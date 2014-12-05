@@ -24,7 +24,7 @@ function UKMSMS_menu() {
 } 
 
 function UKMSMS_menu_network() {
-	$page = add_menu_page(__('SMS'), __('SMS'), 'editor', 'UKMSMS_gui', 'UKMSMS_gui', 'http://ico.ukm.no/mobile-menu.png',10);
+	$page = add_menu_page(__('SMS'), __('SMS'), 'editor', 'UKMSMS_gui', 'UKMSMS_gui', 'http://ico.ukm.no/mobile-menu.png',400);
 	add_action( 'admin_print_styles-' . $page, 'UKMSMS_sns' );
 } 
 
