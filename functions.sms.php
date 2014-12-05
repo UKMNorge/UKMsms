@@ -1,5 +1,9 @@
 <?php
 function SMS_credits(){
+	if( is_network_admin() ) {
+		return 100000;
+	}
+	
 	$plid = get_option('pl_id');
 	SMS_init($plid, SMS_wpsender());
 	
@@ -20,6 +24,10 @@ function SMS_initCredits(){
 }
 
 function SMS_init($plid, $wpusr){
+	global $blog_id;
+	if( $blog_id == 1 ||is_network_admin() ) {
+		$plid = 1;
+	}
 	$qry = new SQL("SELECT * FROM `log_sms_transactions`
 					WHERE `pl_id` = '#plid'
 					AND `t_action` = 'mottok'",
@@ -46,12 +54,16 @@ function SMS_human($type, $data){
 function SMS_avsendere(){
 	global $blog_id;
 	
-	if($blog_id == 1){
+	if($blog_id == 1 ||is_network_admin() ){
 		$options = '<option value="UKMNorge" data-svar="false" data-name="">UKMNorge</option>';
-		$options .='<option value="46415500" data-svar="true" data-name="">46415500 (UKM Norge)</option>';
+		$options .='<option value="46421625" data-svar="true" data-name="">46421625 (UKM Norge support)</option>';
 		$options .='<option value="92837360" data-svar="true" data-name="">92837360 (Marius Mandal)</option>';
-		$options .='<option value="47901046" data-svar="true" data-name="">47901046 (Alva Amalie)</option>';
-		$options .='<option value="93883875" data-svar="true" data-name="">93883875 (Karoline Amb)</option>';
+		$options .='<option value="93001178" data-svar="true" data-name="">93001178 (Anne M Hybertsen)</option>';
+		$options .='<option value="90755685" data-svar="true" data-name="">90755685 (Torstein Siegel)</option>';
+		$options .='<option value="93454190" data-svar="true" data-name="">93454190 (Inger Lise Johnsen)</option>';
+		$options .='<option value="93665540" data-svar="true" data-name="">93665540 (Jardar Nordbø)</option>';
+		$options .='<option value="92688810" data-svar="true" data-name="">92688810 (Espen Lauritzen Von Ibenfeldt)</option>';
+
 		return $options;
 	}
 
@@ -74,7 +86,7 @@ function SMS_avsendere(){
 function SMS_from(){
 	global $blog_id;
 	
-	if($blog_id == 1){
+	if($blog_id == 1 || is_network_admin() ){
 		return '- UKM';
 	}
 	$m = new monstring(get_option('pl_id'));

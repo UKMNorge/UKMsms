@@ -36,8 +36,10 @@ $avsender = $_POST['sender'];
 		$i++;
 		$mottaker = str_replace(' ','',$mottaker);
 		$message = stripslashes(str_replace(array('<br>','<br />'),"\r\n", $beskjed));
-
-		$sms = new SMS('wordpress', get_current_user_id(), get_option('pl_id'));
+		
+		$pl_id = ($blog_id == 1 || is_network_admin() ) ? 1 : get_option('pl_id');
+		
+		$sms = new SMS('wordpress', get_current_user_id(), $pl_id);
 		$sms->text($message)->to($mottaker)->from($avsender)->ok();
 		$report = $sms->report();
 

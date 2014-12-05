@@ -8,6 +8,8 @@ Version: 5.0
 Author URI: http://www.ukm-norge.no
 */
 
+add_action('network_admin_menu', 'UKMSMS_menu_network');
+
 if(is_admin()){
 	require_once('functions.sms.php');
 	require_once('hooks.sms.php');
@@ -19,6 +21,11 @@ function UKMSMS_menu() {
 	global $menu, $blog_id;
 	UKM_add_menu_page('kommunikasjon', __('SMS'), __('SMS'), 'editor', 'UKMSMS_gui', 'UKMSMS_gui', 'http://ico.ukm.no/mobile-menu.png',10);
 	UKM_add_scripts_and_styles('UKMSMS_gui', 'UKMSMS_sns' );
+} 
+
+function UKMSMS_menu_network() {
+	$page = add_menu_page(__('SMS'), __('SMS'), 'editor', 'UKMSMS_gui', 'UKMSMS_gui', 'http://ico.ukm.no/mobile-menu.png',10);
+	add_action( 'admin_print_styles-' . $page, 'UKMSMS_sns' );
 } 
 
 function UKMSMS_sns(){
