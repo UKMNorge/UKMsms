@@ -56,7 +56,7 @@ function SMS_avsendere(){
 	
 	if($blog_id == 1 ||is_network_admin() ){
 		$options = '<option value="UKMNorge" data-svar="false" data-name="">UKMNorge</option>';
-		$options .='<option value="46421625" data-svar="true" data-name="">93091329 (UKM Norge support)</option>';
+		$options .='<option value="93091329" data-svar="true" data-name="">93091329 (UKM Norge support)</option>';
 		$options .='<option value="92837360" data-svar="true" data-name="">92837360 (Marius Mandal)</option>';
 		$options .='<option value="93001178" data-svar="true" data-name="">93001178 (Anne M Hybertsen)</option>';
 		$options .='<option value="90755685" data-svar="true" data-name="">90755685 (Torstein Siegel)</option>';
