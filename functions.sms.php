@@ -9,7 +9,9 @@ function SMS_credits(){
 	
 	$qry = new SQL("SELECT SUM(`t_credits`) AS `credits`
 					FROM `log_sms_transactions`
-					WHERE `pl_id` = '#plid'",
+					WHERE `pl_id` = '#plid'
+					AND `t_system` != 'pamelding'
+					AND `t_system` != 'pameldingUKMvalidate'",
 					array('plid'=>$plid));
 	return (int) $qry->run('field','credits');
 }
