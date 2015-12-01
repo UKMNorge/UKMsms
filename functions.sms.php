@@ -22,7 +22,7 @@ function SMS_wpsender(){
 }
 
 function SMS_initCredits(){
-	return 200;
+	return 400;
 }
 
 function SMS_init($plid, $wpusr){
