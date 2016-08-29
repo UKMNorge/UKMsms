@@ -6,7 +6,6 @@ $INFOS['season'] = date('Y');
 	
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	update_site_option('UKMmateriell_sms_invoice_threshold', $_POST['UKMmateriell_sms_invoice_threshold'] );
-	update_site_option('UKMmateriell_sms_forfree', $_POST['UKMmateriell_sms_forfree'] );
 }
 
 $INFOS['sms_invoice_threshold'] = get_site_option('UKMmateriell_sms_invoice_threshold');
@@ -46,7 +45,7 @@ $qry = "SELECT
 			`t`.`wp_username`,
 			`t`.`t_action`,
 			`pl`.`pl_id`,
-		SUM(`t_credits`) AS `credits`
+		#forfree + SUM(`t_credits`) AS `credits`
 		FROM `log_sms_transactions` AS `t`
 		JOIN `smartukm_place` AS `pl` ON ( `pl`.`pl_id` = `t`.`pl_id`)
 		WHERE `t_action` = 'sendte_sms_for'
