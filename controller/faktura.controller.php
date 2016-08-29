@@ -46,7 +46,7 @@ $qry = "SELECT
 			`t`.`wp_username`,
 			`t`.`t_action`,
 			`pl`.`pl_id`,
-		#forfree + SUM(`t_credits`) AS `credits`
+		SUM(`t_credits`) AS `credits`
 		FROM `log_sms_transactions` AS `t`
 		JOIN `smartukm_place` AS `pl` ON ( `pl`.`pl_id` = `t`.`pl_id`)
 		WHERE `t_action` = 'sendte_sms_for'
