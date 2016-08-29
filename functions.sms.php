@@ -22,7 +22,7 @@ function SMS_wpsender(){
 }
 
 function SMS_initCredits(){
-	return 400;
+	return get_site_option('UKMmateriell_sms_forfree') == false ? 400 : get_site_option('UKMmateriell_sms_forfree');
 }
 
 function SMS_init($plid, $wpusr){

@@ -1,0 +1,27 @@
+<form method="POST">
+	<h3>Fakturagrense SMS</h3>
+	<div class="form-group">
+		<label for="name">Hvilket beløp må mønstringen ha sendt sms for før de skal faktureres?</label>
+		<br />
+		kr. <input type="number" id="UKMmateriell_sms_invoice_threshold" name="UKMmateriell_sms_invoice_threshold" value="{{sms_invoice_threshold}}"> eks mva
+	</div>
+
+	<div class="form-group">
+		<button class="btn btn-success btn-lg" type="submit">Lagre</button>
+	</div>
+</form>
+
+<h3>Mønstringer som har sendt SMS for mer enn kr. {{ sms_invoice_threshold }}</h3>
+<p>&nbsp;</p>
+<a href="{{ excel.link }}" target="_blank" class="btn btn-primary">Last ned som excel-ark</a>
+<p>&nbsp;</p>
+<table class="table table-striped">
+	{% for monstring in monstringer %}
+		<tr>
+			<td>{{ monstring.getAttr('invoiceName') }}</td>
+			<td>{{ monstring.getAttr('creditsAsKroner')|kroner }},-</td>
+		</tr>
+	{% else %}
+		<tr><th>Ingen mønstringer</th></tr>
+	{% endfor %}
+</table>
