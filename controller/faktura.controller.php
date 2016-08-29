@@ -59,6 +59,7 @@ $sql = new SQL($qry, array('forfree' => get_site_option('UKMmateriell_sms_forfre
 $res = $sql->run();
 
 $monstringer = [];
+$total = 0;
 if( $res ) {
 	while( $r = mysql_fetch_assoc( $res ) ) {
 		$monstring = new monstring_v2( $r['pl_id'] );
@@ -86,6 +87,8 @@ if( $res ) {
 			exCell('A'.$row, $fylke);
 			exCell('B'.$row, $monstring->getNavn());
 			exCell('C'.$row, $monstring->getAttr('creditsAsKroner') );
+			
+			$total += $monstring->getAttr('creditsAsKroner');
 		}
 	}
 }
@@ -95,4 +98,5 @@ $excel = new StdClass;
 $excel->link = exWrite($objPHPExcel,'UKM_SMSgrunnlag_'. get_site_option('season') .'_generert_'.date('Y-m-d_His'));
 $excel->created = time();
 
+$INFOS['total'] = $total;
 $INFOS['excel'] = $excel;
