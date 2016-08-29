@@ -2,7 +2,7 @@
 require_once('UKM/sql.class.php');
 require_once('UKM/monstring.class.php');
 
-$INFOS['season'] = get_site_option('season');
+$INFOS['season'] = date('Y');
 	
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	update_site_option('UKMmateriell_sms_invoice_threshold', $_POST['UKMmateriell_sms_invoice_threshold'] );
@@ -20,8 +20,8 @@ $INFOS['sms_invoice_threshold'] = get_site_option('UKMmateriell_sms_invoice_thre
 	
 	$objPHPExcel->getProperties()->setCreator('UKM Norges arrangørsystem');
 	$objPHPExcel->getProperties()->setLastModifiedBy('UKM Norges arrangørsystem');
-	$objPHPExcel->getProperties()->setTitle('Faktura-grunnlag SMS '. get_site_option('season') );
-	$objPHPExcel->getProperties()->setKeywords('Faktura-grunnlag SMS '. get_site_option('season') );
+	$objPHPExcel->getProperties()->setTitle('Faktura-grunnlag SMS '. date('Y') );
+	$objPHPExcel->getProperties()->setKeywords('Faktura-grunnlag SMS '. date('Y') );
 	
 	## Sett standard-stil
 	$objPHPExcel->getDefaultStyle()->getFont()->setName('Calibri');
@@ -55,7 +55,7 @@ $qry = "SELECT
 		GROUP BY `pl`.`pl_id`
 		ORDER BY `credits` ASC";
 
-$sql = new SQL($qry, array('forfree' => get_site_option('UKMmateriell_sms_forfree'), 'season'=>get_site_option('season') ) );
+$sql = new SQL($qry, array('forfree' => get_site_option('UKMmateriell_sms_forfree'), 'season'=>date('Y') ) );
 $res = $sql->run();
 
 $monstringer = [];
@@ -95,7 +95,7 @@ if( $res ) {
 
 $INFOS['monstringer'] = $monstringer;
 $excel = new StdClass;
-$excel->link = exWrite($objPHPExcel,'UKM_SMSgrunnlag_'. get_site_option('season') .'_generert_'.date('Y-m-d_His'));
+$excel->link = exWrite($objPHPExcel,'UKM_SMSgrunnlag_'. date('Y') .'_generert_'.date('Y-m-d_His'));
 $excel->created = time();
 
 $INFOS['total'] = $total;
