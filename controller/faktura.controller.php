@@ -68,13 +68,14 @@ if( $res ) {
 		if( $monstring->getAttr('creditsAsKroner') < -1*$INFOS['sms_invoice_threshold'] ) {
 			if( 'kommune' == $monstring->getType() ) {
 				try {
-					$fylke = $monstring->getFylke();
+					$fylke = $monstring->getFylke()->getNavn();
 					$monstringName =  $monstring->getFylke() .' - '. $monstring->getNavn();
 				} catch (Exception $e ) {
-					$fylke = 'ukjent';
+					$fylke = 'Ukjent';
 					$monstringName = 'UKJENT fylke - '. $monstring->getNavn();
 				}
 			} else {
+				$fylke = $monstring->getNavn();
 				$monstringName = $monstring->getNavn() .' fylkesmønstring';
 			}			
 			$monstring->setAttr('invoiceName', $monstringName );
