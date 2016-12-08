@@ -2,6 +2,7 @@
 	<h3>Fakturagrense SMS</h3>
 	<div class="form-group">
 		<label for="name">Hvilket beløp må mønstringen ha sendt sms for før de skal faktureres?</label>
+		<p class="help">Minimumsbeløpet beregnes etter {{ forfree }} gratis-SMS er trukket fra. Dvs at beløpsgrensen angir hvor mye penger den gitte mønstringen må ha brukt <u>utover</u> {{ forfree }} gratis SMS før de skal vises i faktureringslisten nedenfor</p>
 		<br />
 		kr. <input type="number" id="UKMmateriell_sms_invoice_threshold" name="UKMmateriell_sms_invoice_threshold" value="{{sms_invoice_threshold}}"> eks mva
 	</div>
@@ -12,6 +13,7 @@
 </form>
 
 <h3>Mønstringer som har sendt SMS for mer enn kr. {{ sms_invoice_threshold }} i {{ season }}-sesongen</h3>
+<p>Beløpet som vises er den totale summen mønstringen har sendt SMS for, beregnet <u>etter</u> {{ forfree }} gratis SMS er trukket fra, men inkludert minimumsbeløpet kr. {{ sms_invoice_threshold }}.</p>
 <p>&nbsp;</p>
 <a href="{{ excel.link }}" target="_blank" class="btn btn-primary">Last ned som excel-ark</a>
 <p>&nbsp;</p>

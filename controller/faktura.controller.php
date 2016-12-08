@@ -99,3 +99,4 @@ $excel->created = time();
 
 $INFOS['total'] = $total;
 $INFOS['excel'] = $excel;
+$INFOS['forfree'] = get_site_option('UKMmateriell_sms_forfree');
