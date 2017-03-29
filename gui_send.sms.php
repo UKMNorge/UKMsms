@@ -15,7 +15,13 @@ if(isset($_POST['ekstra_mottakere'])&&!empty($_POST['ekstra_mottakere'])&&!empty
 // Sikre at det kun finnes unike mottakere (dumt å spamme sveve)
 $mottakere = array_unique($mottakere);
 
-$beskjed = strip_tags($_POST['message']."\r\n".$_POST['message_from'], '<br>');
+if( isset( $_POST['signature_hide'] ) && 'true' == $_POST['signature_hide'] ) {
+	$beskjed = $_POST['message'];
+} else {
+	$beskjed = $_POST['message']."\r\n".$_POST['message_from'];
+}
+$beskjed = strip_tags($beskjed, '<br>');
+
 // INITIER SENDING 
 #$transaction = SMS_send_init($mottakere, $beskjed);
 
@@ -40,8 +46,8 @@ $avsender = $_POST['sender'];
 		$pl_id = ($blog_id == 1 || is_network_admin() ) ? 1 : get_option('pl_id');
 		
 		$sms = new SMS('wordpress', get_current_user_id(), $pl_id);
-		$sms->text($message)->to($mottaker)->from($avsender)->ok();
-		$report = $sms->report();
+		#$sms->text($message)->to($mottaker)->from($avsender)->ok();
+		#$report = $sms->report();
 
 		?>
 		<li class="alert alert-<?= is_numeric($report) ? 'success' : 'danger' ?>">

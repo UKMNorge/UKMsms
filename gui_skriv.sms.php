@@ -55,6 +55,11 @@ if(isset($_POST['UKMSMS_recipients'])){
 		<input type="hidden" id="message_really_from" name="trahs" value="<?= SMS_from()?>" />
 		<div id="message_from"><?= SMS_from()?></div>
 		<div id="obs"></div>
+		<?php if( is_super_admin() ) { ?>
+		<label style="font-weight: normal;">
+			<input type="checkbox" id="signature_hide" name="signature_hide" value="true" /> Skjul signatur
+		</label>
+		<?php } ?>
 	</div>
 	
 	<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)){?>

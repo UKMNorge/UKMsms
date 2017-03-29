@@ -33,6 +33,7 @@ jQuery(document).ready(function(){
 	jQuery('#the_message').keyup(function(){preview_message()});
 	jQuery('#the_message').keydown(function(){preview_message()});
 	jQuery('#the_message').change(function(){preview_message()});
+	jQuery('#signature_hide').change(function(){preview_message()});
 	
 	preview_message();
 
@@ -73,6 +74,11 @@ function preview_message(){
 		}
 
 		jQuery('#message_from').html(jQuery('#message_from_value').val());
+		
+		// Superadmin logget inn
+		if( jQuery('#signature_hide').length && jQuery('#signature_hide').is(':checked') ) {
+			jQuery('#message_from').html('');
+		}
 		
 		length = jQuery('#the_message').val().length + jQuery('#message_from').html().length ;
 		if( length > 612 ) {

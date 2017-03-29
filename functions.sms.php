@@ -56,17 +56,19 @@ function SMS_human($type, $data){
 function SMS_avsendere(){
 	global $blog_id;
 	
-	if($blog_id == 1 ||is_network_admin() ){
-		$options = '<option value="UKMNorge" data-svar="false" data-name="">UKMNorge</option>';
-		$options .='<option value="93091329" data-svar="true" data-name="">93091329 (UKM Norge support)</option>';
-		$options .='<option value="92837360" data-svar="true" data-name="">92837360 (Marius Mandal)</option>';
-		$options .='<option value="93001178" data-svar="true" data-name="">93001178 (Anne M Hybertsen)</option>';
-		$options .='<option value="90755685" data-svar="true" data-name="">90755685 (Torstein Siegel)</option>';
-		$options .='<option value="93454190" data-svar="true" data-name="">93454190 (Inger Lise Johnsen)</option>';
-		$options .='<option value="93665540" data-svar="true" data-name="">93665540 (Jardar Nordbø)</option>';
-		$options .='<option value="92688810" data-svar="true" data-name="">92688810 (Espen Lauritzen Von Ibenfeldt)</option>';
+	$norge_options = '<option value="UKMNorge" data-svar="true" data-name="">UKMNorge</option>';
+	$norge_options .='<option value="UKMMedia" data-svar="true" data-name="">UKMMedia</option>';
+	$norge_options .='<option value="93091329" data-svar="true" data-name="">93091329 (UKM Norge support)</option>';
+	$norge_options .='<option value="92837360" data-svar="true" data-name="">92837360 (Marius Mandal)</option>';
+	$norge_options .='<option value="93001178" data-svar="true" data-name="">93001178 (Anne M Hybertsen)</option>';
+	$norge_options .='<option value="90755685" data-svar="true" data-name="">90755685 (Torstein Siegel)</option>';
+	$norge_options .='<option value="93454190" data-svar="true" data-name="">93454190 (Inger Lise Johnsen)</option>';
+	$norge_options .='<option value="93665540" data-svar="true" data-name="">93665540 (Jardar Nordbø)</option>';
+	$norge_options .='<option value="92688810" data-svar="true" data-name="">41123976 (Stine Granly)</option>';
+	$norge_options .='<option value="92688810" data-svar="true" data-name="">45111635 (Martine Jonsrud)</option>';
 
-		return $options;
+	if($blog_id == 1 || is_network_admin() ){
+		return $norge_options;
 	}
 
 
@@ -82,6 +84,10 @@ function SMS_avsendere(){
 			continue;
 		$options .= '<option value="'.$phone.'" data-svar="true" data-name="'.$k->g('firstname').'">'.$phone.' ('.$k->g('name').')</option>';
 	}	
+	
+	if( is_super_admin() ) {
+		return $options . $norge_options;
+	}
 	return $options;
 }
 
