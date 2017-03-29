@@ -46,8 +46,8 @@ $avsender = $_POST['sender'];
 		$pl_id = ($blog_id == 1 || is_network_admin() ) ? 1 : get_option('pl_id');
 		
 		$sms = new SMS('wordpress', get_current_user_id(), $pl_id);
-		#$sms->text($message)->to($mottaker)->from($avsender)->ok();
-		#$report = $sms->report();
+		$sms->text($message)->to($mottaker)->from($avsender)->ok();
+		$report = $sms->report();
 
 		?>
 		<li class="alert alert-<?= is_numeric($report) ? 'success' : 'danger' ?>">
