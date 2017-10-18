@@ -19,12 +19,12 @@ if(is_admin()){
 ## ADMIN MENU
 function UKMSMS_menu() {
 	global $menu, $blog_id;
-	UKM_add_menu_page('kommunikasjon', 'SMS', 'SMS', 'ukm_sms', 'UKMSMS_gui', 'UKMSMS_gui', 'http://ico.ukm.no/mobile-menu.png',10);
+	UKM_add_menu_page('kommunikasjon', 'SMS', 'SMS', 'ukm_sms', 'UKMSMS_gui', 'UKMSMS_gui', '//ico.ukm.no/mobile-menu.png',10);
 	UKM_add_scripts_and_styles('UKMSMS_gui', 'UKMSMS_sns' );
 } 
 
 function UKMSMS_menu_network() {
-	$page = add_menu_page('SMS', 'SMS', 'editor', 'UKMSMS_gui', 'UKMSMS_gui', 'http://ico.ukm.no/mobile-menu.png',400);
+	$page = add_menu_page('SMS', 'SMS', 'editor', 'UKMSMS_gui', 'UKMSMS_gui', '//ico.ukm.no/mobile-menu.png',400);
 
 	$subpage6 = add_submenu_page( 'UKMSMS_gui', 'Fakturering', 'Fakturering', 'superadministrator', 'UKMMsmsfaktura', 'UKMMsmsfaktura' );
 	$subpage7 = add_submenu_page( 'UKMSMS_gui', 'Innstillinger', 'Innstillinger', 'superadministrator', 'UKMMsmsinnstillinger', 'UKMMsmsinnstillinger' );
