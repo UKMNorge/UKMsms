@@ -30,7 +30,7 @@ $avsender = $_POST['sender'];
 
 <div class="wrap">
 	<div id="icon-edit-pages">
-		<img src="<?= UKMN_ico('mobile', 32,false)?>" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" />
+		<img src="//ico.ukm.no/mobile-256.png" style="float: left; margin-top: 10px; margin-right: 10px;" width="32" />
 	</div>
 	<h2>Sender SMS..</h2>
 	<div class="updated" style="width: 420px; font-weight: bold;">IKKE NAVIGER BORT FRA DENNE SIDEN FØR ALLE SMS ER FORSØKT SENDT!</div>
