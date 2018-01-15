@@ -26,6 +26,7 @@ function UKMSMS_menu() {
 function UKMSMS_menu_network() {
 	$page = add_menu_page('SMS', 'SMS', 'editor', 'UKMSMS_gui', 'UKMSMS_gui', '//ico.ukm.no/mobile-menu.png',400);
 
+	$subpage6 = add_submenu_page( 'UKMSMS_gui', 'Blokkere', 'Blokkere mottakere', 'superadministrator', 'UKMMsmsblokkert', 'UKMMsmsblokkert' );
 	$subpage6 = add_submenu_page( 'UKMSMS_gui', 'Fakturering', 'Fakturering', 'superadministrator', 'UKMMsmsfaktura', 'UKMMsmsfaktura' );
 	$subpage7 = add_submenu_page( 'UKMSMS_gui', 'Innstillinger', 'Innstillinger', 'superadministrator', 'UKMMsmsinnstillinger', 'UKMMsmsinnstillinger' );
 
@@ -60,5 +61,11 @@ function UKMSMS_gui(){
 		require_once('gui_send.sms.php');
 	else 
 		require_once('gui_skriv.sms.php');	
+}
+
+function UKMMsmsblokkert() {
+	$TWIGdata = [];
+	require_once('controller/blokkert.controller.php');
+	echo TWIG('blokkert.html.twig', $TWIGdata , dirname(__FILE__));
 }
 ?>
