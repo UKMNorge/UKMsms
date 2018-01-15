@@ -27,7 +27,11 @@
 		<ol class="list-group">
 			{% for blokkert in blokkerte %}
 				<li class="list-group-item">
-					<div class="float-right pull-right small">{{ blokkert.timestamp }}</div>
+					<div class="float-right pull-right small">
+						{{ blokkert.timestamp }}
+						&nbsp; 
+						<a href="?page=UKMsmsblokkert&delete={{ blokkert.id }}" class="btn btn-xs btn-danger">Opphev blokkering</a>
+					</div>
 					{{ blokkert.number }}
 					<div class="clearfix"></div>
 				</li>

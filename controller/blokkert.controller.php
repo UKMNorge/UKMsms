@@ -10,6 +10,15 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	$TWIGdata['message']->message = 'Nummeret er nå blokkert!';
 }
 
+if( isset( $_GET['delete'] ) ) {
+	$sqldel = new SQLdel('sms_block', ['id' => $_GET['delete'] ] );
+	$sqldel->run();
+	
+	$TWIGdata['message'] = new stdClass();
+	$TWIGdata['message']->success = true;
+	$TWIGdata['message']->message = 'Nummeret er ikke lenger blokkert!';
+}
+
 $sql = new SQL("SELECT * FROM `sms_block` ORDER BY `id` DESC");
 $res = $sql->run();
 
