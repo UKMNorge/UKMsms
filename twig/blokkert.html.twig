@@ -35,6 +35,10 @@
 					{{ blokkert.number }}
 					<div class="clearfix"></div>
 				</li>
+			{% else %}
+				<li class="list-group-item">
+					Ingen nummer er blokkert
+				</li>
 			{% endfor %}
 		</ol>
 	</fieldset>
