@@ -22,6 +22,6 @@ if( isset( $_GET['delete'] ) ) {
 $sql = new SQL("SELECT * FROM `sms_block` ORDER BY `id` DESC");
 $res = $sql->run();
 
-while( $row = mysql_fetch_assoc( $res ) ) {
+while( $row = SQL::fetch( $res ) ) {
 	$TWIGdata['blokkerte'][] = $row;
 }

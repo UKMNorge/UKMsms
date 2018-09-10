@@ -60,7 +60,7 @@ $res = $sql->run();
 $monstringer = [];
 $total = 0;
 if( $res ) {
-	while( $r = mysql_fetch_assoc( $res ) ) {
+	while( $r = SQL::fetch( $res ) ) {
 		$monstring = new monstring_v2( $r['pl_id'] );
 		$monstring->setAttr('credits', $r['credits'] );
 		$monstring->setAttr('creditsAsKroner', $r['credits']*0.4 );

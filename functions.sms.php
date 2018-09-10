@@ -35,7 +35,7 @@ function SMS_init($plid, $wpusr){
 					AND `t_action` = 'mottok'",
 					array('plid'=>$plid));
 	$res = $qry->run();
-	if(mysql_num_rows($res)==0){
+	if(SQL::numRows($res)==0){
 		$ins = new SQLins('log_sms_transactions');
 		$ins->add('pl_id', $plid);
 		$ins->add('wp_username', $wpusr);

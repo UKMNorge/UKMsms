@@ -24,7 +24,7 @@ function UKMSMS_ajax_log(){
 			<div class="description"></div>
 		</li>
 	<?php
-	while($r = mysql_fetch_assoc($res)){?>
+	while($r = SQL::fetch($res)){?>
 		<li class="trans">
 			<div class="time"><?= $r['t_time']?><br /><em>Transaksjon: <?= $r['t_id']?></em></div>
 			<div class="action"><?= ucfirst(SMS_human('action',$r['t_action'])).' '.abs($r['t_credits'])?> SMS-credits</div>
