@@ -29,7 +29,7 @@ function UKMSMS_ajax_log(){
 			<div class="time"><?= $r['t_time']?><br /><em>Transaksjon: <?= $r['t_id']?></em></div>
 			<div class="action"><?= ucfirst(SMS_human('action',$r['t_action'])).' '.abs($r['t_credits'])?> SMS-credits</div>
 			<div class="user"><?= $r['wp_username']?></div>
-			<div class="description"><?= utf8_encode($r['t_comment'])?></div>
+			<div class="description"><?= $r['t_comment']?></div>
 		</li>
 	<?php
 	}
