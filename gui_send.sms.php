@@ -1,7 +1,8 @@
 <?php
 /// BEREGN MOTTAKERE
 // Vanlige mottakere
-$_POST['mottakere'] = str_replace(array(' ', ' '),'', $_POST['mottakere']);
+$_POST['mottakere'] = str_replace(array(' ', ' ',),'', $_POST['mottakere']);
+$_POST['mottakere'] = str_replace(';',',', $_POST['mottakere']);
 $mottakere = explode(',', $_POST['mottakere']);
 // Det finnes en blanding av rapport- og vanlige mottakere
 if(isset($_POST['ekstra_mottakere'])&&!empty($_POST['ekstra_mottakere'])&&!empty($_POST['mottakere'])) {
