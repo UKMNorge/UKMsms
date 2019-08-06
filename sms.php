@@ -18,9 +18,19 @@ if(is_admin()){
 }
 ## ADMIN MENU
 function UKMSMS_menu() {
-	global $menu, $blog_id;
-	UKM_add_menu_page('kommunikasjon', 'SMS', 'SMS', 'ukm_sms', 'UKMSMS_gui', 'UKMSMS_gui', '//ico.ukm.no/mobile-menu.png',10);
-	UKM_add_scripts_and_styles('UKMSMS_gui', 'UKMSMS_sns' );
+	$page = add_menu_page(
+		'SMS',
+		'SMS',
+		'ukm_sms',
+		'UKMSMS_gui',
+		'UKMSMS_gui',
+		'//ico.ukm.no/mobile-menu.png',
+		100
+	);
+	add_action(
+		'admin_print_styles-' . $page,
+		'UKMSMS_sns'
+	);
 } 
 
 function UKMSMS_menu_network() {
