@@ -24,7 +24,7 @@ function UKMSMS_menu() {
 		'ukm_sms',
 		'UKMSMS_gui',
 		'UKMSMS_gui',
-		'//ico.ukm.no/mobile-menu.png',
+		'dashicons-smartphone',#'//ico.ukm.no/mobile-menu.png',
 		100
 	);
 	add_action(
@@ -34,7 +34,15 @@ function UKMSMS_menu() {
 } 
 
 function UKMSMS_menu_network() {
-	$page = add_menu_page('SMS', 'SMS', 'editor', 'UKMSMS_gui', 'UKMSMS_gui', '//ico.ukm.no/mobile-menu.png',400);
+	$page = add_menu_page(
+		'SMS',
+		'SMS',
+		'editor',
+		'UKMSMS_gui',
+		'UKMSMS_gui',
+		'dashicons-smartphone',#'//ico.ukm.no/mobile-menu.png',
+		400
+	);
 
 	$subpage6 = add_submenu_page( 'UKMSMS_gui', 'Blokkere', 'Blokkere mottakere', 'superadministrator', 'UKMsmsblokkert', 'UKMsmsblokkert' );
 	$subpage6 = add_submenu_page( 'UKMSMS_gui', 'Fakturering', 'Fakturering', 'superadministrator', 'UKMMsmsfaktura', 'UKMMsmsfaktura' );
