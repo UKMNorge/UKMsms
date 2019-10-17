@@ -11,8 +11,12 @@ Author URI: http://www.ukm-norge.no
 add_action('network_admin_menu', 'UKMSMS_menu_network');
 
 if(is_admin()){
-	require_once('functions.sms.php');
-	require_once('hooks.sms.php');
+    if( get_option('pl_id') ) {
+        add_action('admin_menu', 'UKMSMS_menu', 315);
+    }
+    add_action('wp_ajax_UKMSMS_ajax', 'UKMSMS_ajax');
+    
+    require_once('functions.sms.php');
 	require_once('ajax.sms.php');
 	require_once('UKM/sms.class.php');
 }
