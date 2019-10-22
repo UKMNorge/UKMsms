@@ -74,7 +74,7 @@ function SMS_avsendere(){
 
 	$m = new monstring(get_option('pl_id'));
 	$kontakter = $m->kontakter();
-	if(get_option('site_type')=='fylke')
+	if(get_option('pl_eier_type') == 'fylke' || get_option('site_type') =='fylke')
 		$options = '<option value="UKMfylke" data-svar="false" data-name="">UKMfylke</option>';
 	else
 		$options = '<option value="UKMlokal" data-svar="false" data-name="">UKMlokal</option>'; 

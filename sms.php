@@ -11,20 +11,42 @@ Author URI: http://www.ukm-norge.no
 add_action('network_admin_menu', 'UKMSMS_menu_network');
 
 if(is_admin()){
-	require_once('functions.sms.php');
-	require_once('hooks.sms.php');
+    if( get_option('pl_id') ) {
+        add_action('admin_menu', 'UKMSMS_menu', 315);
+    }
+    add_action('wp_ajax_UKMSMS_ajax', 'UKMSMS_ajax');
+    
+    require_once('functions.sms.php');
 	require_once('ajax.sms.php');
 	require_once('UKM/sms.class.php');
 }
 ## ADMIN MENU
 function UKMSMS_menu() {
-	global $menu, $blog_id;
-	UKM_add_menu_page('kommunikasjon', 'SMS', 'SMS', 'ukm_sms', 'UKMSMS_gui', 'UKMSMS_gui', '//ico.ukm.no/mobile-menu.png',10);
-	UKM_add_scripts_and_styles('UKMSMS_gui', 'UKMSMS_sns' );
+	$page = add_menu_page(
+		'SMS',
+		'SMS',
+		'ukm_sms',
+		'UKMSMS_gui',
+		'UKMSMS_gui',
+		'dashicons-smartphone',#'//ico.ukm.no/mobile-menu.png',
+		100
+	);
+	add_action(
+		'admin_print_styles-' . $page,
+		'UKMSMS_sns'
+	);
 } 
 
 function UKMSMS_menu_network() {
-	$page = add_menu_page('SMS', 'SMS', 'editor', 'UKMSMS_gui', 'UKMSMS_gui', '//ico.ukm.no/mobile-menu.png',400);
+	$page = add_menu_page(
+		'SMS',
+		'SMS',
+		'editor',
+		'UKMSMS_gui',
+		'UKMSMS_gui',
+		'dashicons-smartphone',#'//ico.ukm.no/mobile-menu.png',
+		400
+	);
 
 	$subpage6 = add_submenu_page( 'UKMSMS_gui', 'Blokkere', 'Blokkere mottakere', 'superadministrator', 'UKMsmsblokkert', 'UKMsmsblokkert' );
 	$subpage6 = add_submenu_page( 'UKMSMS_gui', 'Fakturering', 'Fakturering', 'superadministrator', 'UKMMsmsfaktura', 'UKMMsmsfaktura' );

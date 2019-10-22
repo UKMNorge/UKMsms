@@ -17,10 +17,6 @@ if(isset($_POST['UKMSMS_recipients'])){
 		for å sende til dine deltakere 
 		<br />(rapporten &quot;<a href="admin.php?page=UKMrapport_admin&rapport=kontaktlister&kat=personer">kontaktlister</a>&quot;
 		 er spesielt tilpasset dette)
-		<?php
-		if(get_option('site_type') == 'fylke') { ?>
-		, eller via "mine lokalmønstringer" hvis du skal sende til dine lokalkontakter
-		<?php } ?>
 	</div>
 <?php } ?>
 
