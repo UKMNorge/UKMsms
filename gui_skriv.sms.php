@@ -22,12 +22,12 @@ if(isset($_POST['UKMSMS_recipients'])){
 
 <form action="?<?=$_SERVER['QUERY_STRING']?>" method="post" id="SMSform">
 	<div id="credits">
-		Du har <span class="available"><?= $credits ?></span> tekstmeldinger tilgjengelig.
+		<div style="display:none;">Du har <span class="available"><?= $credits ?></span> tekstmeldinger tilgjengelig.</div>
 		<a href="#" id="credits_log">se SMS-logg</a>
 		<a href="#" id="credits_log_hide" style="display:none;">skjul SMS-logg</a>
 		<div id="log"></div>
 	</div>
-	<div class="description"> Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle mønstringer får <?= SMS_initCredits()?> tekstmeldinger gratis, og alt forbruk utover dette <u>kan</u> bli fakturert sammen med neste års materiellpakke. 
+	<div class="description"> Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får <?= SMS_initCredits()?> tekstmeldinger gratis, og alt forbruk utover dette <u>kan</u> bli fakturert sammen med neste års materiellpakke. 
 	<br />1 SMS = kr. 0,40</div>
 
 	<div id="iphone_preview">
