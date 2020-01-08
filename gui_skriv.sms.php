@@ -15,7 +15,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 		Hvis du skal sende SMS til flere mottakere, 
 		anbefaler vi at du går via rapporter 
 		for å sende til dine deltakere 
-		<br />(rapporten &quot;<a href="admin.php?page=UKMrapport_admin&rapport=kontaktlister&kat=personer">kontaktlister</a>&quot;
+		<br />(rapporten &quot;<a href="admin.php?page=UKMrapporter">kontaktlister</a>&quot;
 		 er spesielt tilpasset dette)
 	</div>
 <?php } ?>
