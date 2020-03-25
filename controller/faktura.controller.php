@@ -1,6 +1,9 @@
 <?php
-require_once('UKM/sql.class.php');
-require_once('UKM/monstring.class.php');
+
+use UKMNorge\Arrangement\Arrangement;
+use UKMNorge\Database\SQL\Query;
+
+require_once('UKM/Autoloader.php');
 
 $INFOS['season'] = date('Y');
 	
@@ -54,14 +57,14 @@ $qry = "SELECT
 		GROUP BY `pl`.`pl_id`
 		ORDER BY `credits` ASC";
 
-$sql = new SQL($qry, array('forfree' => get_site_option('UKMmateriell_sms_forfree'), 'season'=>date('Y') ) );
+$sql = new Query($qry, array('forfree' => get_site_option('UKMmateriell_sms_forfree'), 'season'=>date('Y') ) );
 $res = $sql->run();
 
 $monstringer = [];
 $total = 0;
 if( $res ) {
-	while( $r = SQL::fetch( $res ) ) {
-		$monstring = new monstring_v2( $r['pl_id'] );
+	while( $r = Query::fetch( $res ) ) {
+		$monstring = new Arrangement(intval(( $r['pl_id'] )));
 		$monstring->setAttr('credits', $r['credits'] );
 		$monstring->setAttr('creditsAsKroner', $r['credits']*0.4 );
 		

@@ -78,7 +78,6 @@ function UKMSMS_sns(){
 }
 
 function UKMSMS_gui(){
-	require_once('UKM/sql.class.php');
 	if(isset($_POST['SMS_send']))
 		require_once('gui_send.sms.php');
 	else 

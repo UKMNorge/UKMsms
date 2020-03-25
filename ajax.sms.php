@@ -1,4 +1,10 @@
 <?php
+
+use UKMNorge\Arrangement\Arrangement;
+use UKMNorge\Database\SQL\Query;
+
+require_once('UKM/Autoloader.php');
+
 function UKMSMS_ajax(){
 	switch($_POST['SMSaction']){
 		case 'log':				UKMSMS_ajax_log();
@@ -8,12 +14,12 @@ function UKMSMS_ajax(){
 
 function UKMSMS_ajax_log(){
 	$plid = get_option('pl_id');
-	$qry = new SQL("SELECT * FROM `log_sms_transactions`
+	$qry = new Query("SELECT * FROM `log_sms_transactions`
 					WHERE `pl_id` = '#plid'
 					ORDER BY `t_id` ASC",
 					array('plid'=>$plid));
 	$res = $qry->run();
-	$m = new monstring($plid);
+	$m = new Arrangement(intval(($plid)));
 	?>
 	<h3>SMS-logg for <?= $m->g('pl_name')?></h3>
 	<ul class="log">
@@ -24,7 +30,7 @@ function UKMSMS_ajax_log(){
 			<div class="description"></div>
 		</li>
 	<?php
-	while($r = SQL::fetch($res)){?>
+	while($r = Query::fetch($res)){?>
 		<li class="trans">
 			<div class="time"><?= $r['t_time']?><br /><em>Transaksjon: <?= $r['t_id']?></em></div>
 			<div class="action"><?= ucfirst(SMS_human('action',$r['t_action'])).' '.abs($r['t_credits'])?> SMS-credits</div>
