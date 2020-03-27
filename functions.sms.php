@@ -65,31 +65,29 @@ function SMS_avsendere(){
 	
 	$norge_options = '<option value="UKMNorge" data-svar="true" data-name="">UKMNorge</option>';
 	$norge_options .='<option value="UKMMedia" data-svar="true" data-name="">UKMMedia</option>';
-	$norge_options .='<option value="93091329" data-svar="true" data-name="">93091329 (UKM Norge support)</option>';
-	$norge_options .='<option value="92837360" data-svar="true" data-name="">92837360 (Marius Mandal)</option>';
-	$norge_options .='<option value="93001178" data-svar="true" data-name="">93001178 (Anne M Hybertsen)</option>';
-	$norge_options .='<option value="90755685" data-svar="true" data-name="">90755685 (Torstein Siegel)</option>';
-	$norge_options .='<option value="93454190" data-svar="true" data-name="">93454190 (Inger Lise Johnsen)</option>';
-	$norge_options .='<option value="93665540" data-svar="true" data-name="">93665540 (Jardar Nordbø)</option>';
-	$norge_options .='<option value="92688810" data-svar="true" data-name="">41123976 (Stine Granly)</option>';
-	$norge_options .='<option value="92688810" data-svar="true" data-name="">45111635 (Martine Jonsrud)</option>';
+	$norge_options .='<option value="93091329" data-svar="true" data-name="UKM Norge">93091329 (UKM Norge support)</option>';
+	$norge_options .='<option value="92837360" data-svar="true" data-name="Marius">92837360 (Marius Mandal)</option>';
+	$norge_options .='<option value="90755685" data-svar="true" data-name="Torstein">90755685 (Torstein Siegel)</option>';
+	$norge_options .='<option value="93454190" data-svar="true" data-name="Inger Lise">93454190 (Inger Lise Johnsen)</option>';
+	$norge_options .='<option value="93665540" data-svar="true" data-name="Jardar">93665540 (Jardar Nordbø)</option>';
+	$norge_options .='<option value="92688810" data-svar="true" data-name="Stine">41123976 (Stine Granly)</option>';
 
 	if($blog_id == 1 || is_network_admin() ){
 		return $norge_options;
 	}
 
 
-	$m = new Arrangement(intval(get_option('pl_id')));
-	$kontakter = $m->kontakter();
-	if(get_option('pl_eier_type') == 'fylke' || get_option('site_type') =='fylke')
+	$arrangement = new Arrangement(intval(get_option('pl_id')));
+	if( $arrangement->getEierType() == 'fylke' ) {
 		$options = '<option value="UKMfylke" data-svar="false" data-name="">UKMfylke</option>';
-	else
-		$options = '<option value="UKMlokal" data-svar="false" data-name="">UKMlokal</option>'; 
-	foreach($kontakter as $k) {
-		$phone = $k->mobil();
-		if(!$phone)
-			continue;
-		$options .= '<option value="'.$phone.'" data-svar="true" data-name="'.$k->g('firstname').'">'.$phone.' ('.$k->g('name').')</option>';
+    } else {
+        $options = '<option value="UKMlokal" data-svar="false" data-name="">UKMlokal</option>'; 
+    }
+	foreach($arrangement->getKontaktpersoner()->getAll() as $kontakt ){
+        if( empty( $kontakt->getTelefon() ) ) {
+            continue;
+        }
+		$options .= '<option value="'.$kontakt->getTelefon().'" data-svar="true" data-name="'.$kontakt->getFornavn().'">'.$kontakt->getTelefon().' ('.$kontakt->getNavn().')</option>';
 	}	
 	
 	if( is_super_admin() ) {
@@ -104,9 +102,9 @@ function SMS_from(){
 	if($blog_id == 1 || is_network_admin() ){
 		return '- UKM';
 	}
-	$m = new Arrangement(intval(get_option('pl_id')));
+	$arrangement = new Arrangement(intval(get_option('pl_id')));
 	
-	$from = '- UKM '. $m->g('pl_name');
+	$from = '- UKM '. $arrangement->getNavn();
 	
 	if(strlen($from) > 20)
 		return '- UKM';
