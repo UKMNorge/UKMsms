@@ -19,9 +19,9 @@ function UKMSMS_ajax_log(){
 					ORDER BY `t_id` ASC",
 					array('plid'=>$plid));
 	$res = $qry->run();
-	$m = new Arrangement(intval(($plid)));
+	$arrangement = new Arrangement(intval(($plid)));
 	?>
-	<h3>SMS-logg for <?= $m->g('pl_name')?></h3>
+	<h3>SMS-logg for <?= $arrangement->getNavn() ?></h3>
 	<ul class="log">
 		<li class="header">
 			<div class="time">Tidspunkt</div>
