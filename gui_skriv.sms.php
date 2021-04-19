@@ -56,6 +56,21 @@ if(isset($_POST['UKMSMS_recipients'])){
 		</label>
 		<?php } ?>
 	</div>
+
+	<div id="nyhetssak">
+		<div class="title">Legg ved nyhatssak</div>
+		<div class="header-div">
+			<select id="selectNyhetssaker" name="nyhetssaker"></select>
+			<a id="oppdaterNyhetssak" target="_blank" class="clickable-link">
+				<span class="wp-menu-image dashicons-before dashicons-update"></span> 
+				Oppdater listen
+			</a>
+		</div>
+		
+		<p class="beskrivelse">Når du velger en nyhetssak her, legger vi automatisk til en lenke i slutten av meldingen din.</p>
+
+		<a id="leggTilNyhetssak" class="clickable-link" target="_blank">Trykk her for å lage nyhetssak</a>
+	</div>
 	
 	<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)){?>
 	<div id="extra_recipients">

@@ -1,5 +1,37 @@
+var selectedNyhetsakk = null;
+
 jQuery(document).on('click', '#SMS_send', function(e) { validateLength(e) });
 jQuery(document).ready(function(){
+
+	var hentAlleNyheter = () => {
+		// Legg til alle nyhetssaker
+		jQuery('#selectNyhetssaker').html('');
+		jQuery.post(ajaxurl, 'action=UKMSMS_ajax&SMSaction=nyhetssak', 
+			function(response){
+				jQuery('#selectNyhetssaker').html('<option disabled selected url-to-nyhetssak="null">Velg nyhetssak</option>');
+				for(var n of JSON.parse(response)) {
+					jQuery('#selectNyhetssaker').append('<option value="Nyhetssak: ' + n.title + ' (' + n.url + ')"' + ' url-to-nyhetssak="' + n.url + '">' + n.title + '</option>');
+				}
+			}
+		);
+	}
+	
+	hentAlleNyheter();
+
+	jQuery("#leggTilNyhetssak").click(function(e) {
+		var nyhetssak = jQuery('#selectNyhetssaker').children("option:selected")
+		selectedNyhetsakk = {
+			navn: jQuery(nyhetssak).val(),
+			url: jQuery(nyhetssak).attr('url-to-nyhetssak')
+		};
+		console.log(selectedNyhetsakk);
+		preview_message();
+	});
+
+	jQuery('#oppdaterNyhetssak').click(() => {
+		hentAlleNyheter();
+	});
+
 	// ÅPNE CREDITS-LOGG
 	jQuery('#credits_log').click(function(){
 		container = '#credits > #log';
@@ -80,11 +112,13 @@ function preview_message(){
 			jQuery('#message_from').html('');
 		}
 		
+		var nyhetssak = selectedNyhetsakk && selectedNyhetsakk.url != 'null' ? '<br />' + selectedNyhetsakk.navn : '';
+
 		length = jQuery('#the_message').val().length + jQuery('#message_from').html().length ;
 		if( length > 612 ) {
 			jQuery('#iphone_preview > #message').html('<h3>!! ERROR !!</h3>SMS kan maks være 612 tegn lang, altså 4 SMS');	
 		} else {
-			jQuery('#iphone_preview > #message').html(nl2br(jQuery('#the_message').val() + '<br />'+jQuery('#message_from').html()));	
+			jQuery('#iphone_preview > #message').html(nl2br(jQuery('#the_message').val() + nyhetssak + '<br />'+jQuery('#message_from').html()));	
 		}
 }
 

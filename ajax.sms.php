@@ -2,14 +2,30 @@
 
 use UKMNorge\Arrangement\Arrangement;
 use UKMNorge\Database\SQL\Query;
+use UKMNorge\Wordpress\Nyhet;
+use UKMNorge\DesignWordpress\Environment\Posts;
+use UKMNorge\DesignWordpress\Environment\Wordpress;
+
 
 require_once('UKM/Autoloader.php');
 
 function UKMSMS_ajax(){
 	switch($_POST['SMSaction']){
-		case 'log':				UKMSMS_ajax_log();
+		case 'log':
+			UKMSMS_ajax_log();
+			break;
+		case 'nyhetssak':
+			getNyhetssaker();
+			break;
 	}
 	die();
+}
+
+function getNyhetssaker() {
+	$posts = new Posts();
+	Wordpress::setPosts($posts);
+	
+	echo json_encode($posts->getAll());
 }
 
 function UKMSMS_ajax_log(){
