@@ -69,7 +69,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 		
 		<p class="beskrivelse">Når du velger en nyhetssak her, legger vi automatisk til en lenke i slutten av meldingen din.</p>
 
-		<a id="leggTilNyhetssak" class="clickable-link" target="_blank">Trykk her for å lage nyhetssak</a>
+		<a href="/wp-admin/post-new.php" class="clickable-link" target="_blank">Trykk her for å lage nyhetssak</a>
 	</div>
 	
 	<?php if(isset($_POST['UKMSMS_recipients'])&&is_array($recipients)){?>
