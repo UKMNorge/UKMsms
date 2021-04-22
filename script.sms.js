@@ -10,7 +10,7 @@ jQuery(document).ready(function(){
 			function(response){
 				jQuery('#selectNyhetssaker').html('<option selected url-to-nyhetssak="null">Velg nyhetssak</option>');
 				for(var n of JSON.parse(response)) {
-					jQuery('#selectNyhetssaker').append('<option value="Nyhetssak: ' + n.title + ' (' + n.url + ')"' + ' url-to-nyhetssak="' + n.url + '">' + n.title + '</option>');
+					jQuery('#selectNyhetssaker').append('<option value="<br>' + n.url + '"' + ' url-to-nyhetssak="' + n.url + '">' + n.title + '</option>');
 				}
 			}
 		);
