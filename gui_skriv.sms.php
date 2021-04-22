@@ -58,7 +58,7 @@ if(isset($_POST['UKMSMS_recipients'])){
 	</div>
 
 	<div id="nyhetssak">
-		<div class="title">Legg ved nyhatssak</div>
+		<div class="title">Legg ved nyhetssak</div>
 		<div class="header-div">
 			<select id="selectNyhetssaker" name="nyhetssaker"></select>
 			<a id="oppdaterNyhetssak" target="_blank" class="clickable-link">
