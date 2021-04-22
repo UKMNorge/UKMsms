@@ -16,10 +16,12 @@ if(isset($_POST['ekstra_mottakere'])&&!empty($_POST['ekstra_mottakere'])&&!empty
 // Sikre at det kun finnes unike mottakere (dumt å spamme sveve)
 $mottakere = array_unique($mottakere);
 
+$nyhetssaker = isset($_POST['nyhetssaker']) ? "\r\n" . $_POST['nyhetssaker'] : '';
+
 if( isset( $_POST['signature_hide'] ) && 'true' == $_POST['signature_hide'] ) {
-	$beskjed = $_POST['message'];
+	$beskjed = $_POST['message'] . $nyhetssaker;
 } else {
-	$beskjed = $_POST['message']."\r\n".$_POST['message_from'];
+	$beskjed = $_POST['message'] . $nyhetssaker . "\r\n" . $_POST['message_from'];
 }
 $beskjed = strip_tags($beskjed, '<br>');
 
