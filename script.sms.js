@@ -8,7 +8,7 @@ jQuery(document).ready(function(){
 		jQuery('#selectNyhetssaker').html('');
 		jQuery.post(ajaxurl, 'action=UKMSMS_ajax&SMSaction=nyhetssak', 
 			function(response){
-				jQuery('#selectNyhetssaker').html('<option selected url-to-nyhetssak="null">Velg nyhetssak</option>');
+				jQuery('#selectNyhetssaker').html('<option value="null" selected url-to-nyhetssak="null">Velg nyhetssak</option>');
 				for(var n of JSON.parse(response)) {
 					jQuery('#selectNyhetssaker').append('<option value="<br>' + n.url + '"' + ' url-to-nyhetssak="' + n.url + '">' + n.title + '</option>');
 				}
