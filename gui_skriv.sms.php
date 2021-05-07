@@ -22,7 +22,11 @@ if(isset($_POST['UKMSMS_recipients'])){
 <form action="?<?=$_SERVER['QUERY_STRING']?>" method="post" id="SMSform">
 	<div id="credits">
 		<div style="display:none;">Du har <span class="available"><?= $credits ?></span> tekstmeldinger tilgjengelig.</div>
-		<a href="#" id="credits_log">se SMS-logg</a>
+		<?php
+		if(!is_network_admin()) {
+			echo '<a href="#" id="credits_log">se SMS-logg</a>';
+		}
+		?>
 		<a href="#" id="credits_log_hide" style="display:none;">skjul SMS-logg</a>
 		<div id="log"></div>
 	</div>
