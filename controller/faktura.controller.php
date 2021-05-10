@@ -2,6 +2,8 @@
 
 use UKMNorge\Arrangement\Arrangement;
 use UKMNorge\Database\SQL\Query;
+use UKMNorge\File\Excel;
+
 
 require_once('UKM/Autoloader.php');
 
@@ -15,32 +17,36 @@ $INFOS['sms_invoice_threshold'] = get_site_option('UKMmateriell_sms_invoice_thre
 
 // INITIATE EXCEL
 	global $objPHPExcel;
-	require_once('UKM/inc/excel.inc.php');
-	$objPHPExcel = new PHPExcel();
+
+	$filNavn = 'Faktura-grunnlag SMS '. date('Y');
+	$objPHPExcel = new Excel($filNavn);
 	
-	exorientation('portrait');
+	// exorientation('portrait');
 	
-	$objPHPExcel->getProperties()->setCreator('UKM Norges arrangørsystem');
-	$objPHPExcel->getProperties()->setLastModifiedBy('UKM Norges arrangørsystem');
-	$objPHPExcel->getProperties()->setTitle('Faktura-grunnlag SMS '. date('Y') );
-	$objPHPExcel->getProperties()->setKeywords('Faktura-grunnlag SMS '. date('Y') );
+	$objPHPExcel->phpSpreadsheet->getProperties()->setCreator('UKM Norges arrangørsystem');
+	$objPHPExcel->phpSpreadsheet->getProperties()->setLastModifiedBy('UKM Norges arrangørsystem');
+	$objPHPExcel->phpSpreadsheet->getProperties()->setTitle('Faktura-grunnlag SMS '. date('Y') );
+	$objPHPExcel->phpSpreadsheet->getProperties()->setKeywords('Faktura-grunnlag SMS '. date('Y') );
 	
 	## Sett standard-stil
-	$objPHPExcel->getDefaultStyle()->getFont()->setName('Calibri');
-	$objPHPExcel->getDefaultStyle()->getFont()->setSize(12);
+	$objPHPExcel->phpSpreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
+	$objPHPExcel->phpSpreadsheet->getDefaultStyle()->getFont()->setSize(12);
 	
 	####################################################################################
 	## OPPRETTER ARK
-	$objPHPExcel->setActiveSheetIndex(0);
-	$objPHPExcel->setActiveSheetIndex(0)->getTabColor()->setRGB('A0CF67');
+	$objPHPExcel->phpSpreadsheet->setActiveSheetIndex(0);
+	$objPHPExcel->phpSpreadsheet->setActiveSheetIndex(0)->getTabColor()->setRGB('A0CF67');
 	
-	exSheetName('Fakturagrunnlag');
-	
+	// exSheetName('Fakturagrunnlag');
+	$objPHPExcel->$sheet_names[] = 'Fakturagrunnlag';
 	// HEADERS
 	$row = 1;
-	exCell('A'.$row, 'Fylke');
-	exCell('B'.$row, 'Mønstring');
-	exCell('C'.$row, 'Kroner');
+
+	$objPHPExcel->celle('A'.$row, 'Fylke');
+	$objPHPExcel->celle('B'.$row, 'Mønstring');
+	$objPHPExcel->celle('C'.$row, 'Kroner');
+
+	// die();
 
 // SELECT ALL
 $qry = "SELECT
@@ -97,7 +103,7 @@ if( $res ) {
 
 $INFOS['monstringer'] = $monstringer;
 $excel = new StdClass;
-$excel->link = exWrite($objPHPExcel,'UKM_SMSgrunnlag_'. date('Y') .'_generert_'.date('Y-m-d_His'));
+$excel->link = $objPHPExcel->writeToFile();
 $excel->created = time();
 
 $INFOS['total'] = $total;
