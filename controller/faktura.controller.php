@@ -92,9 +92,9 @@ if( $res ) {
 			$monstringer[] = $monstring;
 			
 			$row++;
-			exCell('A'.$row, $fylke);
-			exCell('B'.$row, $monstring->getNavn());
-			exCell('C'.$row, $monstring->getAttr('creditsAsKroner') );
+			$excel->cell('A'.$row, $fylke);
+			$excel->cell('B'.$row, $monstring->getNavn());
+			$excel->cell('C'.$row, $monstring->getAttr('creditsAsKroner') );
 			
 			$total += $monstring->getAttr('creditsAsKroner');
 		}
