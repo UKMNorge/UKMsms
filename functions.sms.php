@@ -68,7 +68,6 @@ function SMS_avsendere(){
 	$norge_options .='<option value="93091329" data-svar="true" data-name="UKM Norge">93091329 (UKM Norge support)</option>';
 	$norge_options .='<option value="92837360" data-svar="true" data-name="Marius">92837360 (Marius Mandal)</option>';
 	$norge_options .='<option value="90755685" data-svar="true" data-name="Torstein">90755685 (Torstein Siegel)</option>';
-	$norge_options .='<option value="93454190" data-svar="true" data-name="Inger Lise">93454190 (Inger Lise Johnsen)</option>';
 	$norge_options .='<option value="93665540" data-svar="true" data-name="Jardar">93665540 (Jardar Nordbø)</option>';
 	$norge_options .='<option value="92688810" data-svar="true" data-name="Stine">41123976 (Stine Granly)</option>';
 
