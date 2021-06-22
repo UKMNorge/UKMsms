@@ -1,12 +1,19 @@
 <form method="POST">
 	<h3>Fakturagrense SMS</h3>
 	<div class="form-group">
-		<label for="name">Hvilket beløp må mønstringen ha sendt sms for før de skal faktureres?</label>
+		<label for="name">Alle kommuner og fylker får {{ forfree }} sms. Dette er kommunisert til de gjennom sms-modulen.</label>
+		<br>
+		<br>
+		<span>
+		    Hvis forbruket utover {{ forfree }} gratis sms:
+        </span>
+		<ul style="list-style: disc; padding-left: 30px;">
+			<li style="margin-bottom: 0;">Utgjør <b>mindre</b> enn beløpet i dette feltet, listes de ikke ut nedenfor</li>
+			<li style="margin-bottom: 0;">Utgjør <b>mer</b> enn beløpet i dette feltet, listes de ut og faktureres for alle sms utover de {{ forfree }} gratis-sms'ene.</li>
+		</ul>
 		<p>
-		    Minimumsbeløpet beregnes etter {{ forfree }} gratis-SMS er trukket fra. <br />
-		    Dvs at beløpsgrensen angir hvor mye penger den gitte mønstringen må ha brukt <u>utover</u> 
-		    {{ forfree }} gratis SMS før de skal vises i faktureringslisten nedenfor.
-        </p>
+			Med andre ord, kommuner som har brukt mindre enn minimumsbeløpet får i praksis alt gratis. De som har gått over minimumsbeløpet faktureres for alt (utover de gratis-sms)
+		</p>
 		<br />
 		kr. <input type="number" id="UKMmateriell_sms_invoice_threshold" name="UKMmateriell_sms_invoice_threshold" value="{{sms_invoice_threshold}}"> eks mva
 	</div>
@@ -16,8 +23,8 @@
 	</div>
 </form>
 
-<h3>Mønstringer som har sendt SMS for mer enn kr. {{ sms_invoice_threshold }} i {{ season }}-sesongen</h3>
-<p>Beløpet som vises er den totale summen mønstringen har sendt SMS for, beregnet <u>etter</u> {{ forfree }} gratis SMS er trukket fra, men inkludert minimumsbeløpet kr. {{ sms_invoice_threshold }}.</p>
+<h3>Kommuner som har brukt mer enn kr.{{ sms_invoice_threshold }},- utover {{ forfree }} gratis-sms</h3>
+<p>Beløpet som vises er den totale summen mønstringen har sendt SMS for, beregnet etter {{ forfree }} gratis SMS er trukket fra, men inkludert minimumsbeløpet kr. {{ sms_invoice_threshold }}.</p>
 <p>&nbsp;</p>
 <a href="{{ excel.link }}" target="_blank" class="btn btn-primary">Last ned som excel-ark</a>
 <p>&nbsp;</p>
