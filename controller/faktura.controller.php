@@ -38,7 +38,7 @@ $INFOS['sms_invoice_threshold'] = get_site_option('UKMmateriell_sms_invoice_thre
 	$objPHPExcel->phpSpreadsheet->setActiveSheetIndex(0)->getTabColor()->setRGB('A0CF67');
 	
 	// exSheetName('Fakturagrunnlag');
-	$objPHPExcel->$sheet_names[] = 'Fakturagrunnlag';
+	$objPHPExcel->sheet_names[] = 'Fakturagrunnlag';
 	// HEADERS
 	$row = 1;
 
