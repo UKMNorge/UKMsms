@@ -6,8 +6,8 @@ use UKMNorge\File\Excel;
 
 
 require_once('UKM/Autoloader.php');
-
-$INFOS['season'] = date('Y');
+$sessong = '2023';
+$INFOS['season'] = $sessong;
 	
 if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 	update_site_option('UKMmateriell_sms_invoice_threshold', $_POST['UKMmateriell_sms_invoice_threshold'] );
@@ -18,15 +18,15 @@ $INFOS['sms_invoice_threshold'] = get_site_option('UKMmateriell_sms_invoice_thre
 // INITIATE EXCEL
 	global $objPHPExcel;
 
-	$filNavn = 'Faktura-grunnlag SMS '. date('Y');
+	$filNavn = 'Faktura-grunnlag SMS '. $sessong;
 	$objPHPExcel = new Excel($filNavn);
 	
 	// exorientation('portrait');
 	
 	$objPHPExcel->phpSpreadsheet->getProperties()->setCreator('UKM Norges arrangørsystem');
 	$objPHPExcel->phpSpreadsheet->getProperties()->setLastModifiedBy('UKM Norges arrangørsystem');
-	$objPHPExcel->phpSpreadsheet->getProperties()->setTitle('Faktura-grunnlag SMS '. date('Y') );
-	$objPHPExcel->phpSpreadsheet->getProperties()->setKeywords('Faktura-grunnlag SMS '. date('Y') );
+	$objPHPExcel->phpSpreadsheet->getProperties()->setTitle('Faktura-grunnlag SMS '. $sessong );
+	$objPHPExcel->phpSpreadsheet->getProperties()->setKeywords('Faktura-grunnlag SMS '. $sessong );
 	
 	## Sett standard-stil
 	$objPHPExcel->phpSpreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
@@ -38,7 +38,7 @@ $INFOS['sms_invoice_threshold'] = get_site_option('UKMmateriell_sms_invoice_thre
 	$objPHPExcel->phpSpreadsheet->setActiveSheetIndex(0)->getTabColor()->setRGB('A0CF67');
 	
 	// exSheetName('Fakturagrunnlag');
-	$objPHPExcel->sheet_names[] = 'Fakturagrunnlag';
+	$objPHPExcel->$sheet_names[] = 'Fakturagrunnlag';
 	// HEADERS
 	$row = 1;
 
@@ -63,8 +63,10 @@ $qry = "SELECT
 		GROUP BY `pl`.`pl_id`
 		ORDER BY `credits` ASC";
 
-$sql = new Query($qry, array('forfree' => get_site_option('UKMmateriell_sms_forfree'), 'season'=>date('Y') ) );
+$sql = new Query($qry, array('forfree' => get_site_option('UKMmateriell_sms_forfree'), 'season'=>$sessong ) );
 $res = $sql->run();
+
+
 
 $monstringer = [];
 $total = 0;
@@ -88,24 +90,25 @@ if( $res ) {
 				$monstringName = $monstring->getNavn() .' fylkesmønstring';
 			}			
 			$monstring->setAttr('invoiceName', $monstringName );
-
+			
 			$monstringer[] = $monstring;
 			
-			$row++;
-			$excel->cell('A'.$row, $fylke);
-			$excel->cell('B'.$row, $monstring->getNavn());
-			$excel->cell('C'.$row, $monstring->getAttr('creditsAsKroner') );
+			$objPHPExcel->celle('A'.$row, $fylke);
+			$objPHPExcel->celle('B'.$row, $monstring->getNavn());
+			$objPHPExcel->celle('C'.$row, $monstring->getAttr('creditsAsKroner') );
 			
 			$total += $monstring->getAttr('creditsAsKroner');
+			$row++;
 		}
+
 	}
 }
 
-$INFOS['monstringer'] = $monstringer;
-$excel = new StdClass;
+$excel = $objPHPExcel;
 $excel->link = $objPHPExcel->writeToFile();
 $excel->created = time();
 
+$INFOS['monstringer'] = $monstringer;
 $INFOS['total'] = $total;
 $INFOS['excel'] = $excel;
 $INFOS['forfree'] = get_site_option('UKMmateriell_sms_forfree');
