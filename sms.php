@@ -75,6 +75,9 @@ function UKMSMS_sns(){
 	wp_enqueue_style( 'UKMSMS_style', PLUGIN_PATH .'UKMsms/style.sms.css');
 	wp_enqueue_script( 'UKMSMS_script', PLUGIN_PATH .'UKMsms/script.sms.js?v=1');
 	wp_enqueue_script( 'UKMSMS_textareacounter', PLUGIN_PATH .'UKMsms/textareacounter.sms.js');
+
+	wp_enqueue_style('UKMSMSVueStyle', plugin_dir_url(__FILE__) . '/client/dist/assets/build.css');
+	wp_enqueue_script('UKMSMSVueJs', plugin_dir_url(__FILE__) . '/client/dist/assets/build.js','','',true);
 }
 
 function UKMSMS_gui(){
