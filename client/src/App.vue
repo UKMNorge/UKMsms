@@ -1,0 +1,344 @@
+<template>
+    <div>
+        <div class="as-container container">
+            <div class="as-margin-top-space-8 as-margin-bottom-space-8">
+                <h1 class="">Send SMS</h1>
+            </div>
+        </div>
+        <div class="as-container buttons container as-margin-bottom-space-6 as-display-flex">
+            <button class="as-btn-simple as-margin-right-space-3 as-btn-hover-default btn-with-icon">
+                <svg class="as-margin-right-space-1" width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.14286 1C7.32423 1 5.58009 1.72245 4.29412 3.00841C3.00816 4.29437 2.28571 6.03852 2.28571 7.85714H0L2.96381 10.821L3.01714 10.9276L6.09524 7.85714H3.80952C3.80952 4.90857 6.19429 2.52381 9.14286 2.52381C12.0914 2.52381 14.4762 4.90857 14.4762 7.85714C14.4762 10.8057 12.0914 13.1905 9.14286 13.1905C7.67238 13.1905 6.33905 12.5886 5.37905 11.621L4.29714 12.7029C4.93213 13.3413 5.68723 13.8478 6.51891 14.193C7.35058 14.5383 8.24238 14.7154 9.14286 14.7143C10.9615 14.7143 12.7056 13.9918 13.9916 12.7059C15.2776 11.4199 16 9.67577 16 7.85714C16 6.03852 15.2776 4.29437 13.9916 3.00841C12.7056 1.72245 10.9615 1 9.14286 1ZM8.38095 4.80952V8.61905L11.619 10.539L12.2057 9.56381L9.52381 7.97143V4.80952H8.38095Z" fill="#333333"/>
+                </svg>                          
+                <span>SMS-logg</span>
+            </button>
+            <button class="as-btn-simple as-margin-right-space-3 as-btn-hover-default btn-with-icon">
+                <svg class="as-margin-right-space-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
+                </svg>            
+                <span>Legg til nyhetssak</span>
+            </button>
+        </div>
+        <div class="as-container container flex-container">
+            <div class="flex-container-left">
+                <!--Avsender-->
+                <div class="as-card-1 as-padding-space-3 margin-bottom"> 
+                    <h4>Avsender</h4>
+                    <div class="text-align-right">
+                        <a>Rediger kontaktpersoner</a>
+                    </div>
+                    
+                    <!--Inputfelt-->
+                    <div class="dropdown as-margin-top-space-1"> 
+                        <div class="dropdown-left-column">
+                            <span class="dropdown-label">Velg avsender</span>
+                            <span class="dropdown-input">UKM Lokal</span>
+                        </div>
+                        <div class="dropdown-right-column">
+                            <icon>X </icon>
+                        </div>
+                    </div>
+                    <v-autocomplete variant="outlined" label="Velg avsender"
+                    :items="['Min Side', 'Arrangement']"
+                    ></v-autocomplete>
+
+                    
+                    <!--Varsel-->
+                    <div class="temporary-notification warning as-margin-top-space-1">
+                        <h5>OBS!</h5>
+                        <p>Mottakeren kan ikke svare hvis du bruker denne avsenderen.</p>
+                    </div>
+                    <div class="toggle-container as-margin-top-space-1 ">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label>
+                        <p class="as-margin-right-space-3">Send kopi til avsender</p>
+                    </div>
+                </div>
+                
+                <!--Mottakere-->
+                <div class="as-card-1 as-padding-space-3 margin-bottom"> 
+                    <h4>Mottakere</h4>
+
+                    <!--Varsel-->
+                    <div class="temporary-notification info as-margin-top-space-1">
+                        <h5>Legge til mange mottakere?</h5>
+                        <p>Hvis du skal sende SMS til mange deltakere kan det hende du burde gå gjennom rapporter. 
+                            <br>
+                            <a>Gå til rapporter →</a>
+                        </p>
+                    </div>
+                    <p class="as-padding-top-space-1 text-align-right">Totalt 13 mottakere</p>
+
+                </div>
+                <!--Innhold-->
+                <div class="as-card-1 as-padding-space-3 margin-bottom"> 
+                    <h4>Innhold</h4>
+                    
+                    <!--Inputfelt-->
+                    <div class="as-margin-top-space-1"> 
+                        <v-textarea label="Melding" v-model="textmessage"></v-textarea>
+                    </div>
+                    <div>
+                        <p class="as-padding-top-space-1 text-align-right">Total kostnad: 0.00 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="fill: #333;transform: ;msFilter:;">
+                            <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+                        </svg></p> 
+                    </div>
+                </div>
+
+                <button class="as-btn-simple as-btn-simple-primary">Send SMS →</button>
+
+            </div>
+            
+            <div class="flex-container-right">
+                <phoneImg :mobile="['46511000', '99887744', '555555555', '99882222']" :message="textmessage as string" />
+            </div>
+            <!-- <div id="phone-preview">
+                <p>What is Lorem Ipsum?
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                    
+                    Why do we use it?
+                    It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+                    
+                    
+                    Where does it come from?
+                    Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
+            </div> -->
+            
+        </div>
+        <div class="as-margin-bottom-space-8"></div>
+        <!-- <FirstTab ref="firstTab" /> -->
+    </div>
+</template>
+
+<script lang="ts">
+import FirstTab from './tabs/FirstTab.vue';
+import { SPAInteraction } from 'ukm-spa/SPAInteraction';
+import { Director } from 'ukm-spa/Director';
+import { ref, onMounted } from 'vue'
+import phoneImg from './components/PhoneImgComponent.vue';
+
+var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
+
+export default {
+    data() {
+        return {
+            name : "World" as String,
+            activeTab : 'first' as String,
+            textmessage : '' as String,
+        }
+    },
+
+    components : {
+        FirstTab : FirstTab,
+        phoneImg : phoneImg
+
+    },
+
+    mounted: function () {
+      
+    },
+    
+    methods: {
+        openTab(tabId : string) {
+        
+        }
+    }
+}
+</script>
+
+
+<style scoped>
+.flex-container {
+    display: flex;
+}
+
+
+.flex-container-left {
+    width: 70%;
+    margin-right: 24px;
+}
+
+.flex-container-right {
+    width: 30%;
+}
+
+.margin-bottom {
+    margin-bottom:16px;
+}
+
+.text-align-right {
+    width: 100%;
+    text-align: right;
+}
+
+.temporary-notification {
+    width: 100%;
+    border: 2px solid;
+    border-radius: var(--radius-minimal);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Varslinger */
+.warning {
+    background-color: var(--as-color-primary-warning-lightest);
+    border-color: var(--as-color-primary-warning-light);
+}
+
+.info {
+    background-color: var(--as-color-primary-info-lightest);
+    border-color: var(--as-color-primary-info-light);
+}
+
+
+.dropdown {
+    background-color: var(--color-primary-grey-lightest);
+    border-radius: var(--radius-normal);
+    padding: 8px 16px;
+    display: flex;
+}
+
+.dropdown-left-column {
+    display: flex;
+    flex-direction: column;
+    width: 98%;
+}
+
+.dropdown-label {
+    font-size: 10px;
+    font-weight: 400;
+    color: #656F7C;
+}
+
+.dropdown-input {
+    font-size: 16px;
+    font-weight: 300;
+    color: #1A202C;
+}
+
+.dropdown-right-column {
+    text-align: left;
+    width: 2%;
+    height: 100%;
+    vertical-align:middle;
+}
+
+
+.toggle-container{
+    display: flex;
+    width: 100%;
+}
+
+/* toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 16px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-primary-grey-light);
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    background-color: var(--color-primary-grey-dark);
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: var(--as-color-primary-primary-lighter);
+  }
+  
+ 
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+    background-color: var(--as-color-primary-primary-darker);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 16px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
+/* Phone preview */
+#phone-preview {
+    /* background-image:url(./img/Phone-illustration.svg); */
+    background-repeat: no-repeat;
+    height: 611px;
+    width: 300px;
+    padding-top: 125px;
+    padding-left: 25px;
+}
+
+#phone-message {
+    width: 50px;
+    height: 200px;
+    overflow-y: auto;
+}
+
+
+.node-floating-selector {
+    margin: auto;
+    min-width: 300px;
+    max-width: 600px;
+    position: relative;
+    max-height: 80vh;
+    overflow: auto
+}
+
+.node-floating-selector-2 {
+    margin: auto;
+    min-width: 300px;
+    max-width: 940px;
+    position: relative;
+    max-height: 80vh;
+    overflow: auto
+}
+
+
+td {
+    vertical-align: top;
+    font-size: 13px;
+}
+
+tr {
+    border-bottom: 1px solid #DDD;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    column-gap: 8px;
+}
+</style>

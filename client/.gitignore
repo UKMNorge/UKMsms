@@ -102,7 +102,3 @@ typings/
 
 # TernJS port file
 .tern-port
-
-# All files in source but not main.ts
-src/*
-!src/main.ts
