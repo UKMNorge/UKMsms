@@ -1,4 +1,14 @@
+<div id="SMSVue">
+	
+</div>
+
+
+<!-- TEMPORARY -->
+<div style="margin-bottom: 500px;"></div>
+
 <?php
+
+
 $credits = SMS_credits();
 $returnLink = SMS_returnLink();
 
