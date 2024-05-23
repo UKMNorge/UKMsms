@@ -8,6 +8,17 @@ import xml from "highlight.js/lib/languages/xml";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 import "highlight.js/styles/base16/dracula.css";
 
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+    components,
+    directives,
+});
+
 hljs.registerLanguage("xml", xml);
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("css", css);
@@ -23,4 +34,4 @@ var director = new Director();
 
 app.use(hljsVuePlugin);
 
-app.mount("#SMSVue");
+app.use(vuetify).mount("#SMSVue");
