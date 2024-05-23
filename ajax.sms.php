@@ -5,6 +5,7 @@ use UKMNorge\Database\SQL\Query;
 use UKMNorge\Wordpress\Nyhet;
 use UKMNorge\DesignWordpress\Environment\Posts;
 use UKMNorge\DesignWordpress\Environment\Wordpress;
+use UKMNorge\OAuth2\HandleAPICall;
 
 
 require_once('UKM/Autoloader.php');
@@ -16,6 +17,8 @@ function UKMSMS_ajax(){
 			break;
 		case 'nyhetssak':
 			getNyhetssaker();
+		case 'getInitialData':
+			getInitialData();
 			break;
 	}
 	die();
@@ -26,6 +29,17 @@ function getNyhetssaker() {
 	Wordpress::setPosts($posts);
 	
 	echo json_encode($posts->getAll());
+}
+
+function getInitialData() {
+	$handleCall = new HandleAPICall([], [], ['GET', 'POST'], false);
+	$handleCall->sendToClient([
+		'SMS_credits' => SMS_credits(),
+		'SMS_returnLink' => SMS_returnLink(),
+		'SMS_initCredits' => SMS_initCredits(),
+		'SMS_avsendere' => SMS_avsendere_array(),
+	]);
+
 }
 
 function UKMSMS_ajax_log(){

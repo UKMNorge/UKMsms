@@ -95,6 +95,37 @@ function SMS_avsendere(){
 	return $options;
 }
 
+function SMS_avsendere_array(){
+	$avsendere = array();
+	$avsendere['UKMNorge'] = 'UKMNorge';
+	$avsendere['UKMMedia'] = 'UKMMedia';
+	$avsendere['93091329'] = '(UKM Norge support)';
+	$avsendere['92837360'] = '(Marius Mandal)';
+	$avsendere['90755685'] = '(Torstein Siegel)';
+	$avsendere['93665540'] = '(Jardar Nordbø)';
+	$avsendere['92688810'] = '(Stine Granly)';
+
+	if(!intval(get_option('pl_id'))) {
+		return $avsendere;
+	}
+	$arrangement = new Arrangement(intval(get_option('pl_id')));
+	if( $arrangement->getEierType() == 'fylke' ) {
+		$avsendere['UKMfylke'] = 'UKMfylke';
+    } else {
+		$avsendere['UKMlokal'] = 'UKMlokal';
+    }
+	
+	foreach($arrangement->getKontaktpersoner()->getAll() as $kontakt ){
+        if( empty( $kontakt->getTelefon() ) ) {
+            continue;
+        }
+		$avsendere[$kontakt->getTelefon()] = $kontakt->getNavn();
+	}	
+	
+	return $avsendere;
+}
+
+
 function SMS_from(){
 	global $blog_id;
 	
