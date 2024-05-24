@@ -98,8 +98,10 @@
                             </div>
                         </div>
                     </div>
-
-                    <p class="as-padding-top-space-1 text-align-right">Totalt {{ mottakere.length }} mottaker{{ mottakere.length != 1 ? 'e' : '' }}</p>
+                    
+                    <div class="as-padding-top-space-1">
+                        <p class="text-align-right">Totalt {{ mottakere.length }} mottaker{{ mottakere.length != 1 ? 'e' : '' }}</p>
+                    </div>
 
                 </div>
                 <!--Innhold-->
