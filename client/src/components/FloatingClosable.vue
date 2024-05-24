@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h2>{{ title }}</h2>
-    <div v-if="isOpen" @click="close($event)" class="node-floating-selector close-selector">
+    <div v-if="isOpen" @click="closeEvent($event)" class="node-floating-selector close-selector">
         <div class="box selector as-card-1 as-padding-space-5">
                 <button class="close-selector close-btn as-btn-hover-default">
                     <div class="icon close-selector">
@@ -10,12 +9,9 @@
                         </svg>
                     </div>
                 </button>
-                <h4>{{ title }}</h4>
-
                 <slot />
         </div>
     </div>
-    <button @click="toggleOpen">Toggle</button>
   </div>
 </template>
 
@@ -23,6 +19,7 @@
 export default {
   props: {
     title: String,
+    // Function open
   },
   data() {
     return {
@@ -30,10 +27,14 @@ export default {
     };
   },
   methods: {
-    toggleOpen() {
-      this.isOpen = !this.isOpen;
+    open() {
+      this.isOpen = true;
+      this.$emit('open'); // Emit the 'open' event
     },
-    close(event : any) {
+    close() {
+      this.isOpen = false;
+    },
+    closeEvent(event : any) {
         if((<any>window).jQuery(event.target).hasClass('close-selector')) {
             this.isOpen = false;
         }

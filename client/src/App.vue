@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="as-container container">
+    <div class="as-container">
+        <div class="container">
             <div class="as-margin-top-space-8 as-margin-bottom-space-8">
                 <h1 class="">Send SMS</h1>
             </div>
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="alle-mottakere">
-                            <div v-for="mottaker in mottakere" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
+                            <div @click="removeMottaker(mottaker)" v-for="mottaker in mottakere" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
                                 <p>{{ mottaker.mobil }} ({{ mottaker.name }})</p>
                                 <button class="icon">
                                     <svg class="remove-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,8 +89,8 @@
                             </div>
 
                             <!-- Add new mottaker -->
-                            <div class="as-chip as-margin-top-space-1 as-margin-right-space-1">
-                                <button class="icon-button">
+                            <div class="as-chip button-chip as-margin-top-space-1 as-margin-right-space-1">
+                                <button @click="openLeggTilMottaker()" class="icon-button">
                                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6 0H4V4H0V6H4V10H6V6H10V4H6V0Z" fill=""/>
                                     </svg>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
 
-                    <p class="as-padding-top-space-1 text-align-right">Totalt 13 mottakere</p>
+                    <p class="as-padding-top-space-1 text-align-right">Totalt {{ mottakere.length }} mottaker{{ mottakere.length != 1 ? 'e' : '' }}</p>
 
                 </div>
                 <!--Innhold-->
@@ -122,41 +122,33 @@
             </div>
             
             <div class="flex-container-right">
-                <phoneImg :mobile="['46511000', '99887744', '555555555', '99882222']" :message="textmessage as string" />
+                <phoneImg :mobile="getMottakerMobilOnly()" :message="textmessage as string" />
             </div>
             
         </div>
         <div class="as-margin-bottom-space-8"></div>
 
-        <!-- Floating divs -->
-        <!-- <div @click="closeSelector($event)" v-if="selectorPopup == node.getRepresentativeName()" class="node-floating-selector close-selector">
-            <div class="box selector as-card-1 as-padding-space-5">
-                <button class="close-selector close-btn as-btn-hover-default">
-                    <div class="icon close-selector">
-                        <svg class="remove-icon close-selector" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path class="close-selector" d="M11.5 4.24264L10.0858 2.82843L7.25736 5.65685L4.42893 2.82843L3.01472 4.24264L5.84315 7.07107L3.01472 9.89949L4.42893 11.3137L7.25736 8.48528L10.0858 11.3137L11.5 9.89949L8.67157 7.07107L11.5 4.24264Z" fill="#9B9B9B"/>
-                        </svg>
-                    </div>
-                </button>
-                <h4>{{ node.getRepresentativeName() }}</h4>
-
-                <div class="attributes as-margin-top-space-2">
-                    <div class="prop as-margin-top-space-1" v-for="(nodeProp, key) in getAllProperties(node)" :key="key">
-                        <div @click="addNodeProperty(nodeProp)" v-if="!nodeProp.active" class="attribute as-padding-space-1 as-margin-right-space-1 as-btn-hover-default">
-                            <span>{{ nodeProp.navn }}</span>
-                        </div>
-                    </div>
-                    <p></p>
-                    <div v-if="getActiveProperties(node).length == getAllProperties(node).length">
-                        <span>Du har lagt til alle feltene!</span>
-                    </div>
-                </div>
-
-            </div>
-        </div> -->
-        <FloatingClosable title="Test Helloo">
+        <!-- Legg til ny mottaker -->
+        <FloatingClosable ref="floatingLeggTilMottaker">
             <div>
-                <button @click="handleClick">Click me</button>
+                <div class="as-padding-bottom-space-4">
+                    <h4 class="nop-impt">Legg til mottaker</h4>
+                </div>
+                <!-- v-if nyMobil exist on mottakere -->
+                <div v-if="mobilExist()" >
+                    <PermanentNotification :typeNotification="'danger'" :tittel="'Mobilnummer eksisterer'" :description="'Du har allerede lagt til dette mobilnummeret!'" />
+                </div>
+                <div>
+                    <v-text-field type="tel" :rules="[validateMobileNumber]" v-model="nyMobil" label="Mobil" variant="outlined" required></v-text-field>
+                </div>
+                <div>
+                    <v-text-field v-model="nyMobilNavn" label="Navn" variant="outlined"></v-text-field>
+                </div>
+                <div class="as-margin-top-space-1">
+                    <v-btn @click="addNewMottaker()" variant="tonal">
+                        Legg til  
+                    </v-btn>
+                </div>
             </div>
         </FloatingClosable>
 
@@ -167,9 +159,10 @@
 import FirstTab from './tabs/FirstTab.vue';
 import { SPAInteraction } from 'ukm-spa/SPAInteraction';
 import { Director } from 'ukm-spa/Director';
-import { ref, onMounted } from 'vue'
 import phoneImg from './components/PhoneImgComponent.vue';
 import FloatingClosable from './components/FloatingClosable.vue';
+import { PermanentNotification } from 'ukm-components-vue3';
+
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
 var alleMottakere : string = (<any>window).alleMottakere; // Definert i PHP
@@ -183,14 +176,10 @@ export default {
             name : "World" as String,
             activeTab : 'first' as String,
             textmessage : '' as String,
-            avsendere : [] as Array<String>,
+            avsendere : [] as Array<{mobil : String, name : String}>,
             mottakere : [] as Array<{mobil : String, name : String}>,
-            htmlContent: `
-            <div>
-                <h1>Dynamic Content</h1>
-                <button @click="alertMessage()">Click Me</button>
-            </div>
-            `
+            nyMobil : '' as String,
+            nyMobilNavn : '' as String,
         }
     },
 
@@ -198,7 +187,7 @@ export default {
         FirstTab : FirstTab,
         phoneImg : phoneImg,
         FloatingClosable : FloatingClosable,
-
+        PermanentNotification : PermanentNotification
 
     },
 
@@ -210,8 +199,23 @@ export default {
     },
     
     methods: {
-        handleClick() {
-            alert('Button clicked!');
+        openLeggTilMottaker() {
+            (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).open();
+        },
+        addNewMottaker() {
+            this.nyMobil = this.nyMobil.replace(/\s/g, '');
+            this.nyMobilNavn = this.nyMobilNavn.trim();
+
+            if(this.nyMobil.length < 1 || this.nyMobilNavn.length < 1 || this.mobilExist() || !this._validateMobileNumber(this.nyMobil)) {
+                return;
+            }
+            
+            // Remove spaces
+
+            this.mottakere.push({mobil: this.nyMobil, name: this.nyMobilNavn});
+            this.nyMobil = '';
+            this.nyMobilNavn = '';
+            (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).close();
         },
         async getInitialData() {
             var data : any = {
@@ -220,18 +224,34 @@ export default {
             };
 
             var response = await spaInteraction.runAjaxCall('/', 'POST', data);
-
-            this.avsendere = response.SMS_avsendere;
-        },
-        openTab(tabId : string) {
-        
-        },
-        getAvsendere() : Array<{mobil : String, name : String}> {
-            for(var key in this.avsendere) {
-                this.mottakere.push({mobil : key, name : this.avsendere[key]});
+            
+            for(var key in response.SMS_avsendere) {
+                this.avsendere.push({mobil : key, name : response.SMS_avsendere[key]});
             }
-
-            return this.mottakere;
+        },
+        getAvsendere() {
+            var retArr = [];
+            for(var avsender in this.avsendere) {
+                retArr.push(this.avsendere[avsender].name + ' (' + this.avsendere[avsender].mobil + ')');
+            }
+            return retArr;
+        },
+        getMottakerMobilOnly() : Array<String> {
+            return this.mottakere.map((mottaker) => mottaker.mobil);
+        },
+        mobilExist() : boolean {
+            this.nyMobil = this.nyMobil.replace(/\s/g, '');
+            return this.mottakere.filter((mottaker) => mottaker.mobil == this.nyMobil).length > 0;
+        },
+        validateMobileNumber(value : any) {
+            return this._validateMobileNumber(value) || 'Sett inn et gyldig mobilnummer';
+        },
+        _validateMobileNumber(value : any) : boolean {
+            const mobileNumberPattern = /^\d{1,8}$/;
+            return mobileNumberPattern.test(value);
+        },
+        removeMottaker(mottaker : {mobil : String, name : String}) {
+            this.mottakere = this.mottakere.filter((m) => m.mobil != mottaker.mobil);
         }
     }
 }
