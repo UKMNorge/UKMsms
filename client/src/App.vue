@@ -59,7 +59,9 @@
                 
                 <!--Mottakere-->
                 <div class="as-card-1 as-padding-space-3 margin-bottom"> 
-                    <h4>Mottakere</h4>
+                    <div class="as-margin-bottom-space-2">
+                        <h4>Mottakere</h4>
+                    </div>
 
                     <!--Varsel-->
                     <div class="temporary-notification info as-margin-top-space-1">
@@ -69,6 +71,34 @@
                             <a>Gå til rapporter →</a>
                         </p>
                     </div>
+
+                    <!-- liste av mottakere -->
+                    <div class="as-card-2 as-padding-space-2 as-margin-top-space-2 nosh-impt as-card-lightest-color">
+                        <div class="">
+                            <p class="motakkere-overtittel">Mottakere</p>
+                        </div>
+
+                        <div class="alle-mottakere">
+                            <div v-for="mottaker in mottakere" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
+                                <p>{{ mottaker.mobil }} ({{ mottaker.name }})</p>
+                                <button class="icon">
+                                    <svg class="remove-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path data-v-36f76f19="" d="M11.5 4.24264L10.0858 2.82843L7.25736 5.65685L4.42893 2.82843L3.01472 4.24264L5.84315 7.07107L3.01472 9.89949L4.42893 11.3137L7.25736 8.48528L10.0858 11.3137L11.5 9.89949L8.67157 7.07107L11.5 4.24264Z" fill="#9B9B9B"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Add new mottaker -->
+                            <div class="as-chip as-margin-top-space-1 as-margin-right-space-1">
+                                <button class="icon-button">
+                                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 0H4V4H0V6H4V10H6V6H10V4H6V0Z" fill=""/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <p class="as-padding-top-space-1 text-align-right">Totalt 13 mottakere</p>
 
                 </div>
@@ -97,7 +127,39 @@
             
         </div>
         <div class="as-margin-bottom-space-8"></div>
-        <!-- <FirstTab ref="firstTab" /> -->
+
+        <!-- Floating divs -->
+        <!-- <div @click="closeSelector($event)" v-if="selectorPopup == node.getRepresentativeName()" class="node-floating-selector close-selector">
+            <div class="box selector as-card-1 as-padding-space-5">
+                <button class="close-selector close-btn as-btn-hover-default">
+                    <div class="icon close-selector">
+                        <svg class="remove-icon close-selector" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="close-selector" d="M11.5 4.24264L10.0858 2.82843L7.25736 5.65685L4.42893 2.82843L3.01472 4.24264L5.84315 7.07107L3.01472 9.89949L4.42893 11.3137L7.25736 8.48528L10.0858 11.3137L11.5 9.89949L8.67157 7.07107L11.5 4.24264Z" fill="#9B9B9B"/>
+                        </svg>
+                    </div>
+                </button>
+                <h4>{{ node.getRepresentativeName() }}</h4>
+
+                <div class="attributes as-margin-top-space-2">
+                    <div class="prop as-margin-top-space-1" v-for="(nodeProp, key) in getAllProperties(node)" :key="key">
+                        <div @click="addNodeProperty(nodeProp)" v-if="!nodeProp.active" class="attribute as-padding-space-1 as-margin-right-space-1 as-btn-hover-default">
+                            <span>{{ nodeProp.navn }}</span>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div v-if="getActiveProperties(node).length == getAllProperties(node).length">
+                        <span>Du har lagt til alle feltene!</span>
+                    </div>
+                </div>
+
+            </div>
+        </div> -->
+        <FloatingClosable title="Test Helloo">
+            <div>
+                <button @click="handleClick">Click me</button>
+            </div>
+        </FloatingClosable>
+
     </div>
 </template>
 
@@ -107,9 +169,12 @@ import { SPAInteraction } from 'ukm-spa/SPAInteraction';
 import { Director } from 'ukm-spa/Director';
 import { ref, onMounted } from 'vue'
 import phoneImg from './components/PhoneImgComponent.vue';
+import FloatingClosable from './components/FloatingClosable.vue';
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
+var alleMottakere : string = (<any>window).alleMottakere; // Definert i PHP
 const spaInteraction = new SPAInteraction(null, ajaxurl);
+
 
 
 export default {
@@ -119,20 +184,35 @@ export default {
             activeTab : 'first' as String,
             textmessage : '' as String,
             avsendere : [] as Array<String>,
+            mottakere : [] as Array<{mobil : String, name : String}>,
+            htmlContent: `
+            <div>
+                <h1>Dynamic Content</h1>
+                <button @click="alertMessage()">Click Me</button>
+            </div>
+            `
         }
     },
 
     components : {
         FirstTab : FirstTab,
-        phoneImg : phoneImg
+        phoneImg : phoneImg,
+        FloatingClosable : FloatingClosable,
+
 
     },
 
     mounted: function () {
         this.getInitialData();
+        if(alleMottakere.length > 0) {
+            this.mottakere = (<any>alleMottakere);
+        }
     },
     
     methods: {
+        handleClick() {
+            alert('Button clicked!');
+        },
         async getInitialData() {
             var data : any = {
                 action: 'UKMSMS_ajax',
@@ -146,8 +226,12 @@ export default {
         openTab(tabId : string) {
         
         },
-        getAvsendere() {
-            return Object.entries(this.avsendere).map(([key, value]) => `${key}, ${value}`);
+        getAvsendere() : Array<{mobil : String, name : String}> {
+            for(var key in this.avsendere) {
+                this.mottakere.push({mobil : key, name : this.avsendere[key]});
+            }
+
+            return this.mottakere;
         }
     }
 }
@@ -334,6 +418,14 @@ export default {
     overflow: auto
 }
 
+.alle-mottakere {
+    display: flex;
+    flex-wrap: wrap;
+}
+.motakkere-overtittel {
+    font-size: 13px;
+    font-weight: 200;
+}
 
 td {
     vertical-align: top;
