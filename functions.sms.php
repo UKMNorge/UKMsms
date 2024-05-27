@@ -99,11 +99,11 @@ function SMS_avsendere_array(){
 	$avsendere = array();
 	$avsendere['UKMNorge'] = 'UKMNorge';
 	$avsendere['UKMMedia'] = 'UKMMedia';
-	$avsendere['93091329'] = '(UKM Norge support)';
-	$avsendere['92837360'] = '(Marius Mandal)';
-	$avsendere['90755685'] = '(Torstein Siegel)';
-	$avsendere['93665540'] = '(Jardar Nordbø)';
-	$avsendere['92688810'] = '(Stine Granly)';
+	$avsendere['93091329'] = 'UKM Norge support';
+	$avsendere['92837360'] = 'Marius Mandal';
+	$avsendere['90755685'] = 'Torstein Siegel';
+	$avsendere['93665540'] = 'Jardar Nordbø';
+	$avsendere['92688810'] = 'Stine Granly';
 
 	if(!intval(get_option('pl_id'))) {
 		return $avsendere;

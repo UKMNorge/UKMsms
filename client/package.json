@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@highlightjs/vue-plugin": "^2.1.0",
+    "@mdi/font": "^7.4.47",
     "jquery": "^3.6.1",
     "prettier": "^2.8.4",
     "prettier-plugin-tailwindcss": "^0.2.2",

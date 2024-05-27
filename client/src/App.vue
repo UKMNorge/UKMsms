@@ -27,50 +27,35 @@
                     <div class="text-align-right">
                         <a>Rediger kontaktpersoner</a>
                     </div>
-                    
+                
+                <!-- Avsender -->
                     <!--Inputfelt-->
-                    <div class="dropdown as-margin-top-space-1"> 
-                        <div class="dropdown-left-column">
-                            <span class="dropdown-label"></span>
-                        </div>
-                        <div class="dropdown-right-column">
-                            <icon>X </icon>
-                        </div>
-                    </div>
+                    <v-autocomplete variant="outlined" label="Velg avsender" :items="getAvsendere()" v-model="selectedAvsender"></v-autocomplete>
 
-                    <v-autocomplete variant="outlined" label="Velg avsender"
-                    :items="getAvsendere()"
-                    ></v-autocomplete>
+                    <!--Varsel-->                    
+                    <PermanentNotification v-if="getSelectedAvsender() != null && !getSelectedAvsender()?.isTelefonnummerValid()" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Mottakeren kan ikke svare hvis du bruker denne avsenderen.'" />
 
                     
-                    <!--Varsel-->
-                    <div class="temporary-notification warning as-margin-top-space-1">
-                        <h5>OBS!</h5>
-                        <p>Mottakeren kan ikke svare hvis du bruker denne avsenderen.</p>
+                    <div class="as-display-flex">
+                        <div class="as-margin-auto as-margin-top-space-2 as-margin-right-none">
+                            <v-switch color="var(--color-primary-bla-600)" label="Send kopi til avsender" value="Send kopi til avsender"></v-switch>
+                        </div>
                     </div>
-                    <div class="toggle-container as-margin-top-space-1 ">
-                        <label class="switch">
-                            <input type="checkbox">
-                            <span class="slider round"></span>
-                        </label>
-                        <p class="as-margin-right-space-3">Send kopi til avsender</p>
-                    </div>
+
                 </div>
                 
                 <!--Mottakere-->
                 <div class="as-card-1 as-padding-space-3 margin-bottom"> 
-                    <div class="as-margin-bottom-space-2">
-                        <h4>Mottakere</h4>
-                    </div>
+                    <div class="as-margin-bottom-space-2 as-display-flex">
+                        <h4 class="as-margin-auto as-margin-left-none">Mottakere</h4>
 
-                    <!--Varsel-->
-                    <div class="temporary-notification info as-margin-top-space-1">
-                        <h5>Legge til mange mottakere?</h5>
-                        <p>Hvis du skal sende SMS til mange deltakere kan det hende du burde gå gjennom rapporter. 
-                            <br>
-                            <a>Gå til rapporter →</a>
-                        </p>
+                        <v-btn @click="mottakereInfo = !mottakereInfo" class="as-margin-auto as-margin-right-none" density="compact" icon variant="tonal">
+                            <v-icon>mdi-information-slab-symbol</v-icon>
+                        </v-btn>
                     </div>
+                    <!--Varsel-->
+                    <PermanentNotification v-if="mottakereInfo" :typeNotification="'info'" :tittel="'Legge til mange mottakere?'" :description="'Hvis du skal sende SMS til mange deltakere kan det hende du burde gå gjennom rapporter.'" />
+
 
                     <!-- liste av mottakere -->
                     <div class="as-card-2 as-padding-space-2 as-margin-top-space-2 nosh-impt as-card-lightest-color">
@@ -165,6 +150,7 @@ import phoneImg from './components/PhoneImgComponent.vue';
 // import FloatingClosable from './components/FloatingClosable.vue';
 import { PermanentNotification } from 'ukm-components-vue3';
 import { FloatingClosable } from 'ukm-components-vue3';
+import Avsender from './objects/Avsender';
 
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
@@ -179,10 +165,12 @@ export default {
             name : "World" as String,
             activeTab : 'first' as String,
             textmessage : '' as String,
-            avsendere : [] as Array<{mobil : String, name : String}>,
+            avsendere : [] as Array<Avsender>,
             mottakere : [] as Array<{mobil : String, name : String}>,
             nyMobil : '' as String,
             nyMobilNavn : '' as String,
+            mottakereInfo : false as Boolean,
+            selectedAvsender : '' as any,
         }
     },
 
@@ -229,13 +217,13 @@ export default {
             var response = await spaInteraction.runAjaxCall('/', 'POST', data);
             
             for(var key in response.SMS_avsendere) {
-                this.avsendere.push({mobil : key, name : response.SMS_avsendere[key]});
+                this.avsendere.push(new Avsender(response.SMS_avsendere[key], key));
             }
         },
         getAvsendere() {
             var retArr = [];
             for(var avsender in this.avsendere) {
-                retArr.push(this.avsendere[avsender].name + ' (' + this.avsendere[avsender].mobil + ')');
+                retArr.push(this.avsendere[avsender].getTelefonnummer() + ' (' + this.avsendere[avsender].getNavn() + ')');
             }
             return retArr;
         },
@@ -255,6 +243,17 @@ export default {
         },
         removeMottaker(mottaker : {mobil : String, name : String}) {
             this.mottakere = this.mottakere.filter((m) => m.mobil != mottaker.mobil);
+        },
+        getSelectedAvsender() : Avsender | null {
+            // 92837360 (Marius Mandal)
+            var selected = this.selectedAvsender;
+            if(selected == null) {
+                return null;
+            }
+            var telefonnummer = selected.split(' ')[0];
+            var ret = this.avsendere.filter((avsender) => avsender.getTelefonnummer() == telefonnummer)[0];
+
+            return ret;
         }
     }
 }
@@ -332,12 +331,6 @@ export default {
     color: #1A202C;
 }
 
-.dropdown-right-column {
-    text-align: left;
-    width: 2%;
-    height: 100%;
-    vertical-align:middle;
-}
 
 
 .toggle-container{
