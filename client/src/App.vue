@@ -162,8 +162,9 @@ import FirstTab from './tabs/FirstTab.vue';
 import { SPAInteraction } from 'ukm-spa/SPAInteraction';
 import { Director } from 'ukm-spa/Director';
 import phoneImg from './components/PhoneImgComponent.vue';
-import FloatingClosable from './components/FloatingClosable.vue';
+// import FloatingClosable from './components/FloatingClosable.vue';
 import { PermanentNotification } from 'ukm-components-vue3';
+import { FloatingClosable } from 'ukm-components-vue3';
 
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
