@@ -41,7 +41,7 @@
                         <p>Hvis du ønsker å dele mer informasjon eller nyheter kan du legge til en lenke til en nyhetssak i meldingen.</p>
                         
                         <div class="as-margin-top-space-4">
-                            <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="['testeron', 'b']" v-model="selectedNyhetsak"></v-autocomplete>
+                            <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="alleNyhetsaker" v-model="selectedNyhetssak"></v-autocomplete>
                         </div>
 
                         <div class="nyhetsaker-buttons as-display-flex">
@@ -50,10 +50,10 @@
                                     class="v-btn--hover-bla"
                                     rounded="large"
                                     size="large"
-                                    @click="openNyhetsaker()"
+                                    @click="redirectToNewNyhetssak()"
                                     variant="outlined"
-                                    style="font-size: 14px; color: #000; background-color: var(--color-primary-bla-200); border: none; border-radius: var(--radius-normal) !important;" >
-                                    Legg til i SMS
+                                    style="font-size: 14px; color: #000; background-color: var(--color-primary-bla-100); border: none; border-radius: var(--radius-normal) !important;" >
+                                    Opprett nyhetssak
                                 </v-btn>
                             </div>
                         </div>
@@ -85,6 +85,21 @@
                         </div>
                     </div>
 
+                </div>
+            <!-- Nyhetssaker -->
+                <div v-if="selectedNyhetssak" class="as-card-1 as-padding-space-3 as-margin-bottom-space-2"> 
+                    <h4>Nyhetssak</h4>
+
+                    <div class="as-margin-top-space-2 alle-nyhetssaker">
+                        <div @click="selectedNyhetssak = null" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
+                            <p>{{ getSelectedNyhetssak()?.getNavn() }}</p>
+                            <button class="icon">
+                                <svg class="remove-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path data-v-36f76f19="" d="M11.5 4.24264L10.0858 2.82843L7.25736 5.65685L4.42893 2.82843L3.01472 4.24264L5.84315 7.07107L3.01472 9.89949L4.42893 11.3137L7.25736 8.48528L10.0858 11.3137L11.5 9.89949L8.67157 7.07107L11.5 4.24264Z" fill="#9B9B9B"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 
                 <!--Mottakere-->
@@ -152,7 +167,7 @@
             </div>
             
             <div class="flex-container-right">
-                <phoneImg :mobile="getMottakerMobilOnly()" :message="textmessage as string" />
+                <phoneImg :mobile="getMottakerMobilOnly()" :message="getTextmessage() as string" />
             </div>
             
         </div>
@@ -187,7 +202,6 @@
                 </div>
             </div>
         </FloatingClosable>
-        <pre>{{ nyMobil }}</pre>
     </div>
 </template>
 
@@ -203,6 +217,7 @@ import { InputTextOverlay } from 'ukm-components-vue3';
 
 
 import Avsender from './objects/Avsender';
+import Nyhetsak from './objects/Nyhetsak';
 
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
@@ -223,7 +238,8 @@ export default {
             nyMobilNavn : '' as any,
             mottakereInfo : false as Boolean,
             selectedAvsender : '' as any,
-            selectedNyhetsak : '' as any,
+            selectedNyhetssak : null as any,
+            alleNyhetsaker : [] as Array<Nyhetsak>,
         }
     },
 
@@ -261,18 +277,19 @@ export default {
                 return;
             }
             
-            // Remove spaces
-
             this.mottakere.push({mobil: this.nyMobil, name: this.nyMobilNavn});
             this.nyMobil = '';
             this.nyMobilNavn = '';
             (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).close();
         },
         async getInitialData() {
+            this._fetchNyhetsaker();
+
             var data : any = {
                 action: 'UKMSMS_ajax',
                 SMSaction: 'getInitialData',
             };
+
 
             var response = await spaInteraction.runAjaxCall('/', 'POST', data);
             
@@ -280,10 +297,36 @@ export default {
                 this.avsendere.push(new Avsender(response.SMS_avsendere[key], key));
             }
         },
+        async _fetchNyhetsaker() {
+
+            var data : any = {
+                action: 'UKMSMS_ajax',
+                SMSaction: 'getNyhetsakerJson',
+            };
+
+            var response = await spaInteraction.runAjaxCall('/', 'POST', data);
+
+
+            for(var n of response.posts) {
+                this.alleNyhetsaker.push(new Nyhetsak(n.id, n.title, n.content, n.link));
+            }
+
+            console.log('aaa');
+            console.log(this.alleNyhetsaker);
+        },
         getAvsendere() {
             var retArr = [];
             for(var avsender in this.avsendere) {
                 retArr.push(this.avsendere[avsender].getTelefonnummer() + ' (' + this.avsendere[avsender].getNavn() + ')');
+            }
+            
+            return retArr;
+        },
+        getNyhetsaker() {
+            var retArr = [];
+            for(var nyhetsak of this.alleNyhetsaker) {
+                console.log(nyhetsak);
+                retArr.push(nyhetsak.getStringFormat());
             }
             return retArr;
         },
@@ -305,7 +348,6 @@ export default {
             this.mottakere = this.mottakere.filter((m) => m.mobil != mottaker.mobil);
         },
         getSelectedAvsender() : Avsender | null {
-            // 92837360 (Marius Mandal)
             var selected = this.selectedAvsender;
             if(selected == null) {
                 return null;
@@ -314,6 +356,22 @@ export default {
             var ret = this.avsendere.filter((avsender) => avsender.getTelefonnummer() == telefonnummer)[0];
 
             return ret;
+        },
+        getSelectedNyhetssak() : Nyhetsak | null {
+            if(this.selectedNyhetssak == null) {
+                return null;
+            }
+        
+            return this.selectedNyhetssak;
+        },
+        getTextmessage() : String {
+            if(this.selectedNyhetssak != null) {
+                return this.textmessage + ' ' + this.getSelectedNyhetssak()?.getLink();
+            }
+            return this.textmessage;
+        },
+        redirectToNewNyhetssak() {
+            window.location.href = '/wp-admin/post-new.php';
         }
     }
 }
@@ -499,7 +557,7 @@ export default {
     overflow: auto
 }
 
-.alle-mottakere {
+.alle-mottakere, .alle-nyhetssaker {
     display: flex;
     flex-wrap: wrap;
 }

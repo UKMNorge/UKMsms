@@ -17,11 +17,35 @@ function UKMSMS_ajax(){
 			break;
 		case 'nyhetssak':
 			getNyhetssaker();
+		case 'getNyhetsakerJson':
+			getNyhetsakerJson();
+			break;
 		case 'getInitialData':
 			getInitialData();
 			break;
 	}
 	die();
+}
+
+function getNyhetsakerJson() {
+	$handleCall = new HandleAPICall([], [], ['GET', 'POST'], false);
+
+	$posts = new Posts();
+	Wordpress::setPosts($posts);
+	
+	$retObj = [];
+	foreach($posts->getAll() as $post) {
+		$retObj[] = [
+			'id' => $post->getId(),
+			'title' => $post->getTitle(),
+			'content' => $post->getContent(),
+			'link' => get_permalink($post->getId()),
+		];
+	}
+
+	$handleCall->sendToClient([
+		'posts' => $retObj,
+	]);
 }
 
 function getNyhetssaker() {
