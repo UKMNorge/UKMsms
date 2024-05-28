@@ -6,23 +6,47 @@
             </div>
         </div>
         <div class="as-container buttons container as-margin-bottom-space-6 as-display-flex">
-            <button class="as-btn-simple as-margin-right-space-3 as-btn-hover-default btn-with-icon">
-                <svg class="as-margin-right-space-1" width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.14286 1C7.32423 1 5.58009 1.72245 4.29412 3.00841C3.00816 4.29437 2.28571 6.03852 2.28571 7.85714H0L2.96381 10.821L3.01714 10.9276L6.09524 7.85714H3.80952C3.80952 4.90857 6.19429 2.52381 9.14286 2.52381C12.0914 2.52381 14.4762 4.90857 14.4762 7.85714C14.4762 10.8057 12.0914 13.1905 9.14286 13.1905C7.67238 13.1905 6.33905 12.5886 5.37905 11.621L4.29714 12.7029C4.93213 13.3413 5.68723 13.8478 6.51891 14.193C7.35058 14.5383 8.24238 14.7154 9.14286 14.7143C10.9615 14.7143 12.7056 13.9918 13.9916 12.7059C15.2776 11.4199 16 9.67577 16 7.85714C16 6.03852 15.2776 4.29437 13.9916 3.00841C12.7056 1.72245 10.9615 1 9.14286 1ZM8.38095 4.80952V8.61905L11.619 10.539L12.2057 9.56381L9.52381 7.97143V4.80952H8.38095Z" fill="#333333"/>
-                </svg>                          
-                <span>SMS-logg</span>
-            </button>
+            
+            <div class="as-margin-right-space-2">
+                <v-btn
+                    class="v-btn--hover-default"
+                    prepend-icon="mdi-history"
+                    color="#000"
+                    rounded="large"
+                    size="x-large"
+                    @click="addNewMottaker()"
+                    variant="outlined"
+                    style="font-size: 14px; color: #000; background-color: #fff; border: none; border-radius: var(--radius-normal) !important;" >
+                    SMS-logg
+                </v-btn>
+            </div>
+            <div class="as-margin-right-space-2">
+                <v-btn
+                    class="v-btn--hover-default"
+                    prepend-icon="mdi-plus"
+                    color="#000"
+                    rounded="large"
+                    size="x-large"
+                    @click="addNewMottaker()"
+                    variant="outlined"
+                    style="font-size: 14px; color: #000; background-color: #fff; border: none; border-radius: var(--radius-normal) !important;" >
+                    Legg til nyhetssak
+                </v-btn>
+            </div>
+            <!-- </div> -->
+            
+<!-- 
             <button class="as-btn-simple as-margin-right-space-3 as-btn-hover-default btn-with-icon">
                 <svg class="as-margin-right-space-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                     <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
                 </svg>            
                 <span>Legg til nyhetssak</span>
-            </button>
+            </button> -->
         </div>
         <div class="as-container container flex-container">
             <div class="flex-container-left">
                 <!--Avsender-->
-                <div class="as-card-1 as-padding-space-3 margin-bottom"> 
+                <div class="as-card-1 as-padding-space-3 as-margin-bottom-space-2 avsender-div"> 
                     <h4>Avsender</h4>
                     <div class="text-align-right">
                         <a>Rediger kontaktpersoner</a>
@@ -49,7 +73,7 @@
                     <div class="as-margin-bottom-space-2 as-display-flex">
                         <h4 class="as-margin-auto as-margin-left-none">Mottakere</h4>
 
-                        <v-btn @click="mottakereInfo = !mottakereInfo" class="as-margin-auto as-margin-right-none" density="compact" icon variant="tonal">
+                        <v-btn @click="mottakereInfo = !mottakereInfo" class="vuetify-icon-button as-margin-auto as-margin-right-none" density="compact" icon variant="tonal">
                             <v-icon>mdi-information-slab-symbol</v-icon>
                         </v-btn>
                     </div>
@@ -126,19 +150,25 @@
                     <PermanentNotification :typeNotification="'danger'" :tittel="'Mobilnummer eksisterer'" :description="'Du har allerede lagt til dette mobilnummeret!'" />
                 </div>
                 <div>
-                    <v-text-field type="tel" :rules="[validateMobileNumber]" v-model="nyMobil" label="Mobil" variant="outlined" required></v-text-field>
+                    <InputTextOverlay :placeholder="'Navn'" v-model="nyMobilNavn" />
                 </div>
-                <div>
-                    <v-text-field v-model="nyMobilNavn" label="Navn" variant="outlined"></v-text-field>
+                <div class="as-margin-top-space-2">
+                    <InputTextOverlay :placeholder="'Mobiltelefonnummer'" :type="'tel'" v-model="nyMobil" />
                 </div>
-                <div class="as-margin-top-space-1">
-                    <v-btn @click="addNewMottaker()" variant="tonal">
+                <div class="as-margin-top-space-2">
+                    <v-btn
+                        color="#000"
+                        rounded="lg"
+                        size="large"
+                        @click="addNewMottaker()"
+                        variant="tonal"
+                        style="color: var(--color-primary-black); border-radius: var(--radius-normal) !important;" >
                         Legg til  
                     </v-btn>
                 </div>
             </div>
         </FloatingClosable>
-
+        <pre>{{ nyMobil }}</pre>
     </div>
 </template>
 
@@ -150,6 +180,9 @@ import phoneImg from './components/PhoneImgComponent.vue';
 // import FloatingClosable from './components/FloatingClosable.vue';
 import { PermanentNotification } from 'ukm-components-vue3';
 import { FloatingClosable } from 'ukm-components-vue3';
+import { InputTextOverlay } from 'ukm-components-vue3';
+
+
 import Avsender from './objects/Avsender';
 
 
@@ -167,8 +200,8 @@ export default {
             textmessage : '' as String,
             avsendere : [] as Array<Avsender>,
             mottakere : [] as Array<{mobil : String, name : String}>,
-            nyMobil : '' as String,
-            nyMobilNavn : '' as String,
+            nyMobil : '' as any,
+            nyMobilNavn : '' as any,
             mottakereInfo : false as Boolean,
             selectedAvsender : '' as any,
         }
@@ -178,7 +211,8 @@ export default {
         FirstTab : FirstTab,
         phoneImg : phoneImg,
         FloatingClosable : FloatingClosable,
-        PermanentNotification : PermanentNotification
+        PermanentNotification : PermanentNotification,
+        InputTextOverlay : InputTextOverlay,
 
     },
 
@@ -190,6 +224,9 @@ export default {
     },
     
     methods: {
+        searchInputChanged() {
+            console.log('a');
+        },
         openLeggTilMottaker() {
             (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).open();
         },
@@ -283,6 +320,9 @@ export default {
     width: 100%;
     text-align: right;
 }
+.vuetify-icon-button {
+    margin-top: -4px;
+}
 
 .temporary-notification {
     width: 100%;
@@ -330,7 +370,9 @@ export default {
     font-weight: 300;
     color: #1A202C;
 }
-
+.avsender-div {
+    padding-bottom: 0 !important;
+}
 
 
 .toggle-container{
