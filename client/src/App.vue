@@ -27,21 +27,40 @@
                     color="#000"
                     rounded="large"
                     size="x-large"
-                    @click="addNewMottaker()"
+                    @click="openNyhetsaker()"
                     variant="outlined"
                     style="font-size: 14px; color: #000; background-color: #fff; border: none; border-radius: var(--radius-normal) !important;" >
                     Legg til nyhetssak
                 </v-btn>
+
+                <FloatingClosable ref="floatingLeggTilNyhetsak">
+                    <div>
+                        <div class="as-padding-bottom-space-3">
+                            <h4 class="nop-impt">Legg til mottaker</h4>
+                        </div>
+                        <p>Hvis du ønsker å dele mer informasjon eller nyheter kan du legge til en lenke til en nyhetssak i meldingen.</p>
+                        
+                        <div class="as-margin-top-space-4">
+                            <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="['testeron', 'b']" v-model="selectedNyhetsak"></v-autocomplete>
+                        </div>
+
+                        <div class="nyhetsaker-buttons as-display-flex">
+                            <div class="as-margin-auto">
+                                <v-btn
+                                    class="v-btn--hover-bla"
+                                    rounded="large"
+                                    size="large"
+                                    @click="openNyhetsaker()"
+                                    variant="outlined"
+                                    style="font-size: 14px; color: #000; background-color: var(--color-primary-bla-200); border: none; border-radius: var(--radius-normal) !important;" >
+                                    Legg til i SMS
+                                </v-btn>
+                            </div>
+                        </div>
+                    </div>
+                </FloatingClosable>
+
             </div>
-            <!-- </div> -->
-            
-<!-- 
-            <button class="as-btn-simple as-margin-right-space-3 as-btn-hover-default btn-with-icon">
-                <svg class="as-margin-right-space-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
-                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path>
-                </svg>            
-                <span>Legg til nyhetssak</span>
-            </button> -->
         </div>
         <div class="as-container container flex-container">
             <div class="flex-container-left">
@@ -54,7 +73,7 @@
                 
                 <!-- Avsender -->
                     <!--Inputfelt-->
-                    <v-autocomplete variant="outlined" label="Velg avsender" :items="getAvsendere()" v-model="selectedAvsender"></v-autocomplete>
+                    <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="getAvsendere()" v-model="selectedAvsender"></v-autocomplete>
 
                     <!--Varsel-->                    
                     <PermanentNotification v-if="getSelectedAvsender() != null && !getSelectedAvsender()?.isTelefonnummerValid()" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Mottakeren kan ikke svare hvis du bruker denne avsenderen.'" />
@@ -142,7 +161,7 @@
         <!-- Legg til ny mottaker -->
         <FloatingClosable ref="floatingLeggTilMottaker">
             <div>
-                <div class="as-padding-bottom-space-4">
+                <div class="as-padding-bottom-space-3">
                     <h4 class="nop-impt">Legg til mottaker</h4>
                 </div>
                 <!-- v-if nyMobil exist on mottakere -->
@@ -204,6 +223,7 @@ export default {
             nyMobilNavn : '' as any,
             mottakereInfo : false as Boolean,
             selectedAvsender : '' as any,
+            selectedNyhetsak : '' as any,
         }
     },
 
@@ -229,6 +249,9 @@ export default {
         },
         openLeggTilMottaker() {
             (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).open();
+        },
+        openNyhetsaker() {
+            (<typeof FloatingClosable>this.$refs.floatingLeggTilNyhetsak).open();
         },
         addNewMottaker() {
             this.nyMobil = this.nyMobil.replace(/\s/g, '');
