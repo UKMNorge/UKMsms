@@ -41,7 +41,7 @@
                         <p>Hvis du ønsker å dele mer informasjon eller nyheter kan du legge til en lenke til en nyhetssak i meldingen.</p>
                         
                         <div class="as-margin-top-space-4">
-                            <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="alleNyhetsaker" v-model="selectedNyhetssak"></v-autocomplete>
+                            <v-autocomplete variant="outlined" label="Velg nyhetssak" class="v-autocomplete-arr-sys" :items="alleNyhetsaker" v-model="selectedNyhetssak"></v-autocomplete>
                         </div>
 
                         <div class="nyhetsaker-buttons as-display-flex">
@@ -80,8 +80,10 @@
 
                     
                     <div class="as-display-flex">
-                        <div class="as-margin-auto as-margin-top-space-2 as-margin-right-none">
-                            <v-switch color="var(--color-primary-bla-600)" label="Send kopi til avsender" value="Send kopi til avsender"></v-switch>
+                        <div class="as-margin-auto as-margin-right-none">
+                            <div class=" as-padding-right-space-2">
+                                <v-switch color="var(--color-primary-bla-600)" v-model="kopiTilAvsender" label="Send kopi til avsender" value="Send kopi til avsender"></v-switch>
+                            </div>
                         </div>
                     </div>
 
@@ -148,18 +150,29 @@
 
                 </div>
                 <!--Innhold-->
-                <div class="as-card-1 as-padding-space-3 margin-bottom"> 
+                <div class="as-card-1 as-padding-space-3 margin-bottom innhold-div"> 
                     <h4>Innhold</h4>
                     
                     <!--Inputfelt-->
                     <div class="as-margin-top-space-1"> 
                         <v-textarea label="Melding" v-model="textmessage"></v-textarea>
                     </div>
+
+                
                     <div>
                         <p class="as-padding-top-space-1 text-align-right">Total kostnad: 0.00 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="fill: #333;transform: ;msFilter:;">
                             <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
                         </svg></p> 
                     </div>
+
+                    <div class="as-display-flex">
+                        <div class="as-margin-auto as-margin-right-none">
+                            <div class="">
+                                <v-switch color="var(--color-primary-bla-600)" v-model="ukmSignatur" label="UKM signatur" value="UKM signatur"></v-switch>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <button class="as-btn-simple as-btn-simple-primary">Send SMS →</button>
@@ -240,6 +253,8 @@ export default {
             selectedAvsender : '' as any,
             selectedNyhetssak : null as any,
             alleNyhetsaker : [] as Array<Nyhetsak>,
+            kopiTilAvsender : false as Boolean,
+            ukmSignatur : false as Boolean,
         }
     },
 
@@ -258,6 +273,11 @@ export default {
             this.mottakere = (<any>alleMottakere);
         }
     },
+    watch: {
+    selectedNyhetssak(newValue : any, oldValue : any) {
+        this.closeNyhetssak();
+        }
+    },
     
     methods: {
         searchInputChanged() {
@@ -268,6 +288,10 @@ export default {
         },
         openNyhetsaker() {
             (<typeof FloatingClosable>this.$refs.floatingLeggTilNyhetsak).open();
+        },
+        closeNyhetssak() {
+            console.log('aa');
+            (<typeof FloatingClosable>this.$refs.floatingLeggTilNyhetsak).close();
         },
         addNewMottaker() {
             this.nyMobil = this.nyMobil.replace(/\s/g, '');
@@ -365,10 +389,18 @@ export default {
             return this.selectedNyhetssak;
         },
         getTextmessage() : String {
+            var retMsgString = this.textmessage;
             if(this.selectedNyhetssak != null) {
-                return this.textmessage + ' ' + this.getSelectedNyhetssak()?.getLink();
+                retMsgString += '\n' + this.getSelectedNyhetssak()?.getLink();
             }
-            return this.textmessage;
+            if(this.ukmSignatur) {
+                retMsgString += '\n\n-UKM';
+            }
+            if(this.getSelectedAvsender() != null && !this.getSelectedAvsender()?.isTelefonnummerValid()) {
+                retMsgString += '\n(denne SMS kan ikke besvares)';
+            }
+
+            return retMsgString;
         },
         redirectToNewNyhetssak() {
             window.location.href = '/wp-admin/post-new.php';
@@ -451,7 +483,7 @@ export default {
     font-weight: 300;
     color: #1A202C;
 }
-.avsender-div {
+.avsender-div, .innhold-div {
     padding-bottom: 0 !important;
 }
 
