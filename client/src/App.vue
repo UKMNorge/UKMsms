@@ -1,11 +1,31 @@
 <template>
     <div class="as-container">
-        <div v-show="!SMSsendt">
-            <div class="container">
-                <div class="as-margin-top-space-8 as-margin-bottom-space-8">
-                    <h1 class="">Send SMS</h1>
-                </div>
+        <div class="container">
+            <div class="as-margin-top-space-8 as-margin-bottom-space-8">
+                <h1 class="">Send SMS</h1>
             </div>
+        </div>
+        <FloatingClosable ref="floatingLogs">
+            <v-table>
+                <thead>
+                    <tr>
+                        <th class="text-left">Tidspunkt</th>
+                        <th class="text-left">Handling</th>
+                        <th class="text-left">Bruker</th>
+                        <th class="text-left">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="log in alleSMSLogs">
+                        <td>{{ log.time }}</td>
+                        <td>{{ log.action }}</td>
+                        <td>{{ log.user }}</td>
+                        <td>{{ log.description }}</td>
+                    </tr>
+                </tbody>
+            </v-table>
+        </FloatingClosable>
+        <div v-show="!SMSsendt">
             <div class="as-container buttons container as-margin-bottom-space-6 as-display-flex">
                 
                 <div class="as-margin-right-space-2">
@@ -20,26 +40,6 @@
                         SMS-logg
                     </v-btn>
 
-                    <FloatingClosable ref="floatingLogs">
-                        <v-table>
-                            <thead>
-                                <tr>
-                                    <th class="text-left">Tidspunkt</th>
-                                    <th class="text-left">Handling</th>
-                                    <th class="text-left">Bruker</th>
-                                    <th class="text-left">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="log in alleSMSLogs">
-                                    <td>{{ log.time }}</td>
-                                    <td>{{ log.action }}</td>
-                                    <td>{{ log.user }}</td>
-                                    <td>{{ log.description }}</td>
-                                </tr>
-                            </tbody>
-                        </v-table>
-                    </FloatingClosable>
 
                 </div>
                 <div class="as-margin-right-space-2">
@@ -308,9 +308,8 @@
             </FloatingClosable>
         </div>
         <div v-show="SMSsendt" class="rapport">
-            <SendSMSraport :mottakere="mottakere" :selectedAvsender="getSelectedAvsender()" :textMsg="getTextmessage()" ref="sendingRapport" />
+            <SendSMSraport :mottakere="mottakere" :selectedAvsender="getSelectedAvsender()" :textMsg="getTextmessage()" :callbackLogg="() => {alleSMSLogs=[];openSMSLogs()}" ref="sendingRapport" />
         </div>
-        {{ SMSsendt }}
     </div>
 </template>
 
