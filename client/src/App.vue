@@ -161,8 +161,7 @@
                     <!--Inputfelt-->
                     <div class="as-margin-top-space-1"> 
                         <v-textarea class="vue-as-textarea" label="Melding" v-model="textmessage"></v-textarea>
-                    </div>
-
+                    </div>                    
 
                 
                     <div class="as-display-flex sms-info as-margin-bottom-space-2">
@@ -174,10 +173,15 @@
                                 {{ Math.floor(getTextmessage().length / 160) + 1 }} SMS
                             </v-chip>
                             <v-chip class="as-margin-right-space-1" density="compact" size="small">
-                                {{ (((Math.floor(getTextmessage().length / 160) + 1) * 0.4) * mottakere.length).toLocaleString('no-NO', { minimumFractionDigits: 2 }) }} kr
+                                {{ (getPrice()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) }} kr
                             </v-chip>
                         </div>
                     </div>
+
+                    <div v-if="getTextmessage().length > 480">
+                        <PermanentNotification :typeNotification="'info'" :tittel="'Har du mye på hjertet?'" :description="'Hvis du har behov for å sende mye informasjon kan det hende du heller burde lenke til en nyhetssak i meldingen din. Da er det enklere for mottakerne å lese meldingen i tillegg til at det blir billigere å sende SMS-en.'" />
+                    </div>
+
 
                     <div class="as-display-flex">
                         <div class="as-margin-auto as-margin-right-none">
@@ -192,14 +196,19 @@
 
                 </div>
 
-                <v-btn
-                    class="v-btn-as v-btn-success"
-                    rounded="large"
-                    size="large"
-                    @click="redirectToNewNyhetssak()"
-                    variant="outlined">
-                    Send SMS →
-                </v-btn>
+            <div class="as-display-flex as-margin-top-space-4">
+                <div class="as-margin-auto as-margin-right-none">
+                    <v-btn
+                        class="v-btn-as v-btn-success"
+                        rounded="large"
+                        size="large"
+                        @click="redirectToNewNyhetssak()"
+                        variant="outlined"
+                        :disabled="!isSendingReady()">
+                        Send SMS →
+                    </v-btn>
+                </div>
+            </div>
 
             </div>
             
@@ -228,7 +237,7 @@
                                 </div>
                                 <!-- v-if nyMobil exist on mottakere -->
                                 <div v-if="mobilExist()" >
-                                    <PermanentNotification :typeNotification="'danger'" :tittel="'Mobilnummer eksisterer'" :description="'Du har allerede lagt til dette mobilnummeret!'" />
+                                    <PermanentNotification class="as-margin-bottom-space-2" :typeNotification="'danger'" :tittel="'Mobilnummer eksisterer'" :description="'Du har allerede lagt til dette mobilnummeret!'" />
                                 </div>
                                 <div>
                                     <InputTextOverlay :placeholder="'Navn'" v-model="nyMobilNavn" />
@@ -493,6 +502,12 @@ export default {
         },
         isPersonInMottakere(person : InnslagMottaker) {
             return this.mottakere.filter((mottaker) => mottaker.mobil == person.mobil).length > 0;
+        },
+        getPrice() : Number{
+            return ((((Math.floor(this.getTextmessage().length / 160) + 1) * 0.4) * this.mottakere.length) + (this.kopiTilAvsender ? 0.4 : 0));
+        },
+        isSendingReady() : boolean {
+            return this.mottakere.length > 0 && this.getTextmessage().length > 0 && this.getSelectedAvsender() != null;
         }
     }
 }
