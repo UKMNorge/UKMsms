@@ -188,30 +188,66 @@
 
         <!-- Legg til ny mottaker -->
         <FloatingClosable ref="floatingLeggTilMottaker">
-            <div>
-                <div class="as-padding-bottom-space-3">
-                    <h4 class="nop-impt">Legg til mottaker</h4>
-                </div>
-                <!-- v-if nyMobil exist on mottakere -->
-                <div v-if="mobilExist()" >
-                    <PermanentNotification :typeNotification="'danger'" :tittel="'Mobilnummer eksisterer'" :description="'Du har allerede lagt til dette mobilnummeret!'" />
-                </div>
-                <div>
-                    <InputTextOverlay :placeholder="'Navn'" v-model="nyMobilNavn" />
-                </div>
-                <div class="as-margin-top-space-2">
-                    <InputTextOverlay :placeholder="'Mobiltelefonnummer'" :type="'tel'" v-model="nyMobil" />
-                </div>
-                <div class="as-margin-top-space-2">
-                    <v-btn
-                        color="#000"
-                        rounded="lg"
-                        size="large"
-                        @click="addNewMottaker()"
-                        variant="tonal"
-                        style="color: var(--color-primary-black); border-radius: var(--radius-normal) !important;" >
-                        Legg til  
-                    </v-btn>
+            <div class="mottakere-tabs as-display-flex">
+                <div class="mottakere-tabs-under nop">
+                    <v-tabs align-tabs="center" v-model="tab">
+                        <v-tab text="Ny mottaker"></v-tab>
+                        <v-tab text="Mottaker fra innslag"></v-tab>
+                    </v-tabs>
+                    
+                    <div class="as-margin-top-space-4">
+                        <v-tabs-window v-model="tab">
+                            <!-- Legg til ny mottaker TAB WINDOW ITEM -->
+                            <v-tabs-window-item>
+                                <div class="as-padding-bottom-space-3">
+                                    <h4 class="nop-impt">Legg til mottaker</h4>
+                                </div>
+                                <!-- v-if nyMobil exist on mottakere -->
+                                <div v-if="mobilExist()" >
+                                    <PermanentNotification :typeNotification="'danger'" :tittel="'Mobilnummer eksisterer'" :description="'Du har allerede lagt til dette mobilnummeret!'" />
+                                </div>
+                                <div>
+                                    <InputTextOverlay :placeholder="'Navn'" v-model="nyMobilNavn" />
+                                </div>
+                                <div class="as-margin-top-space-2">
+                                    <InputTextOverlay :placeholder="'Mobiltelefonnummer'" :type="'tel'" v-model="nyMobil" />
+                                </div>
+                                <div class="as-margin-top-space-2">
+                                    <v-btn
+                                        color="#000"
+                                        rounded="lg"
+                                        size="large"
+                                        @click="addNewMottaker()"
+                                        variant="tonal"
+                                        style="color: var(--color-primary-black); border-radius: var(--radius-normal) !important;" >
+                                        Legg til  
+                                    </v-btn>
+                                </div>
+                            </v-tabs-window-item>
+
+                            <!-- Legg til mottaker fra innslag TAB WINDOW ITEM -->
+                            <v-tabs-window-item>
+                                <div class="as-margin-top-space-2">
+                                    <div v-for="innslag in getInnslagMottakere()">
+                                        <div class="as-card-2 as-padding-space-2 nosh-impt as-margin-bottom-space-2 as-card-lightest-color" v-if="innslag.length > 0">
+                                            <div>
+                                                <h5 class="innslag-navn-mottakere">{{ innslag[0].innslagNavn }}</h5>
+                                                <span class="innslag-type-mottakere">{{ innslag[0].innslagType }}</span>
+                                            </div>
+                                            <div class="alle-innslag-mottakere">
+                                                <template v-for="person in innslag">
+                                                    <div @click="leggTilMottakerFraInnslag(person)" v-show="!isPersonInMottakere(person)" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
+                                                        <p>{{ person.mobil }} ({{ person.navn }})</p>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </v-tabs-window-item>
+
+                        </v-tabs-window>
+                    </div>
                 </div>
             </div>
         </FloatingClosable>
@@ -231,6 +267,7 @@ import { InputTextOverlay } from 'ukm-components-vue3';
 
 import Avsender from './objects/Avsender';
 import Nyhetsak from './objects/Nyhetsak';
+import InnslagMottaker from './objects/InnslagMottaker';
 
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
@@ -255,6 +292,9 @@ export default {
             alleNyhetsaker : [] as Array<Nyhetsak>,
             kopiTilAvsender : false as Boolean,
             ukmSignatur : false as Boolean,
+            aktivMottakerTab : 0 as Number,
+            tab : null as any,
+            innslagMottakere : [] as Array<Array<InnslagMottaker>>,
         }
     },
 
@@ -278,11 +318,7 @@ export default {
         this.closeNyhetssak();
         }
     },
-    
     methods: {
-        searchInputChanged() {
-            console.log('a');
-        },
         openLeggTilMottaker() {
             (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).open();
         },
@@ -321,8 +357,26 @@ export default {
                 this.avsendere.push(new Avsender(response.SMS_avsendere[key], key));
             }
         },
-        async _fetchNyhetsaker() {
+        async _fetchInnslag() {
+            var data : any = {
+                action: 'UKMSMS_ajax',
+                SMSaction: 'getInnslagMottakere',
+            };
 
+            var response = await spaInteraction.runAjaxCall('/', 'POST', data);
+
+            for(var key in response.personer) {
+                var innslagArr = [];
+
+                for(var innslag of (<any>response).personer[key]) {
+                    innslagArr.push(new InnslagMottaker(innslag.navn, innslag.mobil, innslag.innslagNavn, innslag.innslagType));
+                }
+                this.innslagMottakere.push(innslagArr);
+            }
+
+            this.innslagMottakere = response.personer;
+        },
+        async _fetchNyhetsaker() {
             var data : any = {
                 action: 'UKMSMS_ajax',
                 SMSaction: 'getNyhetsakerJson',
@@ -337,6 +391,15 @@ export default {
 
             console.log('aaa');
             console.log(this.alleNyhetsaker);
+        },
+        leggTilMottakerFraInnslag(mottaker : InnslagMottaker) {
+            this.mottakere.push({mobil: mottaker.mobil, name: mottaker.navn});
+        },
+        getInnslagMottakere() {
+            if(this.innslagMottakere.length < 1) {
+                this._fetchInnslag();
+            }
+            return this.innslagMottakere;
         },
         getAvsendere() {
             var retArr = [];
@@ -403,6 +466,9 @@ export default {
         },
         redirectToNewNyhetssak() {
             window.location.href = '/wp-admin/post-new.php';
+        },
+        isPersonInMottakere(person : InnslagMottaker) {
+            return this.mottakere.filter((mottaker) => mottaker.mobil == person.mobil).length > 0;
         }
     }
 }
@@ -484,6 +550,10 @@ export default {
 }
 .avsender-div, .innhold-div {
     padding-bottom: 0 !important;
+}
+.innslag-type-mottakere {
+    font-size: 12px;
+    font-weight: 100;
 }
 
 
@@ -568,8 +638,13 @@ export default {
     height: 200px;
     overflow-y: auto;
 }
-
-
+.mottakere-tabs {
+    width: 100%;
+    width: 500px;
+}
+.mottakere-tabs .mottakere-tabs-under {
+    width: 100%;
+}
 .node-floating-selector {
     margin: auto;
     min-width: 300px;
@@ -588,7 +663,7 @@ export default {
     overflow: auto
 }
 
-.alle-mottakere, .alle-nyhetssaker {
+.alle-mottakere, .alle-nyhetssaker, .alle-innslag-mottakere {
     display: flex;
     flex-wrap: wrap;
 }

@@ -23,8 +23,34 @@ function UKMSMS_ajax(){
 		case 'getInitialData':
 			getInitialData();
 			break;
+		case 'getInnslagMottakere':
+			getInnslagMottakere();
+			break;
 	}
 	die();
+}
+
+function getInnslagMottakere() {
+	$handleCall = new HandleAPICall([], [], ['GET', 'POST'], false);
+
+	$arrangement = new Arrangement(intval((get_option('pl_id'))));
+
+	$allePersoner = [];
+	$arrangement->getInnslag()->getAll();
+	foreach($arrangement->getInnslag()->getAll() as $innslag) {
+		foreach($innslag->getPersoner()->getAll() as $person) {
+			$allePersoner[$innslag->getId()][] = [
+				'navn' => $person->getNavn(),
+				'mobil' => $person->getMobil(),
+				'innslagNavn' => $innslag->getNavn(),
+				'innslagType' => $innslag->getType()->getNavn(),
+			];
+		}
+	}
+
+	$handleCall->sendToClient([
+		'personer' => $allePersoner,
+	]);
 }
 
 function getNyhetsakerJson() {
