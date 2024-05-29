@@ -9,27 +9,25 @@
             
             <div class="as-margin-right-space-2">
                 <v-btn
-                    class="v-btn--hover-default"
+                    class="v-btn-as v-btn-hvit"
                     prepend-icon="mdi-history"
                     color="#000"
                     rounded="large"
                     size="x-large"
                     @click="addNewMottaker()"
-                    variant="outlined"
-                    style="font-size: 14px; color: #000; background-color: #fff; border: none; border-radius: var(--radius-normal) !important;" >
+                    variant="outlined" >
                     SMS-logg
                 </v-btn>
             </div>
             <div class="as-margin-right-space-2">
                 <v-btn
-                    class="v-btn--hover-default"
+                    class="v-btn-as v-btn-hvit"
                     prepend-icon="mdi-plus"
                     color="#000"
                     rounded="large"
                     size="x-large"
                     @click="openNyhetsaker()"
-                    variant="outlined"
-                    style="font-size: 14px; color: #000; background-color: #fff; border: none; border-radius: var(--radius-normal) !important;" >
+                    variant="outlined" >
                     Legg til nyhetssak
                 </v-btn>
 
@@ -47,12 +45,11 @@
                         <div class="nyhetsaker-buttons as-display-flex">
                             <div class="as-margin-auto">
                                 <v-btn
-                                    class="v-btn--hover-bla"
+                                    class="v-btn-as v-btn-bla"
                                     rounded="large"
                                     size="large"
                                     @click="redirectToNewNyhetssak()"
-                                    variant="outlined"
-                                    style="font-size: 14px; color: #000; background-color: var(--color-primary-bla-100); border: none; border-radius: var(--radius-normal) !important;" >
+                                    variant="outlined" >
                                     Opprett nyhetssak
                                 </v-btn>
                             </div>
@@ -151,18 +148,35 @@
                 </div>
                 <!--Innhold-->
                 <div class="as-card-1 as-padding-space-3 margin-bottom innhold-div"> 
-                    <h4>Innhold</h4>
-                    
+                    <div class="as-margin-bottom-space-2 as-display-flex">
+                        <h4 class="as-margin-auto as-margin-left-none">Innhold</h4>
+
+                        <v-btn @click="loggInfo = !loggInfo" class="vuetify-icon-button as-margin-auto as-margin-right-none" density="compact" icon variant="tonal">
+                            <v-icon>mdi-information-slab-symbol</v-icon>
+                        </v-btn>
+                    </div>
+                    <!-- INFO -->
+                    <PermanentNotification class="as-margin-bottom-space-2" v-if="loggInfo" :typeNotification="'info'" :tittel="'OBS: Alle SMS logges og lagres!'" 
+                    :description="'SMS som sendes med dette systemet går fra UKM-Norges konto hos tjenesteleverandøren. UKM-Norge er juridisk ansvarlig for innholdet, og vi logger og lagrer derfor alle meldinger slik at eventuelle misbruk av systemet til personangrep, spam, eller private formål kan oppdages og spores tilbake til avsender. Sendingsloggen brukes også som fakturagrunnlag i de tilfeller UKM Norge finner det nødvendigå fakturere for forbruk utover gratiskvoten.'" />
                     <!--Inputfelt-->
                     <div class="as-margin-top-space-1"> 
-                        <v-textarea label="Melding" v-model="textmessage"></v-textarea>
+                        <v-textarea class="vue-as-textarea" label="Melding" v-model="textmessage"></v-textarea>
                     </div>
 
+
                 
-                    <div>
-                        <p class="as-padding-top-space-1 text-align-right">Total kostnad: 0.00 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="fill: #333;transform: ;msFilter:;">
-                            <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
-                        </svg></p> 
+                    <div class="as-display-flex sms-info as-margin-bottom-space-2">
+                        <div class="as-margin-auto as-display-flex as-margin-right-none">
+                            <v-chip class="as-margin-right-space-1" density="compact" size="small">
+                                {{ getTextmessage().length }} tegn
+                            </v-chip>
+                            <v-chip class="as-margin-right-space-1" density="compact" size="small">
+                                {{ Math.floor(getTextmessage().length / 160) + 1 }} SMS
+                            </v-chip>
+                            <v-chip class="as-margin-right-space-1" density="compact" size="small">
+                                {{ (((Math.floor(getTextmessage().length / 160) + 1) * 0.4) * mottakere.length).toLocaleString('no-NO', { minimumFractionDigits: 2 }) }} kr
+                            </v-chip>
+                        </div>
                     </div>
 
                     <div class="as-display-flex">
@@ -173,9 +187,19 @@
                         </div>
                     </div>
 
+
+                    
+
                 </div>
 
-                <button class="as-btn-simple as-btn-simple-primary">Send SMS →</button>
+                <v-btn
+                    class="v-btn-as v-btn-success"
+                    rounded="large"
+                    size="large"
+                    @click="redirectToNewNyhetssak()"
+                    variant="outlined">
+                    Send SMS →
+                </v-btn>
 
             </div>
             
@@ -214,13 +238,12 @@
                                 </div>
                                 <div class="as-margin-top-space-2">
                                     <v-btn
-                                        color="#000"
-                                        rounded="lg"
+                                        class="v-btn-as v-btn-success"
+                                        rounded="large"
                                         size="large"
                                         @click="addNewMottaker()"
-                                        variant="tonal"
-                                        style="color: var(--color-primary-black); border-radius: var(--radius-normal) !important;" >
-                                        Legg til  
+                                        variant="outlined">
+                                        Legg til
                                     </v-btn>
                                 </div>
                             </v-tabs-window-item>
@@ -295,6 +318,7 @@ export default {
             aktivMottakerTab : 0 as Number,
             tab : null as any,
             innslagMottakere : [] as Array<Array<InnslagMottaker>>,
+            loggInfo : false as Boolean,
         }
     },
 
@@ -555,7 +579,9 @@ export default {
     font-size: 12px;
     font-weight: 100;
 }
-
+.sms-info {
+    margin-top: -10px;
+}
 
 .toggle-container{
     display: flex;
