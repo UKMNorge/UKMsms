@@ -20,6 +20,10 @@ class Avsender {
         const mobileNumberPattern = /^\d{1,8}$/;
         return mobileNumberPattern.test(this.telefonnummer.toString());
     }
+
+    public toString() : String {
+        return this.navn + ' - ' + this.telefonnummer;
+    }
 }
 
 

@@ -73,9 +73,9 @@
                 
                 <!-- Avsender -->
                     <!--Inputfelt-->
-                    <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="getAvsendere()" v-model="selectedAvsender"></v-autocomplete>
+                    <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="avsendere" v-model="selectedAvsender"></v-autocomplete>
 
-                    <!--Varsel-->                    
+                    <!--Varsel-->         
                     <PermanentNotification v-if="getSelectedAvsender() != null && !getSelectedAvsender()?.isTelefonnummerValid()" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Mottakeren kan ikke svare hvis du bruker denne avsenderen.'" />
 
                     
@@ -250,8 +250,8 @@ export default {
             nyMobil : '' as any,
             nyMobilNavn : '' as any,
             mottakereInfo : false as Boolean,
-            selectedAvsender : '' as any,
-            selectedNyhetssak : null as any,
+            selectedAvsender : null as Avsender | null,
+            selectedNyhetssak : null as any | Nyhetsak,
             alleNyhetsaker : [] as Array<Nyhetsak>,
             kopiTilAvsender : false as Boolean,
             ukmSignatur : false as Boolean,
@@ -372,14 +372,12 @@ export default {
             this.mottakere = this.mottakere.filter((m) => m.mobil != mottaker.mobil);
         },
         getSelectedAvsender() : Avsender | null {
-            var selected = this.selectedAvsender;
-            if(selected == null) {
+            console.log(this.selectedAvsender);
+            if(this.selectedAvsender == null) {
                 return null;
             }
-            var telefonnummer = selected.split(' ')[0];
-            var ret = this.avsendere.filter((avsender) => avsender.getTelefonnummer() == telefonnummer)[0];
-
-            return ret;
+            
+            return this.selectedAvsender;
         },
         getSelectedNyhetssak() : Nyhetsak | null {
             if(this.selectedNyhetssak == null) {
@@ -396,7 +394,8 @@ export default {
             if(this.ukmSignatur) {
                 retMsgString += '\n\n-UKM';
             }
-            if(this.getSelectedAvsender() != null && !this.getSelectedAvsender()?.isTelefonnummerValid()) {
+            var selAvsender = this.getSelectedAvsender();
+            if(selAvsender != null && !selAvsender.isTelefonnummerValid()) {
                 retMsgString += '\n(denne SMS kan ikke besvares)';
             }
 
