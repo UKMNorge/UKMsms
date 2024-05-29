@@ -23,6 +23,12 @@ function UKMSMS_ajax(){
 		case 'getInitialData':
 			getInitialData();
 			break;
+		case 'getSMSLog':
+			getSMSLog();
+			break;
+		case 'sendSMS':
+			sendSMS();
+			break;
 		case 'getInnslagMottakere':
 			getInnslagMottakere();
 			break;
@@ -51,6 +57,37 @@ function getInnslagMottakere() {
 	$handleCall->sendToClient([
 		'personer' => $allePersoner,
 	]);
+}
+
+function sendSMS() {
+	$handleCall = new HandleAPICall(['avsender', 'mottakere', 'message'], [], ['GET', 'POST'], false);
+
+	$avsender = $handleCall->getArgument('avsender');
+	$mottakere = $handleCall->getArgument('mottakere');
+	$message = $handleCall->getArgument('message');
+
+	if( !is_array($mottakere) ) {
+		throw new Exception('Listen av mottakere er ugyldig!');
+	}
+
+	$reports = [];
+	foreach($mottakere as $mottaker) {
+		$message = stripslashes(str_replace(array('<br>','<br />'),"\r\n", $message));
+		$pl_id = ($blog_id == 1 || is_network_admin() ) ? 1 : get_option('pl_id');
+
+		$sms = new SMS('wordpress', get_current_user_id(), $pl_id);
+		$sms->text($message)->to($mottaker)->from($avsender)->ok();
+		$report = $sms->report();
+		$reports[] = [
+			'mottaker' => $mottaker,
+			'report' => $report,
+		];
+	}
+
+	$handleCall->sendToClient([
+		'reports' => $reports,
+	]);
+	
 }
 
 function getNyhetsakerJson() {
@@ -88,6 +125,33 @@ function getInitialData() {
 		'SMS_returnLink' => SMS_returnLink(),
 		'SMS_initCredits' => SMS_initCredits(),
 		'SMS_avsendere' => SMS_avsendere_array(),
+	]);
+
+}
+
+function getSMSLog() {
+	$handleCall = new HandleAPICall([], [], ['GET', 'POST'], false);
+
+	$plID = get_option('pl_id');
+	$qry = new Query("SELECT * FROM `log_sms_transactions`
+		WHERE `pl_id` = '#plid'
+		ORDER BY `t_id` ASC",
+		array('plid' => $plID)
+	);
+	$res = $qry->run();
+
+	$logs = [];
+	while($r = Query::fetch($res)) {
+		$logs[] = [
+			'time' => $r['t_time'],
+			'action' => ucfirst(SMS_human('action', $r['t_action'])) . ' ' . abs($r['t_credits']) . ' SMS-credits',
+			'user' => $r['wp_username'],
+			'description' => $r['t_comment'],
+		];
+	}
+	
+	$handleCall->sendToClient([
+		'logs' => $logs,
 	]);
 
 }
