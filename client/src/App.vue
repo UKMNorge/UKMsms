@@ -778,4 +778,13 @@ tr {
     padding-bottom: 4px;
     column-gap: 8px;
 }
+@media(max-width: 992px) {
+    .flex-container-left {
+        margin-right: 0;
+        width: 100% !important;
+    }
+    .flex-container-right {
+        display: none !important;
+    }
+}
 </style>

@@ -117,6 +117,20 @@ export default {
 .mobile-message .mobile-msg {
     word-break: break-all;
 }
+@media(max-width: 1200px) {
+    .mobile-message {
+        height: 270px;
+        width: 172px;
+        top: 132px;
+        left: 28px;
+    }
+    .mobile-number {
+        top: 59px;
+    }
+    .mobile-number .mobile-tlf {
+        font-size: 11px;
+    }
+}
 </style>
 
 
