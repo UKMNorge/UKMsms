@@ -94,6 +94,8 @@ export default {
             gotRepport : false as Boolean,
             callbackLogg : this.callbackLogg,
             errorSend : '' as String,
+            spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
+
         }
     },
     components: {
@@ -121,7 +123,7 @@ export default {
             };
 
             try {
-                var response = await spaInteraction.runAjaxCall('/', 'POST', data);
+                var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
             }catch(e : any) {
                 console.warn(e);
                 this.errorSend = e.message;

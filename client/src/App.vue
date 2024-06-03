@@ -310,13 +310,12 @@
         <div v-show="SMSsendt" class="rapport">
             <SendSMSraport :mottakere="mottakere" :selectedAvsender="getSelectedAvsender()" :textMsg="getTextmessage()" :callbackLogg="() => {alleSMSLogs=[];openSMSLogs()}" ref="sendingRapport" />
         </div>
+
     </div>
 </template>
 
 <script lang="ts">
 import FirstTab from './tabs/FirstTab.vue';
-import { SPAInteraction } from 'ukm-spa/SPAInteraction';
-import { Director } from 'ukm-spa/Director';
 import phoneImg from './components/PhoneImgComponent.vue';
 import SendSMSraport from './components/SendSMSraport.vue';
 // import FloatingClosable from './components/FloatingClosable.vue';
@@ -333,9 +332,6 @@ import Log from './objects/Log';
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
 var alleMottakere : string = (<any>window).alleMottakere; // Definert i PHP
-const spaInteraction = new SPAInteraction(null, ajaxurl);
-
-
 
 export default {
     data() {
@@ -359,6 +355,8 @@ export default {
             innslagMottakere : [] as Array<Array<InnslagMottaker>>,
             loggInfo : false as Boolean,
             alleSMSLogs : [] as Array<Log>,
+            spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
+
         }
     },
 
@@ -369,8 +367,6 @@ export default {
         PermanentNotification : PermanentNotification,
         InputTextOverlay : InputTextOverlay,
         SendSMSraport : SendSMSraport,
-
-
     },
 
     mounted: function () {
@@ -418,8 +414,7 @@ export default {
                 SMSaction: 'getInitialData',
             };
 
-
-            var response = await spaInteraction.runAjaxCall('/', 'POST', data);
+            var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
             
             for(var key in response.SMS_avsendere) {
                 this.avsendere.push(new Avsender(response.SMS_avsendere[key], key));
@@ -431,7 +426,7 @@ export default {
                 SMSaction: 'getSMSLog',
             };
 
-            var response = await spaInteraction.runAjaxCall('/', 'POST', data);
+            var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
 
             for(var log of response.logs) {
                 this.alleSMSLogs.push(new Log(log.time, log.action, log.user, log.description));
@@ -443,7 +438,7 @@ export default {
                 SMSaction: 'getInnslagMottakere',
             };
 
-            var response = await spaInteraction.runAjaxCall('/', 'POST', data);
+            var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
 
             for(var key in response.personer) {
                 var innslagArr = [];
@@ -461,8 +456,9 @@ export default {
                 action: 'UKMSMS_ajax',
                 SMSaction: 'getNyhetsakerJson',
             };
-
-            var response = await spaInteraction.runAjaxCall('/', 'POST', data);
+            
+            
+            var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
 
 
             for(var n of response.posts) {
