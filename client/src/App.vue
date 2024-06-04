@@ -34,7 +34,7 @@
                         prepend-icon="mdi-history"
                         color="#000"
                         rounded="large"
-                        size="x-large"
+                        :size="isMobile ? 'large' : 'x-large'"
                         @click="openSMSLogs()"
                         variant="outlined" >
                         SMS-logg
@@ -48,7 +48,7 @@
                         prepend-icon="mdi-plus"
                         color="#000"
                         rounded="large"
-                        size="x-large"
+                        :size="isMobile ? 'large' : 'x-large'"
                         @click="openNyhetsaker()"
                         variant="outlined" >
                         Legg til nyhetssak
@@ -86,10 +86,16 @@
                 <div class="flex-container-left">
                     <!--Avsender-->
                     <div class="as-card-1 as-padding-space-3 as-margin-bottom-space-2 avsender-div"> 
-                        <h4>Avsender</h4>
-                        <div class="text-align-right">
-                            <a>Rediger kontaktpersoner</a>
+                        <div class="as-margin-bottom-space-2 as-display-flex">
+                            <h4 class="as-margin-auto as-margin-left-none">Avsender</h4>
+
+                            <v-btn @click="avsenderInfo = !avsenderInfo" class="vuetify-icon-button as-margin-auto as-margin-right-none" density="compact" icon variant="tonal">
+                                <v-icon>mdi-information-slab-symbol</v-icon>
+                            </v-btn>
                         </div>
+
+                        <PermanentNotification class="as-margin-bottom-space-2" v-if="avsenderInfo" :typeNotification="'info'" :tittel="'Legg til flere avsendere?'" :description="'På menyvalget arrangement (venstre side meny) kan du legge til flere kontaktpersoner som blir avsendere!'" />
+
                     
                     <!-- Avsender -->
                         <!--Inputfelt-->
@@ -216,10 +222,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        
-
                     </div>
 
                 <div class="as-display-flex as-margin-top-space-4">
@@ -314,6 +316,8 @@
             <SendSMSraport :mottakere="mottakere" :selectedAvsender="getSelectedAvsender()" :textMsg="getTextmessage()" :callbackLogg="() => {alleSMSLogs=[];openSMSLogs()}" ref="sendingRapport" />
         </div>
 
+        <Feedback class="feedback" />
+
     </div>
 </template>
 
@@ -321,11 +325,11 @@
 import FirstTab from './tabs/FirstTab.vue';
 import phoneImg from './components/PhoneImgComponent.vue';
 import SendSMSraport from './components/SendSMSraport.vue';
-// import FloatingClosable from './components/FloatingClosable.vue';
+import Feedback from './components/Feedback.vue';
+
 import { PermanentNotification } from 'ukm-components-vue3';
 import { FloatingClosable } from 'ukm-components-vue3';
 import { InputTextOverlay } from 'ukm-components-vue3';
-
 
 import Avsender from './objects/Avsender';
 import Nyhetsak from './objects/Nyhetsak';
@@ -337,6 +341,11 @@ var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
 var alleMottakere : string = (<any>window).alleMottakere; // Definert i PHP
 
 export default {
+    computed: {
+        isMobile() {
+            return window.innerWidth < 600; // Adjust the breakpoint as needed
+        }
+    },
     data() {
         return {
             SMSsendt : false as Boolean,
@@ -348,6 +357,7 @@ export default {
             nyMobil : '' as any,
             nyMobilNavn : '' as any,
             mottakereInfo : false as Boolean,
+            avsenderInfo : false as Boolean,
             selectedAvsender : null as Avsender | null,
             selectedNyhetssak : null as any | Nyhetsak,
             alleNyhetsaker : [] as Array<Nyhetsak>,
@@ -370,6 +380,7 @@ export default {
         PermanentNotification : PermanentNotification,
         InputTextOverlay : InputTextOverlay,
         SendSMSraport : SendSMSraport,
+        Feedback : Feedback
     },
 
     mounted: function () {
@@ -561,7 +572,7 @@ export default {
         sendSMS() {
             this.SMSsendt = true;
             (<typeof SendSMSraport>this.$refs.sendingRapport).sendSMS();
-        }
+        },
     }
 }
 </script>
@@ -614,7 +625,9 @@ export default {
     background-color: var(--as-color-primary-info-lightest);
     border-color: var(--as-color-primary-info-light);
 }
-
+.feedback {
+    margin-top: 200px;
+}
 
 .dropdown {
     background-color: var(--color-primary-grey-lightest);

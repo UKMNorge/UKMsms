@@ -6,7 +6,9 @@ use UKMNorge\Wordpress\Nyhet;
 use UKMNorge\DesignWordpress\Environment\Posts;
 use UKMNorge\DesignWordpress\Environment\Wordpress;
 use UKMNorge\OAuth2\HandleAPICall;
-
+use UKMNorge\Feedback\FeedbackArrangor;
+use UKMNorge\Feedback\FeedbackResponse;
+use UKMNorge\Feedback\Feedbacks;
 
 require_once('UKM/Autoloader.php');
 
@@ -32,6 +34,12 @@ function UKMSMS_ajax(){
 		case 'getInnslagMottakere':
 			getInnslagMottakere();
 			break;
+		case 'saveFeedback':
+			saveFeedback();
+			break;
+		case 'hasUserAnsweredFeedback':
+			hasUserAnsweredFeedback();
+			break;
 	}
 	die();
 }
@@ -56,6 +64,43 @@ function getInnslagMottakere() {
 
 	$handleCall->sendToClient([
 		'personer' => $allePersoner,
+	]);
+}
+
+function saveFeedback() {
+	$handleCall = new HandleAPICall(['campaignId', 'question', 'answerId'], ['answerText'], ['GET', 'POST'], false);
+
+	$campaignId = $handleCall->getArgument('campaignId');
+	$question = $handleCall->getArgument('question');
+	$answerId = $handleCall->getArgument('answerId');
+	$answerText = $handleCall->getOptionalArgument('answerText');
+
+	$userId = get_current_user_id();
+
+	$answer = !empty($answerText) ? $answerText : $answerId;
+
+	$feedback = new FeedbackArrangor(-1, [], $userId, $campaignId);
+
+	$feedback->leggTilResponse(new FeedbackResponse(-1, $question, $answer));
+
+	$res = $feedback->save();
+
+	$handleCall->sendToClient([
+		'result' => $res,
+	]);
+}
+
+function hasUserAnsweredFeedback() {
+	$handleCall = new HandleAPICall(['campaignId'], [], ['GET', 'POST'], false);
+
+	$campaignId = $handleCall->getArgument('campaignId');
+	$userId = get_current_user_id();
+
+	$feedbacks = Feedbacks::getAllFeedbacksUserCampaign($userId, $campaignId);
+
+
+	$handleCall->sendToClient([
+		'hasAnswered' => count($feedbacks) > 0,
 	]);
 }
 
