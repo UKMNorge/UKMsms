@@ -66,8 +66,15 @@ function sendSMS() {
 	$mottakere = $handleCall->getArgument('mottakere');
 	$message = $handleCall->getArgument('message');
 
+	// Check if avsender is in the list of avsendere
+	if( !in_array($avsender, SMS_avsendere_array()) ) {
+		$handleCall->sendErrorToClient('Avsenderen er ugyldig!', 400);
+		return;
+	}
+	
 	if( !is_array($mottakere) ) {
-		throw new Exception('Listen av mottakere er ugyldig!');
+		$handleCall->sendErrorToClient('Listen av mottakere er ugyldig!', 400);
+		return;
 	}
 
 	$reports = [];
