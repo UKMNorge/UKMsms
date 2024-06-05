@@ -233,7 +233,8 @@
                     </div>
 
                 <div class="as-display-flex as-margin-top-space-4">
-                    <div class="as-margin-auto as-margin-right-none">
+                    <div class="as-margin-auto as-margin-right-none as-display-flex">
+                        <InfoDialog />
                         <v-btn
                             class="v-btn-as v-btn-success"
                             rounded="large"
@@ -339,6 +340,7 @@ import FirstTab from './tabs/FirstTab.vue';
 import phoneImg from './components/PhoneImgComponent.vue';
 import SendSMSraport from './components/SendSMSraport.vue';
 import Feedback from './components/Feedback.vue';
+import InfoDialog from './components/InfoDialog.vue';
 
 import { PermanentNotification } from 'ukm-components-vue3';
 import { FloatingClosable } from 'ukm-components-vue3';
@@ -394,7 +396,8 @@ export default {
         PermanentNotification : PermanentNotification,
         InputTextOverlay : InputTextOverlay,
         SendSMSraport : SendSMSraport,
-        Feedback : Feedback
+        Feedback : Feedback,
+        InfoDialog : InfoDialog,
     },
 
     mounted: function () {
