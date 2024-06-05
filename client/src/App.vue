@@ -118,14 +118,19 @@
                     <div v-if="selectedNyhetssak" class="as-card-1 as-padding-space-3 as-margin-bottom-space-2"> 
                         <h4>Nyhetssak</h4>
 
-                        <div class="as-margin-top-space-2 alle-nyhetssaker">
-                            <div @click="selectedNyhetssak = null" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
-                                <p>{{ getSelectedNyhetssak()?.getNavn() }}</p>
-                                <button class="icon">
-                                    <svg class="remove-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path data-v-36f76f19="" d="M11.5 4.24264L10.0858 2.82843L7.25736 5.65685L4.42893 2.82843L3.01472 4.24264L5.84315 7.07107L3.01472 9.89949L4.42893 11.3137L7.25736 8.48528L10.0858 11.3137L11.5 9.89949L8.67157 7.07107L11.5 4.24264Z" fill="#9B9B9B"></path>
-                                    </svg>
-                                </button>
+                        <div class="as-card-2 as-padding-space-2 as-margin-top-space-2 nosh-impt as-card-lightest-color">
+                            <div class="">
+                                <p class="motakkere-overtittel">Nyhetssak</p>
+                            </div>
+                            <div class="alle-mottakere">
+                                <div @click="selectedNyhetssak = null" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
+                                    <p>{{ getSelectedNyhetssak()?.getNavn() }}</p>
+                                    <button class="icon">
+                                        <svg class="remove-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path data-v-36f76f19="" d="M11.5 4.24264L10.0858 2.82843L7.25736 5.65685L4.42893 2.82843L3.01472 4.24264L5.84315 7.07107L3.01472 9.89949L4.42893 11.3137L7.25736 8.48528L10.0858 11.3137L11.5 9.89949L8.67157 7.07107L11.5 4.24264Z" fill="#9B9B9B"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -203,6 +208,9 @@
                                 </v-chip>
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
                                     {{ Math.floor(getTextmessage().length / 160) + 1 }} SMS
+                                </v-chip>
+                                <v-chip class="as-margin-right-space-1" density="compact" size="small">
+                                    Totalt {{ getTotalSMS() * (Math.floor(getTextmessage().length / 160) + 1) }} SMS
                                 </v-chip>
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
                                     {{ (getPrice()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) }} kr
@@ -573,6 +581,9 @@ export default {
         },
         getPrice() : Number{
             return ((((Math.floor(this.getTextmessage().length / 160) + 1) * 0.4) * this.mottakere.length) + (this.kopiTilAvsender ? 0.4 : 0));
+        },
+        getTotalSMS() : Number {
+            return this.mottakere.length + (this.kopiTilAvsender ? 1 : 0);
         },
         isSendingReady() : boolean {
             return this.mottakere.length > 0 && this.getTextmessage().length > 0 && this.getSelectedAvsender() != null;

@@ -28,7 +28,7 @@ class Nyhetsak {
     }
 
     public getStringFormat() : String {
-        return this.id + ' - ' + this.navn;
+        return this.navn;
     }
 
     public toString() {
