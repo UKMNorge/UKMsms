@@ -210,7 +210,7 @@
                                     {{ Math.floor(getTextmessage().length / 160) + 1 }} SMS
                                 </v-chip>
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
-                                    Totalt {{ getTotalSMS() * (Math.floor(getTextmessage().length / 160) + 1) }} SMS
+                                    Totalt {{ getTotalSMS() }} SMS
                                 </v-chip>
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
                                     {{ (getPrice()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) }} kr
@@ -583,7 +583,7 @@ export default {
             return ((((Math.floor(this.getTextmessage().length / 160) + 1) * 0.4) * this.mottakere.length) + (this.kopiTilAvsender ? 0.4 : 0));
         },
         getTotalSMS() : Number {
-            return this.mottakere.length + (this.kopiTilAvsender ? 1 : 0);
+            return (this.mottakere.length + (this.kopiTilAvsender ? 1 : 0)) * (Math.floor(this.getTextmessage().length / 160) + 1);
         },
         isSendingReady() : boolean {
             return this.mottakere.length > 0 && this.getTextmessage().length > 0 && this.getSelectedAvsender() != null;
