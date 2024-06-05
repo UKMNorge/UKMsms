@@ -177,6 +177,7 @@ function getInitialData() {
 		'SMS_returnLink' => SMS_returnLink(),
 		'SMS_initCredits' => SMS_initCredits(),
 		'SMS_avsendere' => SMS_avsendere_array(),
+		'isArrangement' => get_option('pl_id') ? true : false,
 	]);
 
 }

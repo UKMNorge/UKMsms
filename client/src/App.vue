@@ -253,7 +253,7 @@
                     <div class="mottakere-tabs-under nop">
                         <v-tabs align-tabs="center" v-model="tab">
                             <v-tab text="Ny mottaker"></v-tab>
-                            <v-tab text="Mottaker fra innslag"></v-tab>
+                            <v-tab v-if="isArrangement" text="Mottaker fra innslag"></v-tab>
                         </v-tabs>
                         
                         <div class="as-margin-top-space-4">
@@ -286,7 +286,7 @@
                                 </v-tabs-window-item>
 
                                 <!-- Legg til mottaker fra innslag TAB WINDOW ITEM -->
-                                <v-tabs-window-item>
+                                <v-tabs-window-item v-if="isArrangement">
                                     <div class="as-margin-top-space-2">
                                         <div v-for="innslag in getInnslagMottakere()">
                                             <div class="as-card-2 as-padding-space-2 nosh-impt as-margin-bottom-space-2 as-card-lightest-color" v-if="innslag.length > 0">
@@ -358,6 +358,7 @@ export default {
             nyMobilNavn : '' as any,
             mottakereInfo : false as Boolean,
             avsenderInfo : false as Boolean,
+            isArrangement : false as Boolean,
             selectedAvsender : null as Avsender | null,
             selectedNyhetssak : null as any | Nyhetsak,
             alleNyhetsaker : [] as Array<Nyhetsak>,
@@ -433,6 +434,8 @@ export default {
             for(var key in response.SMS_avsendere) {
                 this.avsendere.push(new Avsender(response.SMS_avsendere[key], key));
             }
+
+            this.isArrangement = response.isArrangement;
         },
         async _fetchSMSLog() {
             var data : any = {
