@@ -188,7 +188,7 @@ function getSMSLog() {
 	$plID = get_option('pl_id');
 	$qry = new Query("SELECT * FROM `log_sms_transactions`
 		WHERE `pl_id` = '#plid'
-		ORDER BY `t_id` ASC",
+		ORDER BY `t_id` DESC LIMIT 500",
 		array('plid' => $plID)
 	);
 	$res = $qry->run();
