@@ -184,17 +184,7 @@
                     <div class="as-card-1 as-padding-space-3 margin-bottom innhold-div"> 
                         <div class="as-margin-bottom-space-2 as-display-flex">
                             <h4 class="as-margin-auto as-margin-left-none">Innhold</h4>
-
-                            <v-btn @click="loggInfo = !loggInfo" class="vuetify-icon-button as-margin-auto as-margin-right-none" density="compact" icon variant="tonal">
-                                <v-icon>mdi-information-slab-symbol</v-icon>
-                            </v-btn>
                         </div>
-                        <!-- INFO -->
-                        <PermanentNotification class="as-margin-bottom-space-2" v-if="loggInfo" :typeNotification="'info'" :tittel="'OBS: Alle SMS logges og lagres!'" 
-                        :description="'SMS som sendes med dette systemet går fra UKM-Norges konto hos tjenesteleverandøren. UKM-Norge er juridisk ansvarlig for innholdet, og vi logger og lagrer derfor alle meldinger slik at eventuelle misbruk av systemet til personangrep, spam, eller private formål kan oppdages og spores tilbake til avsender. Sendingsloggen brukes også som fakturagrunnlag i de tilfeller UKM Norge finner det nødvendigå fakturere for forbruk utover gratiskvoten.'" />
-                        
-                        <PermanentNotification class="as-margin-bottom-space-2" v-if="loggInfo" :typeNotification="'info'" :tittel="'SMS Informasjon'" 
-                        :description="'Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får 400 tekstmeldinger gratis, og alt forbruk utover dette kan bli fakturert sammen med neste års materiellpakke. 1 SMS = kr. 0,40'" />
                         <!--Inputfelt-->
                         <div class="as-margin-top-space-1"> 
                             <v-textarea class="vue-as-textarea" label="Melding" v-model="textmessage"></v-textarea>
