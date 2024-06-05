@@ -26,9 +26,9 @@
             </v-table>
         </FloatingClosable>
         <div v-show="!SMSsendt">
-            <div class="as-container buttons container as-margin-bottom-space-6 as-display-flex">
+            <div class="as-container buttons container as-margin-bottom-space-4 as-display-flex-wrap">
                 
-                <div class="as-margin-right-space-2">
+                <div class="as-margin-right-space-2 as-margin-top-space-2">
                     <v-btn
                         class="v-btn-as v-btn-hvit"
                         prepend-icon="mdi-history"
@@ -42,7 +42,7 @@
 
 
                 </div>
-                <div class="as-margin-right-space-2">
+                <div class="as-margin-right-space-2 as-margin-top-space-2">
                     <v-btn
                         class="v-btn-as v-btn-hvit"
                         prepend-icon="mdi-plus"
@@ -287,6 +287,9 @@
                                 <!-- Legg til mottaker fra innslag TAB WINDOW ITEM -->
                                 <v-tabs-window-item v-if="isArrangement">
                                     <div class="as-margin-top-space-2">
+                                        <div v-if="isMottakereFetched && getInnslagMottakere().length < 1">
+                                            <PermanentNotification class="as-margin-bottom-space-2" :typeNotification="'warning'" :tittel="'Ingen innslag'" :description="'Det er ingen innslag i arrangementet'" />
+                                        </div>
                                         <div v-for="innslag in getInnslagMottakere()">
                                             <div class="as-card-2 as-padding-space-2 nosh-impt as-margin-bottom-space-2 as-card-lightest-color" v-if="innslag.length > 0">
                                                 <div>
@@ -348,7 +351,7 @@ var alleMottakere : string = (<any>window).alleMottakere; // Definert i PHP
 export default {
     computed: {
         isMobile() {
-            return window.innerWidth < 600; // Adjust the breakpoint as needed
+            return window.innerWidth < 576; // Adjust the breakpoint as needed
         }
     },
     data() {
@@ -375,6 +378,7 @@ export default {
             loggInfo : false as Boolean,
             alleSMSLogs : [] as Array<Log>,
             spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
+            isMottakereFetched : false as Boolean,
 
         }
     },
@@ -456,6 +460,7 @@ export default {
             }
         },
         async _fetchInnslag() {
+            this.isMottakereFetched = true;
             var data : any = {
                 action: 'UKMSMS_ajax',
                 SMSaction: 'getInnslagMottakere',
@@ -499,7 +504,7 @@ export default {
             this.mottakere.push({mobil: mottaker.mobil, name: mottaker.navn});
         },
         getInnslagMottakere() {
-            if(this.innslagMottakere.length < 1) {
+            if(!this.isMottakereFetched) {
                 this._fetchInnslag();
             }
             return this.innslagMottakere;
@@ -766,7 +771,8 @@ export default {
 }
 .mottakere-tabs {
     width: 100%;
-    width: 500px;
+    min-width: 450px;
+    width: auto;
 }
 .mottakere-tabs .mottakere-tabs-under {
     width: 100%;
@@ -816,6 +822,12 @@ tr {
     }
     .flex-container-right {
         display: none !important;
+    }
+}
+@media(max-width: 576px) {
+    .mottakere-tabs {
+        width: 100%;
+        min-width: auto;
     }
 }
 </style>
