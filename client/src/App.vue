@@ -300,6 +300,11 @@
                                                             <p>{{ person.mobil }} ({{ person.navn }})</p>
                                                         </div>
                                                     </template>
+                                                    <template v-if="innslag.filter(person => !isPersonInMottakere(person)).length > 1">
+                                                        <div @click="leggTilAllePersonerFraInnslag(innslag)" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
+                                                            <p>Legg til alle</p>
+                                                        </div>
+                                                    </template>
                                                 </div>
                                             </div>
                                         </div>
@@ -576,6 +581,13 @@ export default {
             this.SMSsendt = true;
             (<typeof SendSMSraport>this.$refs.sendingRapport).sendSMS();
         },
+        leggTilAllePersonerFraInnslag(innslag : Array<InnslagMottaker>) {
+            for(var person of innslag) {
+                if(!this.isPersonInMottakere(person)) {
+                    this.mottakere.push({mobil: person.mobil, name: person.navn});
+                }
+            }
+        }
     }
 }
 </script>
