@@ -112,7 +112,7 @@ function sendSMS() {
 	$message = $handleCall->getArgument('message');
 
 	// Check if avsender is in the list of avsendere
-	if( !in_array($avsender, SMS_avsendere_array()) ) {
+	if( !array_key_exists($avsender, SMS_avsendere_array()) ) {
 		$handleCall->sendErrorToClient('Avsenderen er ugyldig!', 400);
 		return;
 	}
