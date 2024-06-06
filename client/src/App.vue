@@ -315,7 +315,7 @@
                                 </v-tabs-window-item>
                                 
                                 <!-- kommaseparert liste -->
-                                <v-tabs-window-item v-if="isArrangement">
+                                <v-tabs-window-item>
                                     <div class="as-padding-bottom-space-3">
                                         <h4 class="nop-impt">Legg til kommaseparert liste av mobiltelefonnummer</h4>
                                     </div>
