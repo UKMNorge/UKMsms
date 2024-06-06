@@ -156,7 +156,7 @@
 
                             <div class="alle-mottakere">
                                 <div @click="removeMottaker(mottaker)" v-for="mottaker in mottakere" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
-                                    <p>{{ mottaker.mobil }} ({{ mottaker.name }})</p>
+                                    <p>{{ mottaker.mobil }} {{ mottaker.name ? '(' + mottaker.name + ')' : '' }}</p>
                                     <button class="icon">
                                         <svg class="remove-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path data-v-36f76f19="" d="M11.5 4.24264L10.0858 2.82843L7.25736 5.65685L4.42893 2.82843L3.01472 4.24264L5.84315 7.07107L3.01472 9.89949L4.42893 11.3137L7.25736 8.48528L10.0858 11.3137L11.5 9.89949L8.67157 7.07107L11.5 4.24264Z" fill="#9B9B9B"></path>
@@ -253,6 +253,7 @@
                         <v-tabs align-tabs="center" v-model="tab">
                             <v-tab text="Ny mottaker"></v-tab>
                             <v-tab v-if="isArrangement" text="Mottaker fra innslag"></v-tab>
+                            <v-tab text="Legg til kommaseparert liste"></v-tab>
                         </v-tabs>
                         
                         <div class="as-margin-top-space-4">
@@ -312,7 +313,27 @@
                                         </div>
                                     </div>
                                 </v-tabs-window-item>
+                                
+                                <!-- kommaseparert liste -->
+                                <v-tabs-window-item v-if="isArrangement">
+                                    <div class="as-padding-bottom-space-3">
+                                        <h4 class="nop-impt">Legg til kommaseparert liste av mobiltelefonnummer</h4>
+                                    </div>
+                                    <div>
+                                        <InputTextOverlay key="kommaseparert" :placeholder="'Kommaseparert mobil'" v-model="kommaseparertMobil" />
+                                    </div>
 
+                                    <div class="as-margin-top-space-2">
+                                        <v-btn
+                                            class="v-btn-as v-btn-success"
+                                            rounded="large"
+                                            size="large"
+                                            @click="leggTilKommaseparert()"
+                                            variant="outlined">
+                                            Legg til
+                                        </v-btn>
+                                    </div>
+                                </v-tabs-window-item>
                             </v-tabs-window>
                         </div>
                     </div>
@@ -379,7 +400,7 @@ export default {
             alleSMSLogs : [] as Array<Log>,
             spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
             isMottakereFetched : false as Boolean,
-
+            kommaseparertMobil : '' as any,
         }
     },
 
@@ -596,7 +617,20 @@ export default {
                     this.mottakere.push({mobil: person.mobil, name: person.navn});
                 }
             }
-        }
+        },
+        leggTilKommaseparert() {
+            var mobilArr = this.kommaseparertMobil.split(',');
+            for(var mobil of mobilArr) {
+                mobil = mobil.trim();
+                if(this._validateMobileNumber(mobil)) {
+                    // Check if the number exists
+                    if(this.mottakere.filter((mottaker) => mottaker.mobil == mobil).length < 1) {
+                        this.mottakere.push({mobil: mobil, name: ''});
+                    }
+                }
+            }
+            this.kommaseparertMobil = '';
+        },
     }
 }
 </script>
