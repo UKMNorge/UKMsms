@@ -194,10 +194,7 @@
                         <div class="as-display-flex sms-info as-margin-bottom-space-2">
                             <div class="as-margin-auto as-display-flex as-margin-right-none">
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
-                                    {{ getTextmessage().length }} tegn
-                                </v-chip>
-                                <v-chip class="as-margin-right-space-1" density="compact" size="small">
-                                    {{ Math.floor(getTextmessage().length / 160) + 1 }} SMS
+                                    {{ getTextmessage().length }} tegn | {{ Math.floor(getTextmessage().length / 160) + 1 }} SMS
                                 </v-chip>
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
                                     Totalt {{ getTotalSMS() }} SMS

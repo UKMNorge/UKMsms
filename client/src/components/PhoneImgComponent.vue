@@ -111,11 +111,11 @@ export default {
     width: 183px;
     height: 286px;
     overflow-y: auto;
-    word-break: break-all;
+    word-break: break-word;
     padding: var(--initial-space-box);
 }
 .mobile-message .mobile-msg {
-    word-break: break-all;
+    word-break: break-word;
 }
 @media(max-width: 1200px) {
     .mobile-message {
