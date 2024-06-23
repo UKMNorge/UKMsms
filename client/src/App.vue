@@ -154,7 +154,7 @@
                                 <p class="motakkere-overtittel">Mottakere</p>
                             </div>
 
-                            <div class="alle-mottakere">
+                            <div :class="isOpenDeltakere ? 'collapse-open' : 'collapse-close'" class="alle-mottakere">
                                 <div @click="removeMottaker(mottaker)" v-for="mottaker in mottakere" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
                                     <p>{{ mottaker.mobil }} {{ mottaker.name ? '(' + mottaker.name + ')' : '' }}</p>
                                     <button class="icon">
@@ -173,6 +173,16 @@
                                     </button>
                                 </div>
                             </div>
+
+                            <div v-show="mottakere.length > 5" :class="!isOpenDeltakere ? 'active' : ''" class="collapse-button as-display-flex as-padding-top-space-2">
+                                <v-btn 
+                                variant="text"
+                                size="small"
+                                icon="mdi-chevron-down"
+                                :class="!isOpenDeltakere ? 'active' : ''"
+                                class="open-close-button-chevron v-btn-as v-btn-hvit v-btn-icon-round-small as-margin-auto"
+                                @click="() => {isOpenDeltakere = !isOpenDeltakere}" />
+                            </div>
                         </div>
                         
                         <div class="as-padding-top-space-1">
@@ -190,7 +200,7 @@
                             <v-textarea class="vue-as-textarea" label="Melding" v-model="textmessage"></v-textarea>
                         </div>                    
 
-                    
+                        
                         <div class="as-display-flex sms-info as-margin-bottom-space-2">
                             <div class="as-margin-auto as-display-flex as-margin-right-none">
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
@@ -398,6 +408,7 @@ export default {
             spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
             isMottakereFetched : false as Boolean,
             kommaseparertMobil : '' as any,
+            isOpenDeltakere : true as Boolean,
         }
     },
 
@@ -784,6 +795,23 @@ export default {
     border-radius: 50%;
   }
 
+
+.collapse-button.active {
+    box-shadow: 0 -17px 13px -15px #0000001b;
+    position: relative;
+}
+.collapse-close.alle-mottakere {
+    max-height: 70px;
+    overflow: hidden;
+    border-bottom: solid 1px #e2e2e2;
+    overflow: hidden;
+}
+.open-close-button-chevron {
+    transform: rotate(180deg);
+}
+.open-close-button-chevron.active {
+    transform: rotate(0);
+}
 
 /* Phone preview */
 #phone-preview {
