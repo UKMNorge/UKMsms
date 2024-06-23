@@ -154,7 +154,7 @@
                                 <p class="motakkere-overtittel">Mottakere</p>
                             </div>
 
-                            <div :class="isOpenDeltakere ? 'collapse-open' : 'collapse-close'" class="alle-mottakere">
+                            <div :class="isCloseDeltakere ? 'collapse-open' : 'collapse-close'" class="alle-mottakere">
                                 <div @click="removeMottaker(mottaker)" v-for="mottaker in mottakere" class="as-chip as-margin-top-space-1 as-margin-right-space-1">
                                     <p>{{ mottaker.mobil }} {{ mottaker.name ? '(' + mottaker.name + ')' : '' }}</p>
                                     <button class="icon">
@@ -174,14 +174,14 @@
                                 </div>
                             </div>
 
-                            <div v-show="mottakere.length > 5" :class="!isOpenDeltakere ? 'active' : ''" class="collapse-button as-display-flex as-padding-top-space-2">
+                            <div v-show="mottakere.length > 5" :class="!isCloseDeltakere ? 'active' : ''" class="collapse-button as-display-flex as-padding-top-space-2">
                                 <v-btn 
                                 variant="text"
                                 size="small"
                                 icon="mdi-chevron-down"
-                                :class="!isOpenDeltakere ? 'active' : ''"
+                                :class="!isCloseDeltakere ? 'active' : ''"
                                 class="open-close-button-chevron v-btn-as v-btn-hvit v-btn-icon-round-small as-margin-auto"
-                                @click="() => {isOpenDeltakere = !isOpenDeltakere}" />
+                                @click="() => {isCloseDeltakere = !isCloseDeltakere}" />
                             </div>
                         </div>
                         
@@ -408,7 +408,7 @@ export default {
             spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
             isMottakereFetched : false as Boolean,
             kommaseparertMobil : '' as any,
-            isOpenDeltakere : true as Boolean,
+            isCloseDeltakere : true as Boolean,
         }
     },
 
@@ -429,7 +429,7 @@ export default {
             this.mottakere = (<any>alleMottakere);
         }
         if(this.mottakere.length > 20) {
-            this.isOpenDeltakere = true;
+            this.isCloseDeltakere = false;
         }
     },
     watch: {
