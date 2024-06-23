@@ -428,6 +428,9 @@ export default {
         if(alleMottakere.length > 0) {
             this.mottakere = (<any>alleMottakere);
         }
+        if(this.mottakere.length > 20) {
+            this.isOpenDeltakere = true;
+        }
     },
     watch: {
     selectedNyhetssak(newValue : any, oldValue : any) {
