@@ -14,10 +14,10 @@
             </div>
         </div>
         <div v-if="gotRepport" class="mobile-entire-div">
-            <div v-if="allSMSSuccess()">
+            <div v-if="sendingComplete && allSMSSuccess()">
                 <permanent-notification tittel="SMS Sendt" description="SMS er sendt til alle mottakere" typeNotification="primary" />
             </div>
-            <div v-else class="as-card-1 as-padding-space-2 as-margin-top-space-2">
+            <div class="as-card-1 as-padding-space-2 as-margin-top-space-2">
                 <div v-for="r in rapports" :class="r.report == -1 ? 'success-repport' : 'error-repport'" class="as-card-2 nosh-impt as-padding-space-2 as-margin-space-2">
                     <p>{{ getMottakerByMobil(r.mottaker) }} ({{ r.mottaker }}) - <b>{{ r.report == -1 ? 'SMS-en er sendt' : r.report }}</b></p>
                 </div>
@@ -83,6 +83,10 @@ export default {
         callbackLogg: {
             type: Function,
             default: () => {}
+        },
+        kopiTilAvsender: {
+            type: Boolean,
+            required: true
         }
     },
     data() {
@@ -111,7 +115,12 @@ export default {
                 throw new Error("Ingen mottakere valgt")
             }
             if(this.textMsg.length == 0) {
-                throw new Error("Ingen melding skrevet")
+                throw new Error("Ingen melding")
+            }
+
+            // Hvis kopi skal sendes, sjekker hvis avsender er ikke null og har telefonnummer
+            if(this.kopiTilAvsender && this.selectedAvsender != null && this.selectedAvsender.getTelefonnummer().length > 0) {
+                this.mottakere.push({mobil: this.selectedAvsender.getTelefonnummer(), name: this.selectedAvsender.getNavn()});
             }
 
             this.initialAntallMottakere = this.mottakere.length;

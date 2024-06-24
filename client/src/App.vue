@@ -348,7 +348,7 @@
             </FloatingClosable>
         </div>
         <div v-show="SMSsendt" class="rapport">
-            <SendSMSraport :mottakere="mottakere" :selectedAvsender="getSelectedAvsender()" :textMsg="getTextmessage()" :callbackLogg="() => {alleSMSLogs=[];openSMSLogs()}" ref="sendingRapport" />
+            <SendSMSraport :mottakere="mottakere" :kopiTilAvsender="kopiTilAvsender.valueOf()" :selectedAvsender="getSelectedAvsender()" :textMsg="getTextmessage()" :callbackLogg="() => {alleSMSLogs=[];openSMSLogs()}" ref="sendingRapport" />
         </div>
 
         <Feedback class="feedback" />
