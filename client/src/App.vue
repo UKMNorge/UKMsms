@@ -204,7 +204,7 @@
                         <div class="as-display-flex sms-info as-margin-bottom-space-2">
                             <div class="as-margin-auto as-display-flex as-margin-right-none">
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
-                                    {{ getTextmessage().length }} tegn | {{ Math.floor(getTextmessage().length / 160) + 1 }} SMS
+                                    {{ getTextmessage().length }} tegn | {{ getCountSMS() }} SMS
                                 </v-chip>
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
                                     Totalt {{ getTotalSMS() }} SMS
@@ -610,13 +610,16 @@ export default {
             return this.mottakere.filter((mottaker) => mottaker.mobil == person.mobil).length > 0;
         },
         getPrice() : Number{
-            return ((((Math.floor(this.getTextmessage().length / 160) + 1) * 0.4) * this.mottakere.length) + (this.kopiTilAvsender ? 0.4 : 0));
+            return ((((this.getCountSMS()) * 0.4) * this.mottakere.length) + (this.kopiTilAvsender ? 0.4 : 0));
         },
         getTotalSMS() : Number {
-            return (this.mottakere.length + (this.kopiTilAvsender ? 1 : 0)) * (Math.floor(this.getTextmessage().length / 160) + 1);
+            return (this.mottakere.length + (this.kopiTilAvsender ? 1 : 0)) * (this.getCountSMS());
         },
         isSendingReady() : boolean {
             return this.mottakere.length > 0 && this.getTextmessage().length > 0 && this.getSelectedAvsender() != null;
+        },
+        getCountSMS() {
+            return Math.ceil(this.getTextmessage().length / 160);
         },
         sendSMS() {
             this.SMSsendt = true;
