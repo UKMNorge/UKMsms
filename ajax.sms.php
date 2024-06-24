@@ -124,22 +124,18 @@ function sendSMS() {
 
 	$reports = [];
 	foreach($mottakere as $mottaker) {
-		// $message = stripslashes(str_replace(array('<br>','<br />'),"\r\n", $message));
-		// $pl_id = ($blog_id == 1 || is_network_admin() ) ? 1 : get_option('pl_id');
+		$message = stripslashes(str_replace(array('<br>','<br />'),"\r\n", $message));
+		$pl_id = ($blog_id == 1 || is_network_admin() ) ? 1 : get_option('pl_id');
 
-		// $sms = new SMS('wordpress', get_current_user_id(), $pl_id);
-		// $sms->text($message)->to($mottaker)->from($avsender)->ok();
-		// $report = $sms->report();
-
-		// Wait 10 seconds
-		
+		$sms = new SMS('wordpress', get_current_user_id(), $pl_id);
+		$sms->text($message)->to($mottaker)->from($avsender)->ok();
+		$report = $sms->report();
 		$reports[] = [
 			'mottaker' => $mottaker,
-			'report' => 'OK',
+			'report' => $report,
 		];
 	}
-	
-	sleep(1);
+
 	$handleCall->sendToClient([
 		'reports' => $reports,
 	]);
