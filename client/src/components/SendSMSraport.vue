@@ -3,17 +3,17 @@
         <div v-if="errorSend.length > 0">
             <permanent-notification tittel="Feil" description="Kunne ikke sende SMS, kontakt support@ukm.no" typeNotification="danger" />
         </div>
-        <div v-else-if="!gotRepport">
+        <div v-else-if="!sendingComplete">
             <div class="as-card-1 as-padding-space-4 as-margin-top-space-2 as-display-flex">
                 <div class="as-margin-auto">
                     <h4>Vennligst vent mens SMS sendes</h4>
                     <div class="as-display-flex as-margin-top-space-3">
-                        <v-progress-circular class="as-margin-auto" indeterminate></v-progress-circular>
+                        <v-progress-circular :size="113" :width="12" class="as-margin-auto" :model-value="getSendingPercentage()"></v-progress-circular>
                     </div>
                 </div>
             </div>
         </div>
-        <div v-else class="mobile-entire-div">
+        <div v-if="gotRepport" class="mobile-entire-div">
             <div v-if="allSMSSuccess()">
                 <permanent-notification tittel="SMS Sendt" description="SMS er sendt til alle mottakere" typeNotification="primary" />
             </div>
@@ -95,13 +95,17 @@ export default {
             callbackLogg : this.callbackLogg,
             errorSend : '' as String,
             spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
-
+            sendingComplete : false as Boolean,
+            initialAntallMottakere : 0,
         }
     },
     components: {
         PermanentNotification
     },
     methods: {
+        getSendingPercentage() {
+            return Math.round(100-(this.mottakere.length / this.initialAntallMottakere) * 100);
+        },
         async sendSMS() {
             if(this.mottakere.length == 0) {
                 throw new Error("Ingen mottakere valgt")
@@ -109,16 +113,35 @@ export default {
             if(this.textMsg.length == 0) {
                 throw new Error("Ingen melding skrevet")
             }
+
+            this.initialAntallMottakere = this.mottakere.length;
+
+            // Send 10 SMS at a time
+            var mottakere = this.mottakere;
+            var mottakereChunk = [];
+            while(mottakere.length > 0) {
+                mottakereChunk = mottakere.splice(0, 10);
+                var result = await this._sendSMS(mottakereChunk);
+                if(result) {
+                    mottakereChunk = [];
+                }
+                if(mottakere.length == 0) {
+                    this.sendingComplete = true;
+                }
+            }
+        },
+        async _sendSMS(mottakerChunk : Array<{mobil : String, name : String}>) {
             if(this.selectedAvsender == null || this.selectedAvsender.getTelefonnummer().length == 0) {
                 throw new Error("Ingen avsender valgt")
             }
 
+            console.log('sending til', mottakerChunk.map((mottaker) => mottaker.mobil));
 
             var data : any = {
                 action: 'UKMSMS_ajax',
                 SMSaction: 'sendSMS',
                 avsender: this.selectedAvsender.getTelefonnummer(),
-                mottakere: this.mottakere.map((mottaker) => mottaker.mobil),
+                mottakere: mottakerChunk.map((mottaker) => mottaker.mobil),
                 message: this.textMsg,
             };
 
@@ -135,6 +158,8 @@ export default {
             for(var rItem of response.reports) {
                 this.rapports.push(<any>rItem);
             }
+
+            return response;
         },
         allSMSSuccess() : Boolean {
             if(this.gotRepport) {
