@@ -102,10 +102,11 @@
                         <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="avsendere" v-model="selectedAvsender"></v-autocomplete>
 
                         <!--Varsel-->         
-                        <PermanentNotification v-if="getSelectedAvsender() != null && !getSelectedAvsender()?.isTelefonnummerValid()" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Mottakeren kan ikke svare hvis du bruker denne avsenderen.'" />
+                        <div v-if="getSelectedAvsender() != null && !getSelectedAvsender()?.isTelefonnummerValid()">
+                            <PermanentNotification class="as-padding-bottom-space-2" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Mottakeren kan ikke svare hvis du bruker denne avsenderen.'" />
+                        </div>
 
-                        
-                        <div class="as-display-flex">
+                        <div v-else class="as-display-flex">
                             <div class="as-margin-auto as-margin-right-none">
                                 <div class=" as-padding-right-space-2">
                                     <v-switch color="var(--color-primary-bla-600)" v-model="kopiTilAvsender" label="Send kopi til avsender" value="Send kopi til avsender"></v-switch>
