@@ -519,7 +519,7 @@ export default {
             };
             
             
-            var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
+            var response = await this.spaInteraction.runAjaxCall('/', 'POST', data, false /* silent */);
 
 
             for(var n of response.posts) {
