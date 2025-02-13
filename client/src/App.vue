@@ -376,6 +376,7 @@ import Log from './objects/Log';
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
 var alleMottakere : string = (<any>window).alleMottakere; // Definert i PHP
+var smsMessage : string = (<any>window).smsMessage; // Definert i PHP
 
 export default {
     computed: {
@@ -431,6 +432,9 @@ export default {
         }
         if(this.mottakere.length > 20) {
             this.isCloseDeltakere = false;
+        }
+        if(smsMessage.length > 0) {
+            this.textmessage = smsMessage;
         }
     },
     watch: {
