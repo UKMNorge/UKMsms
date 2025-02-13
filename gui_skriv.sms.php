@@ -10,9 +10,10 @@
 <?php
 use UKMNorge\OAuth2\HandleAPICall;
 
-$handleCall = new HandleAPICall([], ['UKMSMS_recipients'], ['GET', 'POST'], false);
+$handleCall = new HandleAPICall([], ['UKMSMS_recipients', 'UKMSMS_message'], ['GET', 'POST'], false);
 
 $mottakere = $handleCall->getOptionalArgument('UKMSMS_recipients');
+$message = $handleCall->getOptionalArgument('UKMSMS_message');
 
 
 // Remove the square brackets at the start and end of the string
@@ -48,4 +49,5 @@ if(strlen($mottakere) > 0) {
 // Add $mottakere to client side to be used by Vue
 echo '<script>';
 echo 'var alleMottakere = ' . json_encode($recipients) . ';';
+echo 'var smsMessage = "' . $message . '";';
 echo '</script>';
