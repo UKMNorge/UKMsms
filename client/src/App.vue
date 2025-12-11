@@ -43,7 +43,7 @@
 
                 </div>
                 <div class="as-margin-right-space-2 as-margin-top-space-2">
-                    <v-btn
+                    <!-- <v-btn
                         class="v-btn-as v-btn-hvit"
                         prepend-icon="mdi-plus"
                         color="#000"
@@ -52,7 +52,7 @@
                         @click="openNyhetsaker()"
                         variant="outlined" >
                         Legg til nyhetssak
-                    </v-btn>
+                    </v-btn> -->
 
                     <FloatingClosable ref="floatingLeggTilNyhetsak">
                         <div>
@@ -215,11 +215,6 @@
                                 </v-chip>
                             </div>
                         </div>
-
-                        <div v-if="getTextmessage().length > 480">
-                            <PermanentNotification :typeNotification="'info'" :tittel="'Har du mye på hjertet?'" :description="'Hvis du har behov for å sende mye informasjon kan det hende du heller burde lenke til en nyhetssak i meldingen din. Da er det enklere for mottakerne å lese meldingen i tillegg til at det blir billigere å sende SMS-en.'" />
-                        </div>
-
 
                         <div class="as-display-flex">
                             <div class="as-margin-auto as-margin-right-none">
@@ -450,7 +445,8 @@ export default {
             (<typeof FloatingClosable>this.$refs.floatingLogs).open();
         },
         openNyhetsaker() {
-            (<typeof FloatingClosable>this.$refs.floatingLeggTilNyhetsak).open();
+            // Fra desember 2025, nyhetsak-funksjonalitet fjernet
+            // (<typeof FloatingClosable>this.$refs.floatingLeggTilNyhetsak).open();
         },
         closeNyhetssak() {
             (<typeof FloatingClosable>this.$refs.floatingLeggTilNyhetsak).close();

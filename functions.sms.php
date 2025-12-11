@@ -98,11 +98,11 @@ function SMS_avsendere(){
 function SMS_avsendere_array(){
 	$avsendere = array();
 	$avsendere['UKMNorge'] = 'UKMNorge';
-	$avsendere['UKMMedia'] = 'UKMMedia';
-	$avsendere['93091329'] = 'UKM Norge support';
-	$avsendere['46516256'] = 'Kushtrim Aliu';
-	$avsendere['90755685'] = 'Torstein Siegel';
-	$avsendere['93665540'] = 'Jardar Nordbø';
+	// $avsendere['UKMMedia'] = 'UKMMedia';
+	// $avsendere['93091329'] = 'UKM Norge support';
+	// $avsendere['46516256'] = 'Kushtrim Aliu';
+	// $avsendere['90755685'] = 'Torstein Siegel';
+	// $avsendere['93665540'] = 'Jardar Nordbø';
 
 	if(!intval(get_option('pl_id'))) {
 		return $avsendere;
