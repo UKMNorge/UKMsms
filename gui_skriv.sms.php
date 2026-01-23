@@ -9,11 +9,13 @@
 
 <?php
 use UKMNorge\OAuth2\HandleAPICall;
+use UKMNorge\Arrangement\Arrangement;
 
-$handleCall = new HandleAPICall([], ['UKMSMS_recipients', 'UKMSMS_message'], ['GET', 'POST'], false);
+$handleCall = new HandleAPICall([], ['UKMSMS_recipients', 'UKMSMS_message', 'UKMSMS_wp_post_id'], ['GET', 'POST'], false);
 
 $mottakere = $handleCall->getOptionalArgument('UKMSMS_recipients');
 $message = $handleCall->getOptionalArgument('UKMSMS_message');
+$wp_post_id = $handleCall->getOptionalArgument('UKMSMS_wp_post_id');
 
 
 // Remove the square brackets at the start and end of the string
@@ -47,7 +49,11 @@ if(strlen($mottakere) > 0) {
 
 
 // Add $mottakere to client side to be used by Vue
+$arrangement = new Arrangement(intval((get_option('pl_id'))));
+
 echo '<script>';
 echo 'var alleMottakere = ' . json_encode($recipients) . ';';
 echo 'var smsMessage = "' . $message . '";';
+echo 'var wpPostId = ' . $wp_post_id . ';';
+echo 'var plId = "' . $arrangement->getId() . '";';
 echo '</script>';
