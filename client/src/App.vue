@@ -254,7 +254,6 @@
                 <div class="mottakere-tabs as-display-flex">
                     <div class="mottakere-tabs-under nop">
                         <v-tabs align-tabs="center" v-model="tab">
-                            <v-tab text="Alle deltakere"></v-tab>
                             <v-tab text="Ny mottaker"></v-tab>
                             <v-tab v-if="isArrangement" text="Mottaker fra innslag"></v-tab>
                             <v-tab text="Legg til kommaseparert liste"></v-tab>
@@ -263,18 +262,6 @@
                         <div class="as-margin-top-space-4">
                             <v-tabs-window v-model="tab">
                                 <!-- Legg til ny mottaker TAB WINDOW ITEM -->
-                                <v-tabs-window-item>
-                                    <div class="as-margin-top-space-2">
-                                       <v-btn
-                                            class="v-btn-as v-btn-bla"
-                                            rounded="large"
-                                            size="large"
-                                            @click="leggTilAllePersoner"
-                                            variant="outlined">
-                                            Legg til alle deltakere
-                                        </v-btn>
-                                    </div>
-                                </v-tabs-window-item>
                                 <v-tabs-window-item>
                                     <div class="as-padding-bottom-space-3">
                                         <h4 class="nop-impt">Legg til mottaker</h4>
@@ -307,8 +294,8 @@
                                         <div v-if="isMottakereFetched && getInnslagMottakere().length < 1">
                                             <PermanentNotification class="as-margin-bottom-space-2" :typeNotification="'warning'" :tittel="'Ingen innslag'" :description="'Det er ingen innslag i arrangementet'" />
                                         </div>
-                                        <div v-for="innslag in innslagMottakere">
-                                            <div class="as-card-2 as-padding-space-2 nos1-impt as-margin-bottom-space-2 as-card-lightest-color" v-if="innslag.length > 0">
+                                        <div v-for="innslag in getInnslagMottakere()">
+                                            <div class="as-card-2 as-padding-space-2 nosh-impt as-margin-bottom-space-2 as-card-lightest-color" v-if="innslag.length > 0">
                                                 <div>
                                                     <h5 class="innslag-navn-mottakere">{{ innslag[0].innslagNavn }}</h5>
                                                     <span class="innslag-type-mottakere">{{ innslag[0].innslagType }}</span>
@@ -435,8 +422,6 @@ export default {
 
     mounted: function () {
         this.getInitialData();
-        this.getInnslagMottakere();
-
         if(alleMottakere.length > 0) {
             this.mottakere = (<any>alleMottakere);
         }
@@ -660,14 +645,6 @@ export default {
                 if(!this.isPersonInMottakere(person)) {
                     this.mottakere.push({mobil: person.mobil, name: person.navn});
                 }
-            }
-        },
-        async leggTilAllePersoner() {
-            let mottakere = await this.getInnslagMottakere();
-            console.log(mottakere);
-            for(var innslag in this.innslagMottakere) {
-                console.log(this.innslagMottakere[innslag]);
-                this.leggTilAllePersonerFraInnslag(this.innslagMottakere[innslag]);
             }
         },
         leggTilKommaseparert() {
