@@ -431,9 +431,6 @@ export default {
         if(smsMessage.length > 0) {
             this.textmessage = smsMessage;
         }
-        if((<any>window).wpPostId) {
-            this.deltakerInfoMelding();
-        }
     },
     watch: {
     selectedNyhetssak(newValue : any, oldValue : any) {
@@ -446,17 +443,6 @@ export default {
         },
         openLogs() {
             (<typeof FloatingClosable>this.$refs.floatingLogs).open();
-        },
-        deltakerInfoMelding() {
-            let hostname = (<any>window).UKM_HOSTNAME || 'ukm.no';
-            let postId = (<any>window).wpPostId || null;
-            let arrangementId = (<any>window).plId || null;
-            
-            if(postId == null || arrangementId == null) {
-                return;
-            }
-            let linkTilDeltakerinfo = 'https://delta.'+ hostname +'/ukmid/messages/' + arrangementId + '/' + postId;
-            this.textmessage = 'Hei! Det er lagt ut ny informasjon om arrangementet du er påmeldt. Du finner den her:  ' + linkTilDeltakerinfo;
         },
         openNyhetsaker() {
             // Fra desember 2025, nyhetsak-funksjonalitet fjernet
