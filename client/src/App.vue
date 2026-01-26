@@ -470,7 +470,7 @@ export default {
             if(postId == null || arrangementId == null) {
                 return;
             }
-            let linkTilDeltakerinfo = 'https://delta.'+ hostname +'/ukmid/messages/' + arrangementId + '/' + postId;
+            let linkTilDeltakerinfo = 'https://delta.'+ hostname +'/public/infosak/' + arrangementId + '/' + postId;
             this.textmessage = 'Hei! Det er lagt ut ny informasjon om arrangementet du er påmeldt. Du finner den her:  ' + linkTilDeltakerinfo;
         },
         openNyhetsaker() {
