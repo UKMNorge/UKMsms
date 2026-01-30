@@ -307,7 +307,7 @@
                                         <div v-if="isMottakereFetched && getInnslagMottakere().length < 1">
                                             <PermanentNotification class="as-margin-bottom-space-2" :typeNotification="'warning'" :tittel="'Ingen innslag'" :description="'Det er ingen innslag i arrangementet'" />
                                         </div>
-                                        <div v-for="innslag in innslagMottakere">
+                                        <div v-for="innslag in getInnslagMottakereSorted()">
                                             <div class="as-card-2 as-padding-space-2 nos1-impt as-margin-bottom-space-2 as-card-lightest-color" v-if="innslag.length > 0">
                                                 <div>
                                                     <h5 class="innslag-navn-mottakere">{{ innslag[0].innslagNavn }}</h5>
@@ -456,6 +456,18 @@ export default {
         }
     },
     methods: {
+        getInnslagMottakereSorted() {
+            return Object.values(this.innslagMottakere)
+                .sort((a : any, b : any) => {
+                    if (!a || a.length < 1) return 1;
+                    if (!b || b.length < 1) return -1;
+
+                    const navnA = a[0].innslagType || '';
+                    const navnB = b[0].innslagType || '';
+
+                    return navnA.localeCompare(navnB, 'nb', { sensitivity: 'base' });
+                });
+        },
         openLeggTilMottaker() {
             (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).open();
         },
