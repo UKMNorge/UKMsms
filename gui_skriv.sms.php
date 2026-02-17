@@ -54,6 +54,6 @@ $arrangement = new Arrangement(intval((get_option('pl_id'))));
 echo '<script>';
 echo 'var alleMottakere = ' . json_encode($recipients) . ';';
 echo 'var smsMessage = "' . $message . '";';
-echo 'var wpPostId = ' . $wp_post_id . ';';
+echo 'var wpPostId = ' . ($wp_post_id ? $wp_post_id : 'null') . ';';
 echo 'var plId = "' . $arrangement->getId() . '";';
 echo '</script>';
