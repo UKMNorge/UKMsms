@@ -22,15 +22,25 @@ if(is_admin()){
 }
 ## ADMIN MENU
 function UKMSMS_menu() {
-	$page = add_menu_page(
+	// $page = add_menu_page(
+	// 	'SMS',
+	// 	'SMS',
+	// 	'ukm_sms',
+	// 	'UKMSMS_gui',
+	// 	'UKMSMS_gui',
+	// 	'dashicons-smartphone',#'//ico.ukm.no/mobile-menu.png',
+	// 	100
+	// );
+
+	$page = add_submenu_page(
+		'ukm_kommunikasjon',   // slug of the main item, not its label
 		'SMS',
 		'SMS',
-		'ukm_sms',
+		'editor',
 		'UKMSMS_gui',
-		'UKMSMS_gui',
-		'dashicons-smartphone',#'//ico.ukm.no/mobile-menu.png',
-		100
+		'UKMSMS_gui'
 	);
+
 	add_action(
 		'admin_print_styles-' . $page,
 		'UKMSMS_sns'
