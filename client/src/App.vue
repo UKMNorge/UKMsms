@@ -7,12 +7,17 @@
         </div>
 
         <FloatingClosable ref="floatingOmraadeSMSOversikt">
-            <div class="gratis-sms-outer">
-                <div class="gratis-sms-inner" :style="'width:'+gratisSMSIgjenProsent()+'%'"></div>
-                <span class="gratis-sms-inner-text larger-text-inside-floating">{{ getOmraadeNavn() }} har brukt {{ (gratisSMSIgjenProsent() - 100) }}% av gratis SMS</span>
-            </div>
-            <div class="chart-inner">
-                <canvas id="mainOversiktChart"></canvas>
+            <div class="sms-oversikt-container">
+                <div v-if="totalSMSSendt > antallGratisSMS">
+                    <PermanentNotification class="as-margin-bottom-space-2" :typeNotification="'danger'" :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'" :description="'400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + '</b> SMS. Alle SMS utover dette koster 0.4 kr per SMS og skal faktureres.'" />
+                </div>
+                <div v-else class="gratis-sms-outer">
+                    <div class="gratis-sms-inner" :style="'width:'+gratisSMSIgjenProsent()+'%'"></div>
+                    <span class="gratis-sms-inner-text larger-text-inside-floating">{{ getOmraadeNavn() }} har brukt {{ (gratisSMSIgjenProsent() - 100) }}% av gratis SMS</span>
+                </div>
+                <div class="chart-inner">
+                    <canvas id="mainOversiktChart"></canvas>
+                </div>
             </div>
         </FloatingClosable>
 
@@ -415,6 +420,13 @@ export default {
         isMobile() {
             return window.innerWidth < 576; // Adjust the breakpoint as needed
         },
+        totalSMSSendt() : number {
+            let totalSMS = 0;
+            for(var usage of this.smsUsage) {
+                totalSMS = totalSMS + usage.credits;
+            }
+            return totalSMS;
+        },
     },
     data() {
         return {
@@ -485,9 +497,6 @@ export default {
     methods: {
         gratisSMSIgjenProsent() : number {
             let totalSMS = 0;
-            for(var usage of this.smsUsage) {
-                totalSMS = totalSMS - usage.credits;
-            }
             return ((this.antallGratisSMS - totalSMS) / this.antallGratisSMS) * 100;
         },
         getOmraadeNavn() : string {
@@ -1060,6 +1069,10 @@ tr {
 }
 #mainOversiktChart {
     margin-top: 20px;
+}
+.sms-oversikt-container {
+    min-width: 320px;
+    max-width: 600px;
 }
 @media(max-width: 992px) {
     .flex-container-left {
