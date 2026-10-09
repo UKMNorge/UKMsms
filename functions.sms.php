@@ -23,6 +23,63 @@ function SMS_credits(){
 	return (int) $qry->run('field','credits');
 }
 
+function SMS_usage(){
+	$plid = get_option('pl_id');
+
+	$arrangement = new Arrangement($plid);
+	$season = $arrangement->getSesong();
+	$fylkeId = null;
+	$kommuneId = null;
+	$where = '';
+	if($arrangement->getType() == 'fylke') {
+		$fylkeId = $arrangement->getFylke()->getId();
+	}
+	elseif($arrangement->getType() == 'kommune') {
+		$kommuneId = $arrangement->getKommune()->getId();
+	}
+	if($fylkeId) {
+		$where .= " AND `pl_owner_fylke` = '#fylkeId'";
+	}
+	if($kommuneId) {
+		$where .= " AND `pl_owner_kommune` = '#kommuneId'";
+	}
+	
+	$qry = new Query("SELECT
+		`pl`.`pl_id`,
+		`pl`.`pl_owner_fylke`,
+		`pl`.`pl_owner_kommune`,
+		`f`.`name` AS `fylke_name`,
+		`k`.`name` AS `kommune_name`,
+		SUM(`t_credits`) AS `credits`
+		FROM `log_sms_transactions` AS `t`
+		JOIN `smartukm_place` AS `pl` ON ( `pl`.`pl_id` = `t`.`pl_id`)
+		LEFT JOIN `smartukm_fylke` AS `f` ON ( `f`.`id` = `pl`.`pl_owner_fylke`)
+		LEFT JOIN `smartukm_kommune` AS `k` ON ( `k`.`id` = `pl`.`pl_owner_kommune`)
+		WHERE `t_action` = 'sendte_sms_for'
+		AND `season` = '#season'
+		AND `t_system` = 'wordpress'
+		$where
+		GROUP BY `pl`.`pl_id`
+		ORDER BY `credits` ASC",
+		[
+			'season' => $season,
+			'fylkeId' => $fylkeId,
+			'kommuneId' => $kommuneId,
+		]
+	);
+
+	$res = $qry->run();
+	$usage = [];
+	while($r = Query::fetch($res)) {
+		$usage[] = [
+			'pl_id' => $r['pl_id'],
+			'fylke_name' => $r['fylke_name'],
+			'kommune_name' => $r['kommune_name'],
+			'credits' => $r['credits'],
+		];
+	}
+	return $usage;
+}
 function SMS_wpsender(){
 	$user = wp_get_current_user();
 	return $user->user_login;

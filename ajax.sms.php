@@ -31,6 +31,9 @@ function UKMSMS_ajax(){
 		case 'sendSMS':
 			sendSMS();
 			break;
+		case 'getSMSUsage':
+			getSMSUsage();
+			break;
 		case 'getInnslagMottakere':
 			getInnslagMottakere();
 			break;
@@ -180,6 +183,16 @@ function getInitialData() {
 		'isArrangement' => get_option('pl_id') ? true : false,
 	]);
 
+}
+
+function getSMSUsage() {
+	$handleCall = new HandleAPICall([], [], ['GET', 'POST'], false);
+
+	$usageFromDb = SMS_usage();
+
+	$handleCall->sendToClient([
+		...$usageFromDb,
+	]);
 }
 
 function getSMSLog() {
