@@ -5,6 +5,17 @@
                 <h1 class="">Send SMS</h1>
             </div>
         </div>
+
+        <FloatingClosable ref="floatingOmraadeSMSOversikt">
+            <div class="gratis-sms-outer">
+                <div class="gratis-sms-inner" :style="'width:'+gratisSMSIgjenProsent()+'%'"></div>
+                <span class="gratis-sms-inner-text larger-text-inside-floating">{{ getOmraadeNavn() }} har brukt {{ (gratisSMSIgjenProsent() - 100) }}% av gratis SMS</span>
+            </div>
+            <div class="chart-inner">
+                <canvas id="mainOversiktChart"></canvas>
+            </div>
+        </FloatingClosable>
+
         <FloatingClosable ref="floatingLogs">
             <v-table>
                 <thead>
@@ -39,8 +50,18 @@
                         variant="outlined" >
                         SMS-logg
                     </v-btn>
-
-
+                </div>
+                <div class="as-margin-right-space-2 as-margin-top-space-2">
+                    <v-btn
+                        class="v-btn-as v-btn-hvit gratis-sms-btn"
+                        prepend-icon="mdi-currency-usd"
+                        color="#000"
+                        rounded="large"
+                        :size="isMobile ? 'large' : 'x-large'"
+                        @click="openOmraadeSMSOversikt()"
+                        variant="outlined" >
+                        SMS-bruk oversikt
+                    </v-btn>
                 </div>
                 <div class="as-margin-right-space-2 as-margin-top-space-2">
                     <!-- <v-btn
@@ -381,6 +402,9 @@ import Nyhetsak from './objects/Nyhetsak';
 import InnslagMottaker from './objects/InnslagMottaker';
 import Log from './objects/Log';
 
+import { Chart, PieController, ArcElement, Tooltip, Legend } from 'chart.js'; // Import PieController and ArcElement
+
+Chart.register(PieController, ArcElement, Tooltip, Legend);
 
 var ajaxurl : string = (<any>window).ajaxurl; // Kommer fra global
 var alleMottakere : string = (<any>window).alleMottakere; // Definert i PHP
@@ -390,10 +414,11 @@ export default {
     computed: {
         isMobile() {
             return window.innerWidth < 576; // Adjust the breakpoint as needed
-        }
+        },
     },
     data() {
         return {
+            antallGratisSMS : 400,
             SMSsendt : false as Boolean,
             name : "World" as String,
             activeTab : 'first' as String,
@@ -419,6 +444,8 @@ export default {
             isMottakereFetched : false as Boolean,
             kommaseparertMobil : '' as any,
             isCloseDeltakere : true as Boolean,
+            chart: null as any | null,
+            smsUsage: [] as Array<any>,
         }
     },
 
@@ -456,6 +483,16 @@ export default {
         }
     },
     methods: {
+        gratisSMSIgjenProsent() : number {
+            let totalSMS = 0;
+            for(var usage of this.smsUsage) {
+                totalSMS = totalSMS - usage.credits;
+            }
+            return ((this.antallGratisSMS - totalSMS) / this.antallGratisSMS) * 100;
+        },
+        getOmraadeNavn() : string {
+            return this.smsUsage[0].fylke_name || this.smsUsage[0].kommune_name;
+        },
         getInnslagMottakereSorted() {
             return Object.values(this.innslagMottakere)
                 .sort((a : any, b : any) => {
@@ -473,6 +510,9 @@ export default {
         },
         openLogs() {
             (<typeof FloatingClosable>this.$refs.floatingLogs).open();
+        },
+        openOversikt() {
+            (<typeof FloatingClosable>this.$refs.floatingOmraadeSMSOversikt).open();
         },
         deltakerInfoMelding() {
             let hostname = (<any>window).UKM_HOSTNAME || 'ukm.no';
@@ -573,6 +613,24 @@ export default {
                 this._fetchSMSLog();
             }
             return this.alleSMSLogs;
+        },
+        async openOmraadeSMSOversikt() {
+            this.openOversikt();
+            let fetched = await this._fetchSMSUsage();
+
+            if(fetched) {
+                this.generateChart();
+            }
+        },
+        async _fetchSMSUsage() {
+            var data : any = {
+                action: 'UKMSMS_ajax',
+                SMSaction: 'getSMSUsage',
+            };
+
+            var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
+            this.smsUsage = response;
+            return response;
         },
         leggTilMottakerFraInnslag(mottaker : InnslagMottaker) {
             this.mottakere.push({mobil: mottaker.mobil, name: mottaker.navn});
@@ -694,6 +752,46 @@ export default {
                 }
             }
             this.kommaseparertMobil = '';
+        },
+        
+        generateChart() {
+            // Get data first
+            console.log(this.smsUsage);        
+    
+            let labels = this.smsUsage.map((usage : any) => usage.fylke_name || usage.kommune_name);
+            let dataset =  [{
+                label: 'My First Dataset',
+                data: this.smsUsage.map((usage : any) => usage.credits),
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+
+            const ctx = (document.getElementById('mainOversiktChart') as HTMLCanvasElement).getContext('2d');
+            // console.log(ctx);
+            // const labels = smsUsage.map((usage : any) => usage.fylke_name || usage.kommune_name);
+    
+            this.chart = new Chart(ctx!, {
+            type: 'pie',
+            data: {
+                labels: labels, // Labels for pie slices
+                datasets: dataset
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                legend: {
+                    display: true
+                },
+                tooltip: {
+                    enabled: true
+                }
+                }
+            }
+            });
         },
     }
 }
@@ -929,6 +1027,39 @@ tr {
     padding-top: 4px;
     padding-bottom: 4px;
     column-gap: 8px;
+}
+.gratis-sms-outer {
+    position: relative;
+
+    background: #dedcdc;
+    height: 20px;
+    min-width: 115px;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.gratis-sms-inner {
+    background: #a2d8a4;
+    box-shadow: 2px 0 2px -1px #fff;
+    color: #000000;
+    height: 20px;
+    text-align: center;
+}
+.gratis-sms-inner-text {
+    font-size: 10px;
+    margin-top: 4px;
+    position: absolute;
+    top: 1px;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+}
+.larger-text-inside-floating {
+    font-size: 14px;
+    margin-top: 0;
+}
+#mainOversiktChart {
+    margin-top: 20px;
 }
 @media(max-width: 992px) {
     .flex-container-left {

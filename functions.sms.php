@@ -56,7 +56,7 @@ function SMS_usage(){
 		LEFT JOIN `smartukm_fylke` AS `f` ON ( `f`.`id` = `pl`.`pl_owner_fylke`)
 		LEFT JOIN `smartukm_kommune` AS `k` ON ( `k`.`id` = `pl`.`pl_owner_kommune`)
 		WHERE `t_action` = 'sendte_sms_for'
-		AND `season` = '#season'
+		AND `season` > '2020'
 		AND `t_system` = 'wordpress'
 		$where
 		GROUP BY `pl`.`pl_id`
@@ -75,7 +75,7 @@ function SMS_usage(){
 			'pl_id' => $r['pl_id'],
 			'fylke_name' => $r['fylke_name'],
 			'kommune_name' => $r['kommune_name'],
-			'credits' => $r['credits'],
+			'credits' => abs($r['credits']),
 		];
 	}
 	return $usage;
