@@ -7,20 +7,31 @@
         </div>
 
         <FloatingClosable ref="floatingOmraadeSMSOversikt">
-            <div class="sms-oversikt-container">
-                <div v-if="totalSMSSendt > antallGratisSMS">
-                    <PermanentNotification 
-                        class="as-margin-bottom-space-2" 
-                        :typeNotification="'danger'" 
-                        :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'" 
-                        :description="'400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt ' + totalSMSSendt + ' SMS. Alle SMS utover 400 gratis SMS koster 0.4 kr per SMS og skal faktureres.'" />
+            <div class="sms-oversikt-content">
+                <h3 class="sms-oversikt-title">SMS-bruk oversikt</h3>
+                <div class="as-margin-top-space-2 as-margin-bottom-space-1">
+                    <h5>Her vises informasjon om SMS-bruk for {{ getOmraadeNavn() }}.</h5>
                 </div>
-                <div v-else class="gratis-sms-outer">
-                    <div class="gratis-sms-inner" :style="'width:'+gratisSMSIgjenProsent()+'%'"></div>
-                    <span class="gratis-sms-inner-text larger-text-inside-floating">{{ getOmraadeNavn() }} har brukt {{ (gratisSMSIgjenProsent() - 100) }}% av gratis SMS</span>
-                </div>
-                <div class="chart-inner">
-                    <canvas id="mainOversiktChart"></canvas>
+                <p>Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får 400 tekstmeldinger gratis, og alt forbruk utover dette kan bli fakturert sammen med neste års materiellpakke. 1 SMS = kr. 0,40</p>
+    
+                <div class="sms-oversikt-container">
+                    <div class="gratis-sms-bar-container as-margin-bottom-space-4">
+                        <h5 class="gratis-sms-bar-title">Gratis SMS:</h5>
+                        <div class="gratis-sms-outer">
+                            <div class="gratis-sms-inner" :style="'width:'+gratisSMSIgjenProsent()+'%'"></div>
+                            <span class="gratis-sms-inner-text larger-text-inside-floating">{{ totalSMSSendt > antallGratisSMS ? 0 : (antallGratisSMS - totalSMSSendt) }} gratis SMS igjen</span>
+                        </div>
+                    </div>
+                    <div v-if="totalSMSSendt > antallGratisSMS">
+                        <PermanentNotification 
+                            class="as-margin-bottom-space-2" 
+                            :typeNotification="'danger'" 
+                            :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'" 
+                            :description="'400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt ' + totalSMSSendt + ' SMS. Alle SMS utover 400 gratis SMS koster 0.4 kr per SMS og skal faktureres.'" />
+                    </div>
+                    <div class="chart-inner">
+                        <canvas id="mainOversiktChart"></canvas>
+                    </div>
                 </div>
             </div>
         </FloatingClosable>
@@ -500,8 +511,10 @@ export default {
     },
     methods: {
         gratisSMSIgjenProsent() : number {
-            let totalSMS = 0;
-            return ((this.antallGratisSMS - totalSMS) / this.antallGratisSMS) * 100;
+            if(this.totalSMSSendt > this.antallGratisSMS) {
+                return 0;
+            }
+            return Math.abs((this.totalSMSSendt / this.antallGratisSMS) - 1) * 100;
         },
         getOmraadeNavn() : string {
             return this.smsUsage[0].fylke_name || this.smsUsage[0].kommune_name;
@@ -1068,14 +1081,29 @@ tr {
     text-align: center;
 }
 .larger-text-inside-floating {
-    font-size: 14px;
-    margin-top: 0;
+    font-size: 12px;
+    margin-top: 1px;
 }
 #mainOversiktChart {
     margin-top: 20px;
 }
 .sms-oversikt-container {
     min-width: 320px;
+    max-width: 600px;
+    margin: auto;
+    margin-top: calc(var(--initial-space-box) * 4);
+}
+.gratis-sms-bar-container {
+    display: flex;
+}
+.gratis-sms-bar-container .gratis-sms-bar-title {
+    margin: auto;
+    min-width: 90px;
+}
+.sms-oversikt-title {
+    margin-bottom: calc(var(--initial-space-box) * 4);
+}
+.sms-oversikt-content {
     max-width: 600px;
 }
 @media(max-width: 992px) {
