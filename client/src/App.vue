@@ -758,7 +758,7 @@ export default {
             // Get data first
             console.log(this.smsUsage);        
     
-            let labels = this.smsUsage.map((usage : any) => usage.fylke_name || usage.kommune_name);
+            let labels = this.smsUsage.map((usage : any) => usage.pl_name);
             let dataset =  [{
                 label: 'My First Dataset',
                 data: this.smsUsage.map((usage : any) => usage.credits),

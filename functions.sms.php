@@ -46,6 +46,7 @@ function SMS_usage(){
 	
 	$qry = new Query("SELECT
 		`pl`.`pl_id`,
+		`pl`.`pl_name`,
 		`pl`.`pl_owner_fylke`,
 		`pl`.`pl_owner_kommune`,
 		`f`.`name` AS `fylke_name`,
@@ -73,6 +74,7 @@ function SMS_usage(){
 	while($r = Query::fetch($res)) {
 		$usage[] = [
 			'pl_id' => $r['pl_id'],
+			'pl_name' => $r['pl_name'],
 			'fylke_name' => $r['fylke_name'],
 			'kommune_name' => $r['kommune_name'],
 			'credits' => abs($r['credits']),
