@@ -760,7 +760,7 @@ export default {
     
             let labels = this.smsUsage.map((usage : any) => usage.pl_name);
             let dataset =  [{
-                label: 'My First Dataset',
+                label: '',
                 data: this.smsUsage.map((usage : any) => usage.credits),
                 backgroundColor: [
                     'rgb(255, 99, 132)',
