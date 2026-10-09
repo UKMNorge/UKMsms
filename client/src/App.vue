@@ -12,8 +12,9 @@
                     <PermanentNotification 
                         class="as-margin-bottom-space-2" 
                         :typeNotification="'danger'" 
+                        :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'" 
                         :isHTML="true"
-                        :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'" :description="'400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + '</b> SMS. Alle SMS utover dette koster 0.4 kr per SMS og skal faktureres.'" />
+                        :description="'<p>400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + '</b> SMS. Alle SMS utover dette koster 0.4 kr per SMS og skal faktureres.</p>'" />
                 </div>
                 <div v-else class="gratis-sms-outer">
                     <div class="gratis-sms-inner" :style="'width:'+gratisSMSIgjenProsent()+'%'"></div>
