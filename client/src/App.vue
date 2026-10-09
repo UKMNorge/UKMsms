@@ -27,7 +27,7 @@
                             class="as-margin-bottom-space-2" 
                             :typeNotification="'danger'" 
                             :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'" 
-                            :description="'400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt ' + totalSMSSendt + ' SMS. Alle SMS utover 400 gratis SMS koster 0.4 kr per SMS og skal faktureres.'" />
+                            :description="'400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt ' + totalSMSSendt + ' SMS.'" />
                     </div>
                     <div class="chart-inner">
                         <canvas id="mainOversiktChart"></canvas>
