@@ -133,7 +133,7 @@
                         :typeNotification="'danger'" 
                         :tittel="'Kvoten for gratis SMS er brukt opp'"
                         :isHTML="true"
-                        :description="'<p>' + getOmraadeNavn() + ' har sendt '+ totalSMSSendt +' SMS. Gratiskvoten er på 400 SMS. Utsendelser utover denne kvoten kan bli fakturert.</p>'" 
+                        :description="'<p>' + getOmraadeNavn() + ' har sendt <b>' + totalSMSSendt + ' SMS</b>. Gratiskvoten er på 400 SMS. Utsendelser utover denne kvoten kan bli fakturert.</p>'" 
                     />
                     <!--Avsender-->
                     <div class="as-card-1 as-padding-space-3 as-margin-bottom-space-2 avsender-div"> 
