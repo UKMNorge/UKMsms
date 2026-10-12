@@ -28,7 +28,7 @@
                             :typeNotification="'danger'" 
                             :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'"
                             :isHTML="true"
-                            :description="'<p>400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen.</p><br><p>Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + ' SMS</b>. {{ totalSMSSendt-antallGratisSMS }} kan faktureres og skal koste <b>' + (getOmraadeSMSBruktPris()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) + ' kr</b>.</p>'" />
+                            :description="'<p>400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen.</p><br><p>Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + ' SMS</b>. ' + (totalSMSSendt-antallGratisSMS) + ' SMS kan faktureres og skal koste <b>' + (getOmraadeSMSBruktPris()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) + ' kr</b>.</p>'" />
                     </div>
                     <div class="chart-inner">
                         <canvas id="mainOversiktChart"></canvas>
