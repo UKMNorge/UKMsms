@@ -133,7 +133,7 @@
                         :typeNotification="'danger'" 
                         :tittel="'Alle gratis SMS brukt'"
                         :isHTML="true"
-                        :description="'<p>Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt. Det er sendt ' + totalSMSSendt + ' SMS. Nye SMS over ' + antallGratisSMS + ' kan faktureres.</p>'" 
+                        :description="'<p>Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt. Det er sendt ' + totalSMSSendt + ' SMS. SMS over ' + antallGratisSMS + ' kan faktureres.</p>'" 
                     />
                     <!--Avsender-->
                     <div class="as-card-1 as-padding-space-3 as-margin-bottom-space-2 avsender-div"> 
