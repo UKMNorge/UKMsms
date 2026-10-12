@@ -666,14 +666,21 @@ export default {
                 this.generateChart();
             }
         },
-        async _fetchSMSUsage() {
+        async _fetchSMSUsage() : Promise<any> {
+            // Is fetched already
+            if(this.smsUsage.length > 0) {
+                return Promise.resolve(this.smsUsage);
+            }
+
             var data : any = {
                 action: 'UKMSMS_ajax',
                 SMSaction: 'getSMSUsage',
             };
 
             var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
-            this.smsUsage = response;
+            for(var usage of response) {
+                this.smsUsage.push(usage);
+            }
             return response;
         },
         leggTilMottakerFraInnslag(mottaker : InnslagMottaker) {
