@@ -12,7 +12,7 @@
                 <div class="as-margin-top-space-2 as-margin-bottom-space-1">
                     <h5>Her vises informasjon om SMS-bruk for {{ getOmraadeNavn() }}.</h5>
                 </div>
-                <p>Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får 400 tekstmeldinger gratis, og alt forbruk utover dette kan bli fakturert sammen med neste års materiellpakke. 1 SMS = kr. 0,40</p>
+                <p>Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får 400 tekstmeldinger gratis, og alt forbruk utover dette kan bli fakturert. 1 SMS = kr. {{ SMSPris.toLocaleString('no-NO', { minimumFractionDigits: 2 }) }}</p>
     
                 <div class="sms-oversikt-container">
                     <div class="gratis-sms-bar-container as-margin-bottom-space-4">
@@ -26,8 +26,9 @@
                         <PermanentNotification 
                             class="as-margin-bottom-space-2" 
                             :typeNotification="'danger'" 
-                            :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'" 
-                            :description="'400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen. Totalt har ' + getOmraadeNavn() + ' brukt ' + totalSMSSendt + ' SMS.'" />
+                            :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'"
+                            :isHTML="true"
+                            :description="'<p>400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen.</p><br><p>Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + ' SMS</b> og skal koste <b>' + (getOmraadeSMSBruktPris()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) + ' kr</b>.</p>'" />
                     </div>
                     <div class="chart-inner">
                         <canvas id="mainOversiktChart"></canvas>
@@ -446,6 +447,7 @@ export default {
     data() {
         return {
             antallGratisSMS : 400,
+            SMSPris : 0.40,
             SMSsendt : false as Boolean,
             name : "World" as String,
             activeTab : 'first' as String,
@@ -510,6 +512,12 @@ export default {
         }
     },
     methods: {
+        getOmraadeSMSBruktPris() : number {
+            if(this.totalSMSSendt <= this.antallGratisSMS) {
+                return 0;
+            }
+            return (this.totalSMSSendt - this.antallGratisSMS) * this.SMSPris;
+        },
         gratisSMSIgjenProsent() : number {
             if(this.totalSMSSendt > this.antallGratisSMS) {
                 return 0;
@@ -736,7 +744,7 @@ export default {
             return this.mottakere.filter((mottaker) => mottaker.mobil == person.mobil).length > 0;
         },
         getPrice() : Number{
-            return ((((this.getCountSMS()) * 0.4) * this.mottakere.length) + (this.kopiTilAvsender ? 0.4 : 0));
+            return ((((this.getCountSMS()) * this.SMSPris) * this.mottakere.length) + (this.kopiTilAvsender ? this.SMSPris : 0));
         },
         getTotalSMS() : Number {
             return (this.mottakere.length + (this.kopiTilAvsender ? 1 : 0)) * (this.getCountSMS());
