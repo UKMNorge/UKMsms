@@ -92,6 +92,8 @@ function SMS_initCredits(){
 }
 
 function SMS_init($plid, $wpusr){
+	// Lagrer ikke SMS credits på initialisering
+	return;
 	global $blog_id;
 	if( $blog_id == 1 ||is_network_admin() ) {
 		$plid = 1;
