@@ -131,9 +131,9 @@
                         v-if="totalSMSSendt > antallGratisSMS"
                         class="as-margin-bottom-space-2" 
                         :typeNotification="'danger'" 
-                        :tittel="'Alle gratis SMS brukt'"
+                        :tittel="'Kvoten for gratis SMS er brukt opp'"
                         :isHTML="true"
-                        :description="'<p>Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt. Det er sendt ' + totalSMSSendt + ' SMS. SMS over ' + antallGratisSMS + ' kan faktureres.</p>'" 
+                        :description="'<p>' + getOmraadeNavn() + ' har sendt '+ totalSMSSendt +' SMS. Gratiskvoten er på 400 SMS. Utsendelser utover denne kvoten kan bli fakturert.</p>'" 
                     />
                     <!--Avsender-->
                     <div class="as-card-1 as-padding-space-3 as-margin-bottom-space-2 avsender-div"> 
