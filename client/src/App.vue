@@ -12,7 +12,7 @@
                 <div class="as-margin-top-space-2 as-margin-bottom-space-1">
                     <h5>Her vises informasjon om SMS-bruk for {{ getOmraadeNavn() }}.</h5>
                 </div>
-                <p>Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får 400 tekstmeldinger gratis, og alt forbruk utover dette kan bli fakturert. 1 SMS = kr. {{ SMSPris.toLocaleString('no-NO', { minimumFractionDigits: 2 }) }}</p>
+                <p>Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får {{ antallGratisSMS }} gratis SMS per sesong, og alt forbruk utover dette kan bli fakturert. 1 SMS = kr. {{ SMSPris.toLocaleString('no-NO', { minimumFractionDigits: 2 }) }}</p>
     
                 <div class="sms-oversikt-container">
                     <div class="gratis-sms-bar-container as-margin-bottom-space-4">
@@ -28,7 +28,7 @@
                             :typeNotification="'danger'" 
                             :tittel="'Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt'"
                             :isHTML="true"
-                            :description="'<p>400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for denne sesongen.</p><br><p>Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + ' SMS</b>.</p><p><b> ' + (totalSMSSendt-antallGratisSMS) + ' SMS</b> kan faktureres og skal koste <b>' + (getOmraadeSMSBruktPris()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) + ' kr</b>.</p>'" />
+                            :description="'<p>400 gratis SMS for ' + getOmraadeNavn() + ' er brukt for '+ currentArrangementSeason +'.</p><br><p>Totalt har ' + getOmraadeNavn() + ' brukt <b>' + totalSMSSendt + ' SMS</b> i '+ currentArrangementSeason +'.</p><p><b> ' + (totalSMSSendt-antallGratisSMS) + ' SMS</b> kan faktureres og skal koste <b>' + (getOmraadeSMSBruktPris()).toLocaleString('no-NO', { minimumFractionDigits: 2 }) + ' kr</b>.</p>'" />
                     </div>
                     <div class="chart-inner">
                         <canvas id="mainOversiktChart"></canvas>
@@ -133,7 +133,7 @@
                         :typeNotification="'danger'" 
                         :tittel="'Kvoten for gratis SMS er brukt opp'"
                         :isHTML="true"
-                        :description="'<p>' + getOmraadeNavn() + ' har sendt <b>' + totalSMSSendt + ' SMS</b>. Gratiskvoten er på 400 SMS per sesong. Utsendelser utover denne kvoten kan bli fakturert.</p>'" 
+                        :description="'<p>' + getOmraadeNavn() + ' har sendt <b>' + totalSMSSendt + ' SMS i '+ currentArrangementSeason +'</b>. Gratiskvoten er på 400 SMS per sesong. Utsendelser utover denne kvoten kan bli fakturert.</p>'" 
                     />
                     <!--Avsender-->
                     <div class="as-card-1 as-padding-space-3 as-margin-bottom-space-2 avsender-div"> 
@@ -452,12 +452,19 @@ export default {
             }
             return totalSMS;
         },
+        currentArrangementName() : string {
+            return this.currentArrangement ?? 'Arrangement';
+        },
+        currentArrangementSeason() : number {
+            return this.currentArrangement?.sesong ?? 0;
+        }
     },
     data() {
         return {
             antallGratisSMS : 400,
             SMSPris : 0.40,
             SMSsendt : false as Boolean,
+            currentArrangement : null as any | null,
             name : "World" as String,
             activeTab : 'first' as String,
             textmessage : '' as String,
@@ -678,9 +685,10 @@ export default {
             };
 
             var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
-            for(var usage of response) {
+            for(var usage of response.usage) {
                 this.smsUsage.push(usage);
             }
+            this.currentArrangement = response.arrangement ?? null;
             return response;
         },
         leggTilMottakerFraInnslag(mottaker : InnslagMottaker) {

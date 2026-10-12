@@ -189,9 +189,15 @@ function getSMSUsage() {
 	$handleCall = new HandleAPICall([], [], ['GET', 'POST'], false);
 
 	$usageFromDb = SMS_usage();
+	$arrangement = new Arrangement(intval(get_option('pl_id')));
 
 	$handleCall->sendToClient([
-		...$usageFromDb,
+		'usage' => [...$usageFromDb],
+		'arrangement' => [
+			'id' => $arrangement->getId(), 
+			'navn' => $arrangement->getNavn(), 
+			'sesong' => $arrangement->getSesong(),
+		],
 	]);
 }
 
