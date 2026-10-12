@@ -126,6 +126,15 @@
             </div>
             <div class="as-container container flex-container">
                 <div class="flex-container-left">
+                    <!-- Beskjed -->
+                    <PermanentNotification 
+                        v-if="totalSMSSendt > antallGratisSMS"
+                        class="as-margin-bottom-space-2" 
+                        :typeNotification="'danger'" 
+                        :tittel="'Alle gratis SMS brukt'"
+                        :isHTML="true"
+                        :description="'<p>Alle gratis SMS for ' + getOmraadeNavn() + ' er brukt. Det er sendt ' + totalSMSSendt + ' SMS. Nye SMS over ' + antallGratisSMS + ' kan faktureres.</p>'" 
+                    />
                     <!--Avsender-->
                     <div class="as-card-1 as-padding-space-3 as-margin-bottom-space-2 avsender-div"> 
                         <div class="as-margin-bottom-space-2 as-display-flex">
@@ -492,6 +501,7 @@ export default {
     mounted: function () {
         this.getInitialData();
         this.getInnslagMottakere();
+        this._fetchSMSUsage(); // Fetch SMS usage
 
         if(alleMottakere.length > 0) {
             this.mottakere = (<any>alleMottakere);
