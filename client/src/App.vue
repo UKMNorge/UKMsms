@@ -255,7 +255,11 @@
                         
                         <div class="as-display-flex sms-info as-margin-bottom-space-2">
                             <div class="as-margin-auto as-display-flex as-margin-right-none">
-                                <v-chip class="as-margin-right-space-1" density="compact" size="small">
+                                <v-chip 
+                                    class="as-margin-right-space-1" 
+                                    density="compact" 
+                                    :color="getCountSMS() > 3 ? 'red' : (getCountSMS() < 2 ? 'success' : 'warning')"
+                                    size="small">
                                     {{ getTextmessage().length }} tegn | {{ getCountSMS() }} SMS
                                 </v-chip>
                                 <v-chip class="as-margin-right-space-1" density="compact" size="small">
@@ -778,7 +782,10 @@ export default {
             return this.mottakere.length > 0 && this.getTextmessage().length > 0 && this.getSelectedAvsender() != null;
         },
         getCountSMS() {
-            return Math.ceil(this.getTextmessage().length / 160);
+            if(this.getTextmessage().length <= 160) {
+                return 1;
+            }
+            return Math.ceil(this.getTextmessage().length / 153);
         },
         sendSMS() {
             this.SMSsendt = true;
