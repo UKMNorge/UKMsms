@@ -542,9 +542,7 @@ export default {
             this.closeNyhetssak();
         },
         trengerSvarFraMottaker(newValue : any, oldValue : any) {
-            if(newValue == false && this.selectedAvsender != null && this.selectedAvsender?.isTelefonnummerValid()) {
-                this.selectedAvsender = null;
-            }
+            this.selectedAvsender = null;
         }
     },
     methods: {
