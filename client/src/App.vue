@@ -154,7 +154,7 @@
                         <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="getGyldigeAvsendere()" v-model="selectedAvsender"></v-autocomplete>
 
                         <!--Varsel-->         
-                        <div v-if="getSelectedAvsender() != null && getSelectedAvsender()?.isTelefonnummerValid()">
+                        <div v-if="trengerSvarFraMottaker">
                             <PermanentNotification class="as-padding-bottom-space-2" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Når du velger en avsender med telefonnummer hvor mottakeren kan besvare, blir du belastet +1 SMS pr mottaker.'" />
                         </div>
 
