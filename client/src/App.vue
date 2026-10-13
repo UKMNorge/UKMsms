@@ -155,7 +155,12 @@
 
                         <!--Varsel-->         
                         <div v-if="trengerSvarFraMottaker">
-                            <PermanentNotification class="as-padding-bottom-space-2" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Når du velger en avsender med telefonnummer hvor mottakeren kan besvare, blir du belastet +1 SMS pr mottaker.'" />
+                            <PermanentNotification 
+                            class="as-padding-bottom-space-2" 
+                            :typeNotification="'warning'" 
+                            :tittel="'OBS!'" 
+                            :isHTML="true"
+                            :description="'<p>Når du velger en avsender med et telefonnummer som mottakeren kan svare på, blir du belastet for <b>1 ekstra SMS</b> per mottaker. Les mer under <b>Retningslinjer</b>.</p>'" />
                         </div>
 
                         <div class="as-display-flex">
