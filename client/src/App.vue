@@ -788,10 +788,6 @@ export default {
             if(this.ukmSignatur) {
                 retMsgString += '\n\n-UKM';
             }
-            var selAvsender = this.getSelectedAvsender();
-            if(selAvsender != null && !selAvsender.isTelefonnummerValid()) {
-                retMsgString += '\n(SMS kan ikke besvares)';
-            }
 
             return retMsgString;
         },
