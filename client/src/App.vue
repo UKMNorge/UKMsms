@@ -149,21 +149,30 @@
 
                     
                     <!-- Avsender -->
+
                         <!--Inputfelt-->
-                        <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="avsendere" v-model="selectedAvsender"></v-autocomplete>
+                        <v-autocomplete variant="outlined" label="Velg avsender" class="v-autocomplete-arr-sys" :items="getGyldigeAvsendere()" v-model="selectedAvsender"></v-autocomplete>
 
                         <!--Varsel-->         
-                        <div v-if="getSelectedAvsender() != null && !getSelectedAvsender()?.isTelefonnummerValid()">
-                            <PermanentNotification class="as-padding-bottom-space-2" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Mottakeren kan ikke svare hvis du bruker denne avsenderen.'" />
+                        <div v-if="getSelectedAvsender() != null && getSelectedAvsender()?.isTelefonnummerValid()">
+                            <PermanentNotification class="as-padding-bottom-space-2" :typeNotification="'warning'" :tittel="'OBS!'" :description="'Når du velger en avsender med telefonnummer hvor mottakeren kan besvare, blir du belastet +1 SMS pr mottaker.'" />
                         </div>
 
-                        <div v-else class="as-display-flex">
+                        <div class="as-display-flex">
+                            <div class="as-margin-auto as-margin-right-none">
+                                <div class=" as-padding-right-space-2">
+                                    <v-switch color="var(--color-primary-bla-600)" v-model="trengerSvarFraMottaker" label="Trenger svar fra mottaker" value="Trenger svar fra mottaker"></v-switch>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div v-else class="as-display-flex">
                             <div class="as-margin-auto as-margin-right-none">
                                 <div class=" as-padding-right-space-2">
                                     <v-switch color="var(--color-primary-bla-600)" v-model="kopiTilAvsender" label="Send kopi til avsender" value="Send kopi til avsender"></v-switch>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                 <!-- Nyhetssaker -->
@@ -436,7 +445,7 @@ import Nyhetsak from './objects/Nyhetsak';
 import InnslagMottaker from './objects/InnslagMottaker';
 import Log from './objects/Log';
 
-import { Chart, PieController, ArcElement, Tooltip, Legend } from 'chart.js'; // Import PieController and ArcElement
+import { Chart, PieController, ArcElement, Tooltip, Legend, controllers } from 'chart.js'; // Import PieController and ArcElement
 
 Chart.register(PieController, ArcElement, Tooltip, Legend);
 
@@ -483,6 +492,7 @@ export default {
             selectedNyhetssak : null as any | Nyhetsak,
             alleNyhetsaker : [] as Array<Nyhetsak>,
             kopiTilAvsender : false as Boolean,
+            trengerSvarFraMottaker : false as Boolean,
             ukmSignatur : false as Boolean,
             aktivMottakerTab : 0 as Number,
             tab : null as any,
@@ -528,11 +538,30 @@ export default {
         }
     },
     watch: {
-    selectedNyhetssak(newValue : any, oldValue : any) {
-        this.closeNyhetssak();
+        selectedNyhetssak(newValue : any, oldValue : any) {
+            this.closeNyhetssak();
+        },
+        trengerSvarFraMottaker(newValue : any, oldValue : any) {
+            if(newValue == false && this.selectedAvsender != null && this.selectedAvsender?.isTelefonnummerValid()) {
+                this.selectedAvsender = null;
+            }
         }
     },
     methods: {
+        getGyldigeAvsendere() : Array<Avsender> {
+            let retArr = [];
+            for(var avsender of this.avsendere) {
+                if(this.trengerSvarFraMottaker == false) {
+                    if(!avsender.isTelefonnummerValid()) {
+                        retArr.push(avsender);
+                    }
+                }
+                else {
+                    retArr.push(avsender);
+                }
+            }
+            return retArr;
+        },
         getOmraadeSMSBruktPris() : number {
             if(this.totalSMSSendt <= this.antallGratisSMS) {
                 return 0;
@@ -761,7 +790,7 @@ export default {
             }
             var selAvsender = this.getSelectedAvsender();
             if(selAvsender != null && !selAvsender.isTelefonnummerValid()) {
-                retMsgString += '\n(denne SMS kan ikke besvares)';
+                retMsgString += '\n(SMS kan ikke besvares)';
             }
 
             return retMsgString;
@@ -781,11 +810,24 @@ export default {
         isSendingReady() : boolean {
             return this.mottakere.length > 0 && this.getTextmessage().length > 0 && this.getSelectedAvsender() != null;
         },
-        getCountSMS() {
-            if(this.getTextmessage().length <= 160) {
+        // SVEVE legger til + 1 SMS når man bruker en avsender som kan besvares fra mottaker.
+        _getExtraSMSCount() : number {
+            if(this.selectedAvsender != null && this.selectedAvsender?.isTelefonnummerValid()) {
                 return 1;
             }
-            return Math.ceil(this.getTextmessage().length / 153);
+            return 0;
+        },
+        getCountSMS() {
+            let totalSMS = this._getExtraSMSCount();
+
+            if(this.getTextmessage().length <= 160) {
+                totalSMS += 1;
+            }
+            else {
+                totalSMS += Math.ceil(this.getTextmessage().length / 153);
+
+            }
+            return totalSMS;
         },
         sendSMS() {
             this.SMSsendt = true;
