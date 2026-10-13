@@ -557,7 +557,9 @@ export default {
                     }
                 }
                 else {
-                    retArr.push(avsender);
+                    if(avsender.isTelefonnummerValid()) {
+                        retArr.push(avsender);
+                    }
                 }
             }
             return retArr;
