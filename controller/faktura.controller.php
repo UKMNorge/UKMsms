@@ -11,7 +11,7 @@ $INFOS['season'] = $sessong;
 
 $minimumForbruk = 400;
 $gruppert = grupperSmsForbruk(hentSmsForbruk($sessong), $minimumForbruk);
-$INFOS['fylker'] = $gruppert['fylker'];
+$INFOS['omraader'] = $gruppert['omraader'];
 $INFOS['total'] = $gruppert['total'];
 $INFOS['minimumForbruk'] = $minimumForbruk;
 
@@ -64,9 +64,8 @@ function hentSmsForbruk($season) : array {
 }
 
 /**
- * Fylke, deretter kommunene i fylket, deretter arrangement.
- * Rekkefølgen på fylke og kommune følger Fylker::getAll() og getKommuner().
- * Arrangement uten kommune ligger direkte på fylket.
+ * Grupper arrangement etter eier (kommune eller fylke), filtrer på
+ * minimumsforbruk og sorter alle eiere etter forbruk.
  *
  * @param Array $rader
  * @param Int $minimumForbruk
@@ -130,45 +129,51 @@ function grupperSmsForbruk(array $rader, $minimumForbruk) : array {
 		$fylker[$id]['arrangementer'] = array_merge($fylker[$id]['arrangementer'], $arrangementer);
 	}
 
-	$liste = [];
+	$omraader = [];
 	$total = 0;
 
 	foreach ($fylker as $fylke) {
-		$fylke = oppdaterFylkeTotal($fylke);
-		if ($fylke['total'] <= $minimumForbruk) {
-			continue;
+		$fylkeTotal = summerCredits($fylke['arrangementer']);
+		if ($fylkeTotal > $minimumForbruk) {
+			usort($fylke['arrangementer'], function ($a, $b) {
+				return $b['credits'] <=> $a['credits'];
+			});
+			$omraader[] = [
+				'id' => $fylke['id'],
+				'name' => $fylke['name'],
+				'type' => 'Fylke',
+				'type_key' => 'fylke',
+				'total' => $fylkeTotal,
+				'arrangementer' => $fylke['arrangementer'],
+			];
+			$total += $fylkeTotal;
 		}
 
-		$fylke['kommuner'] = array_values(array_filter(
-			$fylke['kommuner'],
-			function ($kommune) use ($minimumForbruk) {
-				return $kommune['total'] > $minimumForbruk;
+		foreach ($fylke['kommuner'] as $kommune) {
+			if ($kommune['total'] <= $minimumForbruk) {
+				continue;
 			}
-		));
-
-		usort($fylke['kommuner'], function ($a, $b) {
-			return $b['total'] <=> $a['total'];
-		});
-		usort($fylke['arrangementer'], function ($a, $b) {
-			return $b['credits'] <=> $a['credits'];
-		});
-		foreach ($fylke['kommuner'] as &$kommune) {
 			usort($kommune['arrangementer'], function ($a, $b) {
 				return $b['credits'] <=> $a['credits'];
 			});
+			$omraader[] = [
+				'id' => $kommune['id'],
+				'name' => $kommune['name'],
+				'type' => 'Kommune',
+				'type_key' => 'kommune',
+				'total' => $kommune['total'],
+				'arrangementer' => $kommune['arrangementer'],
+			];
+			$total += $kommune['total'];
 		}
-		unset($kommune);
-
-		$total += $fylke['total'];
-		$liste[] = $fylke;
 	}
 
-	usort($liste, function ($a, $b) {
+	usort($omraader, function ($a, $b) {
 		return $b['total'] <=> $a['total'];
 	});
 
 	return [
-		'fylker' => $liste,
+		'omraader' => $omraader,
 		'total' => $total,
 	];
 }
@@ -259,25 +264,12 @@ function lagKommuneRad($id, $navn, array $arrangementer) : array {
  * @return Array
  */
 function lagFylkeRad($id, $navn, array $arrangementer, array $kommuner) : array {
-	return oppdaterFylkeTotal([
+	return [
 		'id' => (int) $id,
 		'name' => $navn,
 		'arrangementer' => $arrangementer,
 		'kommuner' => $kommuner,
-	]);
-}
-
-/**
- * @param Array $fylke
- * @return Array
- */
-function oppdaterFylkeTotal(array $fylke) : array {
-	$total = summerCredits($fylke['arrangementer']);
-	foreach ($fylke['kommuner'] as $kommune) {
-		$total += (int) $kommune['total'];
-	}
-	$fylke['total'] = $total;
-	return $fylke;
+	];
 }
 
 /**

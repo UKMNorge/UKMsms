@@ -4,49 +4,35 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>Fylke / kommune / arrangement</th>
+			<th>Type</th>
+			<th>Område / arrangement</th>
 			<th>SMS</th>
 		</tr>
 		<tr class="alert-info">
-			<th>TOTAL</th>
+			<th colspan="2">TOTAL</th>
 			<th>{{ total }}</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for fylke in fylker %}
+		{% for omraade in omraader %}
 			<tr class="active">
+				<th>{{ omraade.type }}</th>
 				<th>
-					{{ fylke.name }}
-					{% if fylke.arrangementer|length > 0 %}
-						<button type="button" class="button button-small" aria-expanded="false" onclick="toggleArrangementer('fylke-{{ fylke.id }}', this)">Vis arrangementer</button>
-					{% endif %}
+					{{ omraade.name }}
+					<button type="button" class="button button-small" aria-expanded="false" onclick="toggleArrangementer('{{ omraade.type_key }}-{{ omraade.id }}', this)">Vis arrangementer</button>
 				</th>
-				<th>{{ fylke.total }}</th>
+				<th>{{ omraade.total }}</th>
 			</tr>
-			{% for arrangement in fylke.arrangementer %}
-				<tr class="sms-arrangement-fylke-{{ fylke.id }}" hidden>
+			{% for arrangement in omraade.arrangementer %}
+				<tr class="sms-arrangement-{{ omraade.type_key }}-{{ omraade.id }}" hidden>
+					<td></td>
 					<td style="padding-left: 2em;">{{ arrangement.pl_name }}</td>
 					<td>{{ arrangement.credits }}</td>
 				</tr>
 			{% endfor %}
-			{% for kommune in fylke.kommuner %}
-				<tr>
-					<td style="padding-left: 2em;">
-						<strong>{{ kommune.name }}</strong>
-						<button type="button" class="button button-small" aria-expanded="false" onclick="toggleArrangementer('kommune-{{ kommune.id }}', this)">Vis arrangementer</button>
-					</td>
-					<td><strong>{{ kommune.total }}</strong></td>
-				</tr>
-				{% for arrangement in kommune.arrangementer %}
-					<tr class="sms-arrangement-kommune-{{ kommune.id }}" hidden>
-						<td style="padding-left: 4em;">{{ arrangement.pl_name }}</td>
-						<td>{{ arrangement.credits }}</td>
-					</tr>
-				{% endfor %}
-			{% endfor %}
 		{% else %}
 			<tr>
-				<td colspan="2">Ingen SMS-forbruk i denne sesongen.</td>
+				<td colspan="3">Ingen SMS-forbruk over {{ minimumForbruk }} i denne sesongen.</td>
 			</tr>
 		{% endfor %}
 	</tbody>
