@@ -4,8 +4,8 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>Type</th>
 			<th>Område / arrangement</th>
+			<th>Type</th>
 			<th>SMS</th>
 		</tr>
 		<tr class="alert-info">
@@ -16,12 +16,12 @@
 	<tbody>
 		{% for omraade in omraader %}
 			<tr class="active">
-				<th>{{ omraade.type }}</th>
 				<th>
-					{{ omraade.name }}
+					<h4>{{ omraade.name }}</h4>
 					<button type="button" class="button button-small" aria-expanded="false" onclick="toggleArrangementer('{{ omraade.type_key }}-{{ omraade.id }}', this)">Vis arrangementer</button>
 				</th>
-				<th>{{ omraade.total }}</th>
+				<th>{{ omraade.type }}</th>
+				<th><strong>{{ omraade.total }}</strong></th>
 			</tr>
 			{% for arrangement in omraade.arrangementer %}
 				<tr class="sms-arrangement-{{ omraade.type_key }}-{{ omraade.id }}" hidden>
