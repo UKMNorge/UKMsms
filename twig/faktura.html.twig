@@ -1,12 +1,14 @@
 <h3>SMS-forbruk i {{ season }}-sesongen</h3>
-<p>Listen viser sendte SMS per arrangement for kommuner og fylker med mer enn {{ minimumForbruk }} SMS. Høyeste forbruk vises først.</p>
+<p>Listen viser sendte SMS per arrangement for kommuner og fylker med mer enn {{ gratisSMS }} SMS. Høyeste forbruk vises først.</p>
 
 <table class="table table-striped">
 	<thead>
 		<tr>
 			<th>Område / arrangement</th>
 			<th>Type</th>
-			<th>SMS</th>
+			<th>Antall SMS</th>
+			<th>Betalende SMS</th>
+			<th>Beløp</th>
 		</tr>
 		<tr class="alert-info">
 			<th colspan="2">TOTAL</th>
@@ -22,6 +24,8 @@
 				</th>
 				<th>{{ omraade.type }}</th>
 				<th><strong>{{ omraade.total }}</strong></th>
+				<th>{{omraade.total - gratisSMS }}</th>
+				<th>{{ (omraade.total - gratisSMS) * prisPerSMS }}</th>
 			</tr>
 			{% for arrangement in omraade.arrangementer %}
 				<tr class="sms-arrangement-{{ omraade.type_key }}-{{ omraade.id }}" hidden>
@@ -32,7 +36,7 @@
 			{% endfor %}
 		{% else %}
 			<tr>
-				<td colspan="3">Ingen SMS-forbruk over {{ minimumForbruk }} i denne sesongen.</td>
+				<td colspan="3">Ingen SMS-forbruk over {{ gratisSMS }} i denne sesongen.</td>
 			</tr>
 		{% endfor %}
 	</tbody>

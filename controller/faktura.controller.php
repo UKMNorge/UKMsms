@@ -9,12 +9,13 @@ require_once('UKM/Autoloader.php');
 $sessong = date('Y');
 $INFOS['season'] = $sessong;
 
-$minimumForbruk = 400;
-$gruppert = grupperSmsForbruk(hentSmsForbruk($sessong), $minimumForbruk);
+$gratisSMS = 400;
+$SMSprice = 0.4;
+$gruppert = grupperSmsForbruk(hentSmsForbruk($sessong), $gratisSMS);
 $INFOS['omraader'] = $gruppert['omraader'];
 $INFOS['total'] = $gruppert['total'];
-$INFOS['minimumForbruk'] = $minimumForbruk;
-
+$INFOS['gratisSMS'] = $gratisSMS;
+$INFOS['SMSprice'] = $SMSprice;
 /**
  * Alle arrangement med SMS-forbruk i sesongen.
  * Kreditter lagres negativt ved sending; abs() gir forbruket, som i SMS_usage().
@@ -68,10 +69,10 @@ function hentSmsForbruk($season) : array {
  * minimumsforbruk og sorter alle eiere etter forbruk.
  *
  * @param Array $rader
- * @param Int $minimumForbruk
+ * @param Int $gratisSMS
  * @return Array
  */
-function grupperSmsForbruk(array $rader, $minimumForbruk) : array {
+function grupperSmsForbruk(array $rader, $gratisSMS) : array {
 	$perKommune = [];
 	$perFylke = [];
 
@@ -134,7 +135,7 @@ function grupperSmsForbruk(array $rader, $minimumForbruk) : array {
 
 	foreach ($fylker as $fylke) {
 		$fylkeTotal = summerCredits($fylke['arrangementer']);
-		if ($fylkeTotal > $minimumForbruk) {
+		if ($fylkeTotal > $gratisSMS) {
 			usort($fylke['arrangementer'], function ($a, $b) {
 				return $b['credits'] <=> $a['credits'];
 			});
@@ -150,7 +151,7 @@ function grupperSmsForbruk(array $rader, $minimumForbruk) : array {
 		}
 
 		foreach ($fylke['kommuner'] as $kommune) {
-			if ($kommune['total'] <= $minimumForbruk) {
+			if ($kommune['total'] <= $gratisSMS) {
 				continue;
 			}
 			usort($kommune['arrangementer'], function ($a, $b) {
