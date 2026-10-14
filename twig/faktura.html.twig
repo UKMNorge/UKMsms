@@ -25,7 +25,7 @@
 				<th>{{ omraade.type }}</th>
 				<th><strong>{{ omraade.total }}</strong></th>
 				<th>{{omraade.total - gratisSMS }}</th>
-				<th>{{ (omraade.total - gratisSMS) * prisPerSMS }}</th>
+				<th>{{ ((omraade.total - gratisSMS) * SMSprice)|kroner(2) }} kr</th>
 			</tr>
 			{% for arrangement in omraade.arrangementer %}
 				<tr class="sms-arrangement-{{ omraade.type_key }}-{{ omraade.id }}" hidden>
