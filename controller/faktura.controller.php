@@ -9,7 +9,7 @@ require_once('UKM/Autoloader.php');
 $sessong = date('Y');
 $INFOS['season'] = $sessong;
 
-$gratisSMS = 400;
+$gratisSMS = 2;
 $SMSprice = 0.4;
 $gruppert = grupperSmsForbruk(hentSmsForbruk($sessong), $gratisSMS);
 $INFOS['omraader'] = $gruppert['omraader'];
