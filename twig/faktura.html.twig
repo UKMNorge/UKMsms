@@ -23,8 +23,8 @@
 				</th>
 				<th>{{ omraade.type }}</th>
 				<th><strong>{{ omraade.total }}</strong></th>
-				<th>{{omraade.total - gratisSMS }}</th>
-				<th>{{ ((omraade.total - gratisSMS) * SMSprice)|kroner(2) }} kr</th>
+				<th class="total-betalende-sms">{{omraade.total - gratisSMS }}</th>
+				<th class="total-belop">{{ ((omraade.total - gratisSMS) * SMSprice)|kroner(2) }} kr</th>
 				{% set totalEkskludertGratis = totalEkskludertGratis + ((omraade.total - gratisSMS) * SMSprice) %}
 				{% set antallSMS = antallSMS + omraade.total %}
 				{% set antallBetalendeSMS = antallBetalendeSMS + (omraade.total - gratisSMS) %}
