@@ -1,6 +1,8 @@
 <h3>SMS-forbruk i {{ season }}-sesongen</h3>
 <p>Listen viser sendte SMS per arrangement for kommuner og fylker med mer enn {{ gratisSMS }} SMS. Høyeste forbruk vises først.</p>
 
+{% set totalEkskludertGratis = 0 %}
+
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -10,10 +12,10 @@
 			<th>Betalende SMS</th>
 			<th>Beløp</th>
 		</tr>
-		<tr class="alert-info">
+		{# <tr class="alert-info">
 			<th colspan="2">TOTAL</th>
 			<th>{{ total }}</th>
-		</tr>
+		</tr> #}
 	</thead>
 	<tbody>
 		{% for omraade in omraader %}
@@ -26,6 +28,7 @@
 				<th><strong>{{ omraade.total }}</strong></th>
 				<th>{{omraade.total - gratisSMS }}</th>
 				<th>{{ ((omraade.total - gratisSMS) * SMSprice)|kroner(2) }} kr</th>
+				{% set totalEkskludertGratis = totalEkskludertGratis + ((omraade.total - gratisSMS) * SMSprice) %}
 			</tr>
 			{% for arrangement in omraade.arrangementer %}
 				<tr class="sms-arrangement-{{ omraade.type_key }}-{{ omraade.id }}" hidden>
@@ -41,6 +44,8 @@
 		{% endfor %}
 	</tbody>
 </table>
+
+<h1>Total beløp for {{season}}: {{ totalEkskludertGratis|kroner(2) }} kr</h1>
 
 <script>
 	function toggleArrangementer(group, button) {
