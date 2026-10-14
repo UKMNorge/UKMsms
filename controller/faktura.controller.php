@@ -9,9 +9,11 @@ require_once('UKM/Autoloader.php');
 $sessong = date('Y');
 $INFOS['season'] = $sessong;
 
-$gruppert = grupperSmsForbruk(hentSmsForbruk($sessong));
+$minimumForbruk = 400;
+$gruppert = grupperSmsForbruk(hentSmsForbruk($sessong), $minimumForbruk);
 $INFOS['fylker'] = $gruppert['fylker'];
 $INFOS['total'] = $gruppert['total'];
+$INFOS['minimumForbruk'] = $minimumForbruk;
 
 /**
  * Alle arrangement med SMS-forbruk i sesongen.
@@ -67,9 +69,10 @@ function hentSmsForbruk($season) : array {
  * Arrangement uten kommune ligger direkte på fylket.
  *
  * @param Array $rader
+ * @param Int $minimumForbruk
  * @return Array
  */
-function grupperSmsForbruk(array $rader) : array {
+function grupperSmsForbruk(array $rader, $minimumForbruk) : array {
 	$perKommune = [];
 	$perFylke = [];
 
@@ -82,11 +85,9 @@ function grupperSmsForbruk(array $rader) : array {
 	}
 
 	$fylker = [];
-	$kjenteFylkeIder = [];
 
 	foreach (Fylker::getAll() as $fylke) {
 		$fylkeId = (int) $fylke->getId();
-		$kjenteFylkeIder[$fylkeId] = true;
 		$kommuner = [];
 
 		foreach ($fylke->getKommuner() as $kommune) {
@@ -130,34 +131,44 @@ function grupperSmsForbruk(array $rader) : array {
 	}
 
 	$liste = [];
-	$ekstra = [];
 	$total = 0;
 
-	foreach ($fylker as $fylkeId => $fylke) {
+	foreach ($fylker as $fylke) {
 		$fylke = oppdaterFylkeTotal($fylke);
-		if ($fylke['total'] === 0) {
+		if ($fylke['total'] <= $minimumForbruk) {
 			continue;
 		}
-		$total += $fylke['total'];
-		if (isset($kjenteFylkeIder[$fylkeId])) {
-			$liste[] = $fylke;
-		} else {
-			$ekstra[] = $fylke;
+
+		$fylke['kommuner'] = array_values(array_filter(
+			$fylke['kommuner'],
+			function ($kommune) use ($minimumForbruk) {
+				return $kommune['total'] > $minimumForbruk;
+			}
+		));
+
+		usort($fylke['kommuner'], function ($a, $b) {
+			return $b['total'] <=> $a['total'];
+		});
+		usort($fylke['arrangementer'], function ($a, $b) {
+			return $b['credits'] <=> $a['credits'];
+		});
+		foreach ($fylke['kommuner'] as &$kommune) {
+			usort($kommune['arrangementer'], function ($a, $b) {
+				return $b['credits'] <=> $a['credits'];
+			});
 		}
+		unset($kommune);
+
+		$total += $fylke['total'];
+		$liste[] = $fylke;
 	}
 
-	usort($ekstra, function ($a, $b) {
-		if ((int) $a['id'] === 0) {
-			return 1;
-		}
-		if ((int) $b['id'] === 0) {
-			return -1;
-		}
-		return strcasecmp($a['name'], $b['name']);
+	usort($liste, function ($a, $b) {
+		return $b['total'] <=> $a['total'];
 	});
 
 	return [
-		'fylker' => array_merge($liste, $ekstra),
+		'fylker' => $liste,
 		'total' => $total,
 	];
 }
