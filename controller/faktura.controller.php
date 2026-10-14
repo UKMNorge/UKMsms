@@ -6,7 +6,11 @@ use UKMNorge\Geografi\Kommune;
 
 require_once('UKM/Autoloader.php');
 
-$sessong = date('Y');
+if(date('m') > 8) {
+	$sessong = date('Y');
+} else {
+	$sessong = date('Y') - 1;
+}
 $INFOS['season'] = $sessong;
 
 $gratisSMS = 400;
