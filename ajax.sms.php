@@ -197,7 +197,7 @@ function getSMSUsage() {
 			'id' => $arrangement->getId(), 
 			'navn' => $arrangement->getNavn(), 
 			'sesong' => $arrangement->getSesong(),
-			'omrade_navn' => $arrangement->getType() == 'fylke' ? $arrangement->getFylke()->getNavn() : $arrangement->getKommune()->getNavn(),
+			'omrade_navn' => $arrangement->getType() == 'fylke' ? $arrangement->getFylke()->getNavn() : $arrangement->getEierKommune()->getNavn(),
 		],
 	]);
 }
