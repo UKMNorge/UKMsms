@@ -586,7 +586,10 @@ export default {
             return Math.abs((this.totalSMSSendt / this.antallGratisSMS) - 1) * 100;
         },
         getOmraadeNavn() : string {
-            return this.smsUsage[0].fylke_name || this.smsUsage[0].kommune_name;
+            if(!this.currentArrangement) {
+                return 'kommune/fylke';
+            }
+            return this.currentArrangement.omrade_navn;
         },
         getInnslagMottakereSorted() {
             return Object.values(this.innslagMottakere)
