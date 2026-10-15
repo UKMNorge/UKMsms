@@ -586,6 +586,7 @@ export default {
             return Math.abs((this.totalSMSSendt / this.antallGratisSMS) - 1) * 100;
         },
         getOmraadeNavn() : string {
+            console.log(this.currentArrangement);
             if(!this.currentArrangement) {
                 return 'kommune/fylke';
             }
@@ -874,7 +875,9 @@ export default {
         
         generateChart() {
             // Get data first
-            console.log(this.smsUsage);        
+            if(this.smsUsage.length < 1) {
+                return;
+            }  
     
             let labels = this.smsUsage.map((usage : any) => usage.pl_name);
             let dataset =  [{
