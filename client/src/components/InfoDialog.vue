@@ -26,6 +26,7 @@
                             </div>
                             <p>Alle SMS belastes UKM Norge, uansett hvilken avsender som velges. Alle får 400 tekstmeldinger gratis, og alt forbruk utover dette kan bli fakturert sammen med neste års materiellpakke. 1 SMS = kr. 0,40</p>
                             <p>Når du velger en avsender med et telefonnummer som mottakeren kan svare på, blir vi belastet for én ekstra SMS per mottaker av vår SMS-leverandør, derfor belastes du også for én ekstra SMS per mottaker når du velger en avsender med et telefonnummer som mottakeren kan svare på.</p>
+                            <p>På fellesmønstringer, blir kommunen som eier arrangementet belastet for alle SMS-er sendt til deltakere i fellesmønstringen.</p>
                             
                             <div class="as-margin-top-space-4 as-margin-bottom-space-1">
                                 <h5>Sende SMS til målgruppe</h5>
