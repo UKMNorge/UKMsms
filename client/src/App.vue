@@ -548,6 +548,12 @@ export default {
         },
         trengerSvarFraMottaker(newValue : any, oldValue : any) {
             this.selectedAvsender = null;
+        },
+        textmessage(newValue : any, oldValue : any) {
+            if(this.getCountSMS() > 4) {
+                this.spaInteraction.showMessage("For mange SMS-er", "Du kan ikke sende mer enn 4 SMS-er per mottaker. Bruk deltakerinfo under «Kommunikasjon» i menyen for å sende lengre meldinger.", "error");
+                this.textmessage = oldValue;
+            }
         }
     },
     methods: {
