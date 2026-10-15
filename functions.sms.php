@@ -35,7 +35,7 @@ function SMS_usage(){
 		$fylkeId = $arrangement->getFylke()->getId();
 	}
 	elseif($arrangement->getType() == 'kommune') {
-		$kommuneId = $arrangement->getKommune()->getId();
+		$kommuneId = $arrangement->getEierKommuneId();
 	}
 	if($fylkeId) {
 		$where .= " AND `pl_owner_fylke` = '#fylkeId' AND `pl_type` != 'kommune'";
