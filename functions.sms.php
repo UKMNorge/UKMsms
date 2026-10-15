@@ -38,10 +38,10 @@ function SMS_usage(){
 		$kommuneId = $arrangement->getKommune()->getId();
 	}
 	if($fylkeId) {
-		$where .= " AND `pl_owner_fylke` = '#fylkeId'";
+		$where .= " AND `pl_owner_fylke` = '#fylkeId' AND `pl_type` != 'kommune'";
 	}
 	if($kommuneId) {
-		$where .= " AND `pl_owner_kommune` = '#kommuneId'";
+		$where .= " AND `pl_owner_kommune` = '#kommuneId' AND `pl_type` != 'fylke'";
 	}
 	
 	$qry = new Query("SELECT
