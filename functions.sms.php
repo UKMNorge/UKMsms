@@ -158,21 +158,18 @@ function SMS_avsendere(){
 
 function SMS_avsendere_array(){
 	$avsendere = array();
-	$avsendere['UKMNorge'] = 'UKMNorge';
-	// $avsendere['UKMMedia'] = 'UKMMedia';
-	// $avsendere['93091329'] = 'UKM Norge support';
-	// $avsendere['46516256'] = 'Kushtrim Aliu';
-	// $avsendere['90755685'] = 'Torstein Siegel';
-	// $avsendere['93665540'] = 'Jardar Nordbø';
+	if(is_super_admin()) {
+		$avsendere['UKMNorge'] = 'UKM Norge';
+	} 
 
 	if(!intval(get_option('pl_id'))) {
 		return $avsendere;
 	}
 	$arrangement = new Arrangement(intval(get_option('pl_id')));
 	if( $arrangement->getEierType() == 'fylke' ) {
-		$avsendere['UKMfylke'] = 'UKMfylke';
+		$avsendere['UKMfylke'] = 'UKM Fylke';
     } else {
-		$avsendere['UKMlokal'] = 'UKMlokal';
+		$avsendere['UKMlokal'] = 'UKM Lokal';
     }
 	
 	foreach($arrangement->getKontaktpersoner()->getAll() as $kontakt ){
