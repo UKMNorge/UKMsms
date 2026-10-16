@@ -139,9 +139,9 @@ function SMS_avsendere(){
 
 	$arrangement = new Arrangement(intval(get_option('pl_id')));
 	if( $arrangement->getEierType() == 'fylke' ) {
-		$options = '<option value="UKMfylke" data-svar="false" data-name="">UKM Fylke</option>';
+		$options = '<option value="UKMFylke" data-svar="false" data-name="">UKM Fylke</option>';
     } else {
-        $options = '<option value="UKMlokal" data-svar="false" data-name="">UKM Lokal</option>'; 
+        $options = '<option value="UKMLokal" data-svar="false" data-name="">UKM Lokal</option>'; 
     }
 	foreach($arrangement->getKontaktpersoner()->getAll() as $kontakt ){
         if( empty( $kontakt->getTelefon() ) ) {
@@ -167,9 +167,9 @@ function SMS_avsendere_array(){
 	}
 	$arrangement = new Arrangement(intval(get_option('pl_id')));
 	if( $arrangement->getEierType() == 'fylke' ) {
-		$avsendere['UKMfylke'] = 'UKM Fylke';
+		$avsendere['UKMFylke'] = 'UKM Fylke';
     } else {
-		$avsendere['UKMlokal'] = 'UKM Lokal';
+		$avsendere['UKMLokal'] = 'UKM Lokal';
     }
 	
 	foreach($arrangement->getKontaktpersoner()->getAll() as $kontakt ){

@@ -19,7 +19,7 @@
             </div>
             <div class="as-card-1 as-padding-space-2 as-margin-top-space-2">
                 <div v-for="r in rapports" :class="r.report == -1 ? 'success-repport' : 'error-repport'" class="as-card-2 nosh-impt as-padding-space-2 as-margin-space-2">
-                    <p>{{ getMottakerByMobil(r.mottaker) }} ({{ r.mottaker }}) - <b>{{ r.report == -1 ? 'SMS-en er sendt' : r.report }}</b></p>
+                    <p>{{ getMottakerByMobil(r.mottaker) }} ({{ r.mottaker }}) - <b>{{ r.report < 0 ? 'SMS-en er sendt' : r.report }}</b></p>
                 </div>
             </div>
         </div>
