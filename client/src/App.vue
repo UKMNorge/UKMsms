@@ -863,8 +863,7 @@ export default {
             // check if this.kommaseparertMobil has minimum 1 ','
             let splitBy = this.kommaseparertMobil.indexOf(',') < 0 ? ' ' : ',';
             var mobilArr = this.kommaseparertMobil.split(splitBy);
-            console.warn(mobilArr);
-            return;
+
             for(var mobil of mobilArr) {
                 mobil = mobil.trim();
                 if(this._validateMobileNumber(mobil)) {
