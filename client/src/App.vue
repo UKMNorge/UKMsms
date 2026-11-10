@@ -373,8 +373,13 @@
                                 <!-- Legg til mottaker fra innslag TAB WINDOW ITEM -->
                                 <v-tabs-window-item v-if="isArrangement">
                                     <div class="as-margin-top-space-2">
-                                        <div v-if="isMottakereFetched && getInnslagMottakere().length < 1">
+                                        <div v-if="isMottakereFetched && Object.keys(getInnslagMottakere()).length < 1">
                                             <PermanentNotification class="as-margin-bottom-space-2" :typeNotification="'warning'" :tittel="'Ingen innslag'" :description="'Det er ingen innslag i arrangementet'" />
+                                        </div>
+                                        <div class="innslag-type-filter as-margin-bottom-space-2">
+                                            <v-btn @click="filterItemClicked(innslagType)" v-for="innslagType in ['Alle', ...getInnslagTypes()]" :key="innslagType" v-model="selectedInnslagTypes" :value="innslagType" :class="selectedInnslagTypes.includes(innslagType) ? 'v-btn-success' : 'v-btn-grey'" class="v-btn-as as-margin-right-space-1" rounded="large" size="small" variant="outlined">
+                                                {{ innslagType }}
+                                            </v-btn>
                                         </div>
                                         <div v-for="innslag in getInnslagMottakereSorted()">
                                             <div class="as-card-2 as-padding-space-2 nos1-impt as-margin-bottom-space-2 as-card-lightest-color" v-if="innslag.length > 0">
@@ -501,7 +506,7 @@ export default {
             ukmSignatur : false as Boolean,
             aktivMottakerTab : 0 as Number,
             tab : null as any,
-            innslagMottakere : [] as Array<Array<InnslagMottaker>>,
+            innslagMottakere : {} as Record<string, Array<InnslagMottaker>>,
             loggInfo : false as Boolean,
             alleSMSLogs : [] as Array<Log>,
             spaInteraction : (<any>window).spaInteraction, // Definert i main.ts
@@ -510,6 +515,7 @@ export default {
             isCloseDeltakere : true as Boolean,
             chart: null as any | null,
             smsUsage: [] as Array<any>,
+            selectedInnslagTypes : ['Alle'] as Array<string>,
         }
     },
 
@@ -592,8 +598,21 @@ export default {
             }
             return this.currentArrangement.omrade_navn;
         },
+        getInnslagMottakereFiltered() {
+            if(this.selectedInnslagTypes.includes('Alle')) {
+                return this.innslagMottakere;
+            }
+            const filtered : Record<string, Array<InnslagMottaker>> = {};
+            for(const key in this.innslagMottakere) {
+                const innslag = this.innslagMottakere[key];
+                if(innslag.length > 0 && this.selectedInnslagTypes.includes(String(innslag[0].innslagType))) {
+                    filtered[key] = innslag;
+                }
+            }
+            return filtered;
+        },
         getInnslagMottakereSorted() {
-            return Object.values(this.innslagMottakere)
+            return Object.values(this.getInnslagMottakereFiltered())
                 .sort((a : any, b : any) => {
                     if (!a || a.length < 1) return 1;
                     if (!b || b.length < 1) return -1;
@@ -603,6 +622,25 @@ export default {
 
                     return navnA.localeCompare(navnB, 'nb', { sensitivity: 'base' });
                 });
+        },
+        filterItemClicked(item : string) {
+            if(item == 'Alle') {
+                this.selectedInnslagTypes = ['Alle'];
+                return;
+            }
+            // Remove Alle from selectedInnslagTypes
+            else {
+                this.selectedInnslagTypes = this.selectedInnslagTypes.filter((type) => type !== 'Alle');
+            }
+            if(this.selectedInnslagTypes.includes(item)) {
+                this.selectedInnslagTypes = this.selectedInnslagTypes.filter((type) => type !== item);
+            }
+            else {
+                this.selectedInnslagTypes.push(item);
+            }
+        },
+        getInnslagTypes() : Array<string> {
+            return Array.from(new Set(Object.values(this.innslagMottakere).map((innslag) => innslag[0].innslagType))).sort();
         },
         openLeggTilMottaker() {
             (<typeof FloatingClosable>this.$refs.floatingLeggTilMottaker).open();
@@ -681,16 +719,17 @@ export default {
 
             var response = await this.spaInteraction.runAjaxCall('/', 'POST', data);
 
+            const mottakere : Record<string, Array<InnslagMottaker>> = {};
             for(var key in response.personer) {
                 var innslagArr = [];
 
                 for(var innslag of (<any>response).personer[key]) {
                     innslagArr.push(new InnslagMottaker(innslag.navn, innslag.mobil, innslag.innslagNavn, innslag.innslagType));
                 }
-                this.innslagMottakere.push(innslagArr);
+                mottakere[key] = innslagArr;
             }
 
-            this.innslagMottakere = response.personer;
+            this.innslagMottakere = mottakere;
         },
         async _fetchNyhetsaker() {
             var data : any = {
@@ -836,7 +875,9 @@ export default {
             }
             else {
                 totalSMS += Math.ceil(this.getTextmessage().length / 153);
-
+            }
+            if(totalSMS > 4) {
+                this.ukmSignatur = false;
             }
             return totalSMS;
         },
