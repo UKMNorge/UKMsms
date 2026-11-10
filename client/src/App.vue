@@ -516,6 +516,7 @@ export default {
             chart: null as any | null,
             smsUsage: [] as Array<any>,
             selectedInnslagTypes : ['Alle'] as Array<string>,
+            maxSMSPerMottaker : 4 as number,
         }
     },
 
@@ -556,7 +557,7 @@ export default {
             this.selectedAvsender = null;
         },
         textmessage(newValue : any, oldValue : any) {
-            if(this.getCountSMS() > 4) {
+            if(this.getCountSMS() > this.maxSMSPerMottaker) {
                 this.spaInteraction.showMessage("For mange SMS-er", "Du kan ikke sende mer enn 4 SMS-er per mottaker. Bruk deltakerinfo under «Kommunikasjon» i menyen for å sende lengre meldinger.", "error");
                 this.textmessage = oldValue;
             }
@@ -876,7 +877,7 @@ export default {
             else {
                 totalSMS += Math.ceil(this.getTextmessage().length / 153);
             }
-            if(totalSMS > 4) {
+            if(totalSMS > this.maxSMSPerMottaker) {
                 this.ukmSignatur = false;
             }
             return totalSMS;
